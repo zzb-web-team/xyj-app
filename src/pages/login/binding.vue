@@ -12,12 +12,12 @@
       :z-index="2000"
     >
       <div slot="left" class="alltitleleft">
-        <van-icon name="arrow-left" color="#ffffff" />
+        <van-icon name="arrow-left" color="#333333" />
         <span>返回</span>
       </div>
       <div slot="right">
-        <van-icon name="scan" size="0.4rem" />
         <span>扫码绑定</span>
+         <van-icon name="scan" size="0.4rem" />
       </div>
     </van-nav-bar>
     <scroller>
@@ -31,10 +31,10 @@
                     绑定西柚机
           </div>-->
           <div class="find_devive_item">
-            <img src="../../assets/images/sea_illustrations3.png" />
+            <img src="../../assets/images/xiyouji.png" />
           </div>
         </div>
-        <div>
+        <div class="next_btn">
           <van-button class="introduction_start" @click="goLink()">搜索</van-button>
         </div>
       </div>
@@ -92,7 +92,6 @@ export default {
     }
   },
   methods: {
-
     ...mapMutations(["updateUser", "clearUser"]),
     goLink() {
       if (this.$parent.onLine == false) {
@@ -286,19 +285,15 @@ export default {
 
 <style lang="less" scoped >
 /deep/.van-nav-bar .van-icon {
-  color: #ffffff;
+  color: #333333;
   vertical-align: middle;
 }
 /deep/.van-nav-bar__right {
   right: 0.2rem;
 }
 .van-nav-bar {
-  color: #fff;
-  background: linear-gradient(
-    45deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
-  );
+  color: #333333;
+  background: #ffffff;
 }
 .titright {
   line-height: 33px;
@@ -321,15 +316,15 @@ export default {
     margin: 0 auto;
     margin-top: 1.5rem;
     overflow: hidden;
-    background: #f8f8f8;
+    background: #f8fafb;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     .toptext {
       width: 80%;
-      font-size: 0.6rem;
-      color: #000;
+      font-size: 0.36rem;
+      color: #333333;
       text-align: center;
       // span {
       //   border-bottom: 0.12rem solid #e74a7e;
@@ -337,7 +332,7 @@ export default {
     }
     .protocol_text {
       width: 80%;
-      color: #888fa9;
+      color: #666666;
       font-size: 0.22rem;
       text-align: center;
       text-indent: 0rem;
@@ -353,7 +348,7 @@ export default {
       border-radius: 0.12rem;
       box-sizing: border-box;
       .find_devive_item {
-        background-color: #fff;
+        // background-color: #fff;
         img {
           width: 85%;
           margin-top: 0.3rem;
@@ -361,23 +356,28 @@ export default {
         }
       }
     }
-    .introduction_start {
-      font-size: 0.38rem;
-      color: #ffffff;
-      margin: 0 auto;
-      margin-top: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 5.9rem;
-      height: 0.88rem;
-      background: linear-gradient(
-        90deg,
-        rgba(116, 90, 243, 1) 0%,
-        rgba(92, 116, 243, 1) 100%
-      );
-      border-radius: 1rem;
-      border: none;
+    .next_btn {
+      width: 100%;
+
+      .introduction_start {
+        width: 92%;
+        height: 0.8rem;
+        font-size: 0.38rem;
+        color: #ffffff;
+        margin: 0 auto;
+        margin-top: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          90deg,
+          rgba(254, 168, 107, 1) 0%,
+          rgba(255, 109, 110, 1) 100%
+        );
+        box-shadow: 0px 5px 5px 0px rgba(255, 109, 110, 0.1);
+        border-radius: 5px;
+        border: none;
+      }
     }
   }
 }

@@ -91,7 +91,7 @@ export default {
     height: auto;
     overflow: hidden;
     margin: auto;
-    margin-top: 0.3rem;
+    margin-top: 0.92rem;
     .user_con {
       width: 95%;
       height: auto;

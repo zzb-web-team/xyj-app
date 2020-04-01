@@ -41,14 +41,14 @@
                   @click="previouspage()"
                   v-bind:style="{opacity:leftstyle}"
                 >
-                  <img src="../../assets/images/find_icon_arrow1.png" />
+                  <img src="../../assets/images/findzuo.png" />
                 </div>
                 <div
                   class="item_active_right"
                   @click="nextpage()"
                   v-bind:style="{opacity:rightstyle}"
                 >
-                  <img src="../../assets/images/find_icon_arrow2.png" />
+                  <img src="../../assets/images/findyou.png" />
                 </div>
               </div>
               <van-swipe-item
@@ -61,14 +61,15 @@
                 <!-- 类容区域 -->
                 <div class="serial">
                   <span>{{(index+1>=10)?index+1:"0"+(index+1)}}</span>
+                  <span><img src="../../assets/images/findtishi.png" alt=""> 非法设备</span>
                 </div>
                 <div class="find_devive">
                   <div class="find_devive_item item_active">
-                    <img src="../../assets/images/binding_illustration3.png" />
+                    <img src="../../assets/images/findxiyouji.png" />
                   </div>
 
                   <div class="find_devive_item item_active_one">
-                    <img src="../../assets/images/binding_capacity.png" alt />
+                    <!-- <img src="../../assets/images/binding_capacity.png" alt /> -->
                     容量：{{((item.free_cap)/1024/1024/1024).toFixed(2)}}GB
                   </div>
                   <div class="find_devive_item">序号：{{item.dev_sn}}</div>
@@ -154,20 +155,20 @@ export default {
       rightstyle: "",
       startingpoint: 0,
       // devlist: ['PTFS201909000014'],
-        devlist: [],
+      devlist: [],
       deviceArr: [
-        // {
-        //   free_cap: 16000000000,
-        //   bind_user_tel_num: 18872926121,
-        //   dev_sn: "m15y65123k",
-        //   bind: "立即绑定"
-        // },
-        // {
-        //   free_cap: 96000000000,
-        //   bind_user_tel_num: 15913246981,
-        //   dev_sn: "c1my6f1dr31",
-        //   bind: "已绑定"
-        // }
+        {
+          free_cap: 16000000000,
+          bind_user_tel_num: 18872926121,
+          dev_sn: "m15y65123k",
+          bind: "立即绑定"
+        },
+        {
+          free_cap: 96000000000,
+          bind_user_tel_num: 15913246981,
+          dev_sn: "c1my6f1dr31",
+          bind: "已绑定"
+        }
       ]
     };
   },
@@ -474,7 +475,7 @@ export default {
       }, 100);
     },
     onClickLeft() {
-       this.$router.push({
+      this.$router.push({
         path: "/binding"
       });
     },
@@ -555,12 +556,10 @@ export default {
     .number {
       height: 1rem;
       width: 100%;
-      color: #000000;
+      color: #333333;
       background-color: #f8f8f8;
-      font-size: 0.52rem;
+      font-size: 0.48rem;
       margin-top: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
     }
     .introduction_text {
       font-size: 0.4rem;
@@ -590,7 +589,7 @@ export default {
           height: 1rem;
           position: relative;
           left: -2rem;
-          top: -4.5rem;
+          top: -5rem;
           z-index: 3500;
         }
         .item_active_right {
@@ -598,26 +597,39 @@ export default {
           height: 1rem;
           position: relative;
           right: -2rem;
-          top: -4.5rem;
+          top: -5rem;
           z-index: 3500;
         }
       }
 
       .serial {
-        color: #5f7bf2;
+        width: 90%;
+        color: #000000;
         text-align: left;
-        padding-left: 0.5rem;
+        padding: 0 4% 0 6%;
         margin-top: 0.2rem;
         border-radius: 0.12rem 0.12rem 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         span {
           display: inline-block;
-          width: 0.6rem;
+          width: 1;
           height: 0.6rem;
           line-height: 0.6rem;
           text-align: center;
           border-radius: 50%;
-          font-weight: 700;
-          font-size: 0.52rem;
+          font-size: 0.28rem;
+        }
+        span:nth-child(2) {
+          color: #ff6d6e;
+          font-size: 0.24rem;
+          display: flex;
+          align-items: center;
+          img{
+            width: 20%;
+            margin-right: 0.1rem;
+          }
         }
       }
       .find_devive {
@@ -625,9 +637,8 @@ export default {
         margin: 0 auto;
         // overflow: hidden;
         .find_devive_item {
-          margin-top: 0.1rem;
           font-size: 0.24rem;
-          color: rgba(128, 128, 128, 1);
+          color: #666666;
           .usertel,
           .usert {
             margin: 0 0 0.1rem 0;
@@ -636,8 +647,9 @@ export default {
           }
           &.item_active {
             width: 2.4rem;
-            height: 2.4rem;
+            // height: 2.4rem;
             margin: 0 auto;
+            margin-top: 0.6rem;
             // display: flex;
             // justify-content: center;
             // align-items: center;
@@ -656,9 +668,9 @@ export default {
             }
           }
           &.item_active_one {
-            font-size: 0.35rem;
-            color: rgba(49, 49, 49, 1);
-            font-weight: 700; //加粗
+            font-size: 0.28rem;
+            color: #333333;
+            margin-top: 0.4rem;
             img {
               margin-bottom: -0.08rem;
               width: 6%;
@@ -666,37 +678,34 @@ export default {
             }
           }
           &.item_active_two {
-            margin-top: 0.8rem;
+            margin-top: 0.4rem;
           }
           input {
-            width: 3.03rem;
-            height: 0.69rem;
+            width: 4.6rem;
+            height: 0.8rem;
             outline: none;
-            border-radius: 0.12rem;
+            border-radius: 0.1rem;
             color: #000000;
             padding-left: 0.2rem;
             margin: 0.02rem;
             border: none;
             background: none;
             text-align: left;
-            background-color: #f1f1f1;
+            background-color: #f2f2f2;
           }
           .find_btn {
             // margin: 0 auto;
-            color: rgb(255, 255, 255);
+            color: #3477fd;
             font-size: 0.26rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 1.88rem;
             height: 0.69rem;
-            background: linear-gradient(
-              90deg,
-              rgba(116, 90, 243, 1) 0%,
-              rgba(92, 116, 243, 1) 100%
-            );
-            border-radius: 0.12rem;
+            line-height: 1rem;
+            background: #ffffff;
+            border-radius: 0;
             border: none;
+            border-bottom: 1px solid #3477fd;
           }
         }
       }
@@ -704,21 +713,22 @@ export default {
     .dopbtn {
       padding-top: 1.16rem;
       .introduction_start {
-        font-size: 0.3rem;
+        font-size: 0.28rem;
         color: #ffffff;
         margin: 0 auto;
         // margin-top: 1.36rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 5.9rem;
-        height: 0.88rem;
+        width: 6rem;
+        height: 0.8rem;
         background: linear-gradient(
           90deg,
-          rgba(116, 90, 243, 1) 0%,
-          rgba(92, 116, 243, 1) 100%
+          rgba(254, 168, 107, 1) 0%,
+          rgba(255, 109, 110, 1) 100%
         );
-        border-radius: 1rem;
+        box-shadow: 0 0.1rem 0.1rem 0 #ff6d6e1a;
+        border-radius: 0.1rem;
         margin-bottom: 1.84rem;
         border: none;
       }

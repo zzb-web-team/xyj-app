@@ -1,0 +1,344 @@
+<template>
+  <div class="income_overview">
+    <!-- 头部 -->
+    <van-nav-bar
+      size="0.4rem"
+      left-arrow
+      fixed
+      title="收益"
+      @click-right="onClickRight()"
+      :z-index="0"
+    >
+      <div slot="left" class="alltitleleft">
+        <!-- <van-icon name="arrow-left" color="#ffffff" /> -->
+      </div>
+      <div slot="right" class="titright">
+        <span>排行</span>
+      </div>
+    </van-nav-bar>
+    <!--  -->
+    <div class="content">
+      <div class="content_top">
+        <div class="content_top_all" @click="go_all_income_list">
+          <p>
+            累计收益(gfm)
+            <van-icon name="play" />
+          </p>
+          <div>{{all_income}}</div>
+        </div>
+        <div class="content_top_detail">
+          <div class="content_top_detail_left">
+            <p>{{last_income}}</p>
+            <p>昨日收益(gfm)</p>
+          </div>
+          <div class="content_top_detail_right">
+            <p>{{weak_income}}</p>
+            <p>近一周收益(gfm)</p>
+          </div>
+        </div>
+      </div>
+      <div class="content_body">
+        <div class="content_con" v-for="(item,index) in dev_income_list" :key="index">
+          <div class="content_body_top" @click="go_income_list(item)">
+            <span>
+              <img src="../../assets/images/income_name.png" alt />
+              {{item.devname}}
+            </span>
+            <img src="../../assets/images/per_icon_arrow.png" alt />
+          </div>
+          <div class="content_body_bottom" @click="go_income_list(item)">
+            <div class="content_body_bottom_left">
+              <img src="../../assets/images/income_shouyi.png" alt />
+              <div class="content_body_bottom_right_detail">
+                <p>累计收益</p>
+                <p>
+                  {{item.total_profit}}
+                  <span>gfm</span>
+                </p>
+              </div>
+            </div>
+            <div class="content_body_bottom_right">
+              <img src="../../assets/images/income_suanli.png" alt />
+              <div class="content_body_bottom_right_detail">
+                <p>算力</p>
+                <p>{{item.total_com_power}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  -->
+    <tabbar v-model="active"></tabbar>
+  </div>
+</template>
+
+<script>
+import { mapState, mapMutations } from "vuex";
+import tabbar from "../../components/foot";
+import {
+  getuserdevlist,
+  query_node_total_profit_info
+} from "../../common/js/api";
+export default {
+  data() {
+    return {
+      active: 3,
+      all_income: 0,
+      last_income: 0,
+      weak_income: 0,
+      dev_income_list: [
+        // {
+        //   devname: "我的西柚机1",
+        //   total_profit: 6334,
+        //   total_com_power: 56,
+        //   dev_sn: 0
+        // },
+        // {
+        //   devname: "我的西柚机2",
+        //   total_profit: 546,
+        //   total_com_power: 34656,
+        //   dev_sn: 1
+        // },
+        // {
+        //   devname: "我的西柚机3",
+        //   total_profit: 2745,
+        //   total_com_power: 346,
+        //   dev_sn: 2
+        // },
+        // {
+        //   devname: "我的西柚机4",
+        //   total_profit: 547,
+        //   total_com_power: 2345,
+        //   dev_sn: 3
+        // },
+        // {
+        //   devname: "我的西柚机5",
+        //   total_profit: 6334,
+        //   total_com_power: 93684,
+        //   dev_sn: 4
+        // },
+        // {
+        //   devname: "我的西柚机6",
+        //   total_profit: 15073,
+        //   total_com_power: 46,
+        //   dev_sn: 5
+        // },
+        // {
+        //   devname: "我的西柚机7",
+        //   total_profit: 45,
+        //   total_com_power: 102375,
+        //   dev_sn: 6
+        // }
+      ]
+    };
+  },
+  computed: mapState({
+    log_token: state => state.user.log_token,
+    phone_number: state => state.user.phone_number,
+    user_name: state => state.user.user_name,
+    user_sex: state => state.user.user_sex,
+    charge_psd: state => state.user.charge_psd,
+    minerstates: state => state.management.minerstates,
+    devsn: state => state.management.devsn
+  }),
+  mounted() {
+    this.get_all_income(90);
+    this.get_all_dev_income(0);
+  },
+  methods: {
+    ...mapMutations(["updateUser", "clearUser"]),
+    //获取设备收益列表
+    get_all_dev_income(page) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      params.cur_page = page;
+      query_node_total_profit_info(params)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            this.dev_income_list = this.dev_income_list.concat(
+              res.data.dev_total_profit_list
+            );
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //获取总收益
+    get_all_income(num) {
+      let params = new Object();
+      let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+      let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
+      let starttime = endtimes - num * 24 * 3600; //获取7天的时间戳
+      let token = this.log_token;
+      params.login_token = token;
+      params.start_time = starttime;
+      params.end_time = endtimes;
+      params.query_type = 1;
+      params.cur_page = 0;
+      console.log(params);
+      getuserdevlist(params)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            this.all_income = (res.data.user_total_profit / 10000).toFixed(6);
+            this.last_income = (res.data.yes_profit / 10000).toFixed(6);
+            this.weak_income = (res.data.one_week_profit / 10000).toFixed(6);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    onClickRight() {
+      this.$router.push({
+        path: "/ranking"
+      });
+    },
+    go_all_income_list() {
+      this.$router.push({
+        path: "/all_income_list",
+        query: { allshou: this.all_income }
+      });
+    },
+    go_income_list(val) {
+      this.$router.push({
+        path: "/income_list",
+        query: { allshou: val }
+      });
+    }
+  },
+  components: {
+    tabbar: tabbar
+  }
+};
+</script>
+
+<style lang="less" scoped>
+.income_overview {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  .titright {
+    margin-right: 0.2rem;
+    color: #666666;
+  }
+  .content {
+    margin-top: 0.92rem;
+    color: #ffffff;
+    font-size: 0.24rem;
+    .content_top {
+      width: 72%;
+      padding: 0 10%;
+      height: 3.6rem;
+      text-align: left;
+      margin: auto;
+      border-radius: 0.1rem;
+      background: url(../../assets/images/suanlibg.png) no-repeat;
+      background-size: 100% 100%;
+      .content_top_all {
+        padding-top: 10%;
+        div {
+          width: 100%;
+          font-size: 0.76rem;
+          font-weight: 600;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .content_top_detail {
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+        .content_top_detail_left,
+        .content_top_detail_right {
+          width: 50%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          p {
+            font-size: 0.32rem;
+          }
+          p:nth-child(2) {
+            margin-top: 0.1rem;
+            font-size: 0.24rem;
+          }
+        }
+      }
+    }
+    .content_body {
+      width: 100%;
+      height: 7.38rem;
+      overflow-y: scroll;
+      .content_con {
+        width: 84%;
+        padding: 4%;
+        margin: auto;
+        color: #333333;
+        border: solid 0.01rem #eeeeee;
+        border-radius: 0.1rem;
+        margin-top: 0.2rem;
+        text-align: left;
+        img {
+          width: 7%;
+        }
+        .content_body_top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.2rem;
+          font-size: 0.28rem;
+          font-weight: 600;
+        }
+        .content_body_bottom {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .content_body_bottom_left,
+          .content_body_bottom_right {
+            width: 28.5%;
+            padding: 10%;
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
+            border: solid 0.01rem #eeeeee;
+            border-radius: 0.1rem;
+            img {
+              width: 28%;
+            }
+            .content_body_bottom_right_detail {
+              width: 96%;
+              padding-left: 4%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              p {
+                font-style: 0.26rem;
+                color: #666666;
+              }
+              p:nth-child(2) {
+                font-weight: 600;
+                color: #333333;
+                span {
+                  font-size: 0.22rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

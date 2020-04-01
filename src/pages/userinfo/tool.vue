@@ -60,7 +60,7 @@ export default {
   margin: 0 auto;
   .content {
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 1.2rem;
     // display: flex;
     // justify-content: center;
     // align-items: center;

@@ -35,8 +35,6 @@ export default {
   data() {
     return {
       title: "关于我们",
-      active: 2,
-      sum_earnings: null
     };
   },
   mounted() {},

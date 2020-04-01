@@ -3,10 +3,10 @@
     <!-- <van-nav-bar :z-index="2000"></van-nav-bar> -->
 
     <div class="container_introduction">
-      <div class="welcome">欢迎来到西柚机</div>
+      <div class="welcome">手机号登陆</div>
       <div class="introduction_text">
         <div class="login_input">
-          <p>手机号</p>
+          <!-- <p>手机号</p> -->
           <div class="loginPpho">
             <!-- <img src="../../assets/images/login_icon_pho.png" alt /> -->
             <input
@@ -28,14 +28,15 @@
           >{{ errors.first('phone') }}</div>
         </div>
 
-        <div class="down">
-          <!-- <div class="emali" @click="emaillogin()">↑↓切换邮箱登录</div> -->
-          <van-button class="introduction_start" @click="getCode()">下一步</van-button>
-        </div>
         <div class="protocol">
           注册即同意
-          <span @click="goprotocol()">《用户协议》</span>和
-          <span @click="goprivacy()">《隐私协议》</span>
+          <span @click="goprotocol()">用户协议</span>及
+          <span @click="goprivacy()">隐私协议</span>
+        </div>
+
+        <div class="down">
+          <!-- <div class="emali" @click="emaillogin()">↑↓切换邮箱登录</div> -->
+          <van-button class="introduction_start" @click="getCode()">登录</van-button>
         </div>
       </div>
     </div>
@@ -71,7 +72,6 @@ export default {
 
   mounted() {
     // window.get_pushid("090909090");
-
   },
   computed: {
     ...mapFields({
@@ -112,7 +112,6 @@ export default {
           path: "/loginCode",
           query: { phoneNum: this.phoneNum }
         });
-        console.log(this.phoneNum);
       });
     },
     resetDiv() {
@@ -145,24 +144,26 @@ body {
     height: 100%;
     margin: 0 auto;
     overflow: hidden;
-    margin-top: 1rem;
+    //margin-top: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: url(../../assets/images/log_bottom.png) no-repeat;
+    background-size: 100% auto;
+    background-position: bottom;
     .welcome {
-      width: 92%;
+      width: 76%;
       text-align: left;
-      font-size: 0.64rem;
-      padding-left: 1rem;
-      font-weight: 900; //加粗
-      color: #252834;
+      font-size: 0.48rem;
+      font-weight: 500; //加粗
+      color: #333333;
     }
     .introduction_text {
       font-size: 0.4rem;
       color: #000000;
-      width: 80%;
-      height: 10.4rem;
+      width: 76%;
+      height: 5.4rem;
       border-radius: 0.12rem;
       display: flex;
       justify-content: flex-start;
@@ -171,12 +172,12 @@ body {
       .protocol {
         width: 100%;
         font-size: 0.24rem;
-        text-align: center;
-        margin-top: 0.27rem;
-        color: #818181;
+        text-align: left;
+        margin-top: 0.15rem;
+        color: #666666;
         font-weight: 500;
         span {
-          color: #000000;
+          color: #417bfe;
           font-weight: 500;
         }
       }
@@ -189,7 +190,6 @@ body {
         }
         .loginPpho {
           width: 100%;
-
           display: flex;
           flex-direction: row;
           img {
@@ -203,19 +203,19 @@ body {
             text-align: left;
             outline: none;
             line-height: 0.58rem;
-            padding-bottom: 0.1rem;
             // padding-left: 0.4rem;
             width: 100%;
             // color: #ffffff;
-            font-size: 0.35rem;
-            margin-top: 0.42rem;
+            font-size: 0.28rem;
+            margin-top: 1rem;
+            padding-bottom: 0.1rem;
             border-radius: 0;
             border-bottom: #bebebe 1px solid;
           }
         }
       }
       .down {
-        margin-top: 0.67rem;
+        margin-top: 0.5rem;
         .emali {
           font-size: 0.28rem;
         }
@@ -227,22 +227,23 @@ body {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 5.9rem;
+          width: 5.7rem;
           height: 0.88rem;
           background: linear-gradient(
             90deg,
-            rgba(132, 90, 243, 1) 0%,
-            rgba(92, 116, 243, 1) 100%
+            rgba(254, 168, 107, 1) 0%,
+            rgba(255, 109, 110, 1) 100%
           );
-          border-radius: 1rem;
+          box-shadow: 0px 5px 5px 0px rgba(255, 109, 110, 0.1);
+          border-radius: 5px;
           border: none;
-          margin-top: 0.2rem;
         }
       }
     }
   }
 }
-input[type="tel"]:focus,input[type="text"]:focus {
+input[type="tel"]:focus,
+input[type="text"]:focus {
   border-bottom: 1px solid #fa9f47 !important;
 }
 </style>

@@ -5,18 +5,13 @@
     </navBar>
     <div class="top"></div>
     <div class="xiala">
-      <Scroll
-        ref="myscroller"
-        :autoUpdate="true"
-        :listenScroll="true"
-        @pullingDown="onRefresh"
-      >
+      <Scroll ref="myscroller" :autoUpdate="true" :listenScroll="true" @pullingDown="onRefresh">
         <div class="user">
           <div
             style="width:100%;height:0.8rem; background:linear-gradient(45deg,rgba(116, 90, 243, 1) 10%,rgba(92, 116, 243, 1) 100%);"
           ></div>
           <div class="user_con">
-            <div class="user_con_item" @click="goUserName()">
+            <div class="user_con_item" @click="gouser()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_logo12x.png" alt />
               </div>
@@ -24,13 +19,26 @@
                 <p>{{ user_name }}</p>
                 <p>{{ phone_number }}</p>
               </div>
-              <button @click="goUserName()">编辑</button>
+              <button @click.stop="goUserName()">签到</button>
             </div>
-            <div
-              class="user_con_item"
-              @click="gotool()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
+            <div class="user_con_item" v-fb="{ cls: 'my_touchfeedback' }">
+              <div class="user_con_item_border">
+                <div class="con_item_l">
+                  <img src="../../assets/images/per_icon_toolkit.png" alt />
+                  <div>
+                    <p>
+                      {{all_income}}
+                      <span>gfm</span>
+                    </p>
+                    <p>积分</p>
+                  </div>
+                </div>
+                <div class="con_item_r">
+                  <button @click.stop="goexange()">兑换</button>
+                </div>
+              </div>
+            </div>
+            <div class="user_con_item" @click="gotool()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_toolkit.png" alt />
                 <span>工具箱</span>
@@ -39,11 +47,34 @@
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>
-            <div
-              class="user_con_item"
-              @click="goPassword()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
+            <div class="user_con_item" @click="gojifen()">
+              <div class="con_item_l">
+                <img src="../../assets/images/per_icon_version@3x.png" alt />
+                <span>我的积分</span>
+              </div>
+              <div class="con_item_r">
+                <img src="../../assets/images/evenmore.png" />
+              </div>
+            </div>
+            <div class="user_con_item" @click="gohelp()">
+              <div class="con_item_l">
+                <img src="../../assets/images/per_icon_version@3x.png" alt />
+                <span>帮助中心</span>
+              </div>
+              <div class="con_item_r">
+                <img src="../../assets/images/evenmore.png" />
+              </div>
+            </div>
+            <div class="user_con_item" @click="gowe()">
+              <div class="con_item_l">
+                <img src="../../assets/images/per_icon_version@3x.png" alt />
+                <span>关于我们</span>
+              </div>
+              <div class="con_item_r">
+                <img src="../../assets/images/evenmore.png" />
+              </div>
+            </div>
+            <!-- <div class="user_con_item" @click="goPassword()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_password@3x.png" alt />
                 <span>交易密码</span>
@@ -51,19 +82,15 @@
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
-            </div>
-            <div class="user_con_item" @click="goversioninformation()">
+            </div>-->
+            <!-- <div class="user_con_item" @click="goversioninformation()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_version@3x.png" alt />
                 <span>版本信息</span>
               </div>
               <div class="con_item_r">1.3.1.126</div>
-            </div>
-            <div
-              class="user_con_item"
-              @click="goAbout()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
+            </div>-->
+            <!-- <div class="user_con_item" @click="goAbout()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_about@3x.png" alt />
                 <span>关于我们</span>
@@ -71,8 +98,8 @@
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
-            </div>
-            <div
+            </div>-->
+            <!-- <div
               class="user_con_item"
               @click="goUserAgreement()"
               v-fb="{ cls: 'my_touchfeedback' }"
@@ -84,13 +111,8 @@
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
-            </div>
-            <div
-              class="user_con_item"
-              @click="goPrivacy()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
-              <!-- -->
+            </div>-->
+            <!-- <div class="user_con_item" @click="goPrivacy()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_agreement@3x.png" alt />
                 <span>隐私协议</span>
@@ -98,20 +120,38 @@
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
-            </div>
+            </div>-->
+            <!-- <div class="user_con_item" @click="govertion()">
+              <div class="con_item_l">
+                <img src="../../assets/images/per_icon_version@3x.png" alt />
+                <span>跳转测试</span>
+              </div>
+              <div class="con_item_r"></div>
+            </div> -->
           </div>
           <div>
-            <van-button
-              class="out_login"
-              @click="loginOut()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
+            <van-button class="out_login" @click="loginOut()" v-fb="{ cls: 'my_touchfeedback' }">
               <b>退出登录</b>
             </van-button>
           </div>
         </div>
       </Scroll>
     </div>
+    <van-overlay :show="show" @click="show = false">
+      <div class="wrapper" @click.stop>
+        <div class="block">
+          <div class="topclose" @click="show = false">
+            <img src="../../assets/images/add_close.png" alt />
+          </div>
+          <img src="../../assets/images/detail.png" alt />
+          <p>签到成功</p>
+          <p class="add_num">
+            算力
+            <span>+1</span>
+          </p>
+        </div>
+      </div>
+    </van-overlay>
     <tabbar v-model="active"></tabbar>
   </div>
 </template>
@@ -120,8 +160,13 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/barBarActive";
 import { Tabbar, TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
-import { userInfoCenter, loginout } from "../../common/js/api.js";
-import { logout, getUserinfo, querystatus } from "../../common/js/api.js";
+import { userInfoCenter, loginout, sign,authorization } from "../../common/js/api.js";
+import {
+  logout,
+  getUserinfo,
+  querystatus,
+  getuserdevlist
+} from "../../common/js/api.js";
 import tabbar from "../../components/foot";
 import { error } from "util";
 import { err } from "../../common/js/status";
@@ -132,8 +177,11 @@ export default {
       loading: false,
       finished: false,
       title: "个人中心",
-      active: 2,
-      isLoading: false
+      active: 4,
+      isLoading: false,
+      show: false,
+      all_income: 0,
+      system:""
     };
   },
   computed: mapState({
@@ -144,10 +192,12 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted: function() {
+    this.whatBrowser();
     if (this.$parent.onLine == false) {
       Toast("无法连接网络，请检查网络状态");
       return false;
     } else {
+      this.get_all_income(90);
     }
   },
   methods: {
@@ -265,6 +315,33 @@ export default {
           });
       }
     },
+    //获取总积分
+    get_all_income(num) {
+      let params = new Object();
+      let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+      let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
+      let starttime = endtimes - num * 24 * 3600; //获取7天的时间戳
+      let token = this.log_token;
+      params.login_token = token;
+      params.start_time = starttime;
+      params.end_time = endtimes;
+      params.query_type = 1;
+      params.cur_page = 0;
+      console.log(params);
+      getuserdevlist(params)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            this.all_income = (res.data.user_total_profit / 10000).toFixed(6);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     goversioninformation() {
       this.$router.push({ path: "/versioninformation" });
     },
@@ -273,13 +350,147 @@ export default {
         this.$router.push({ path: "/tool" });
       }, 200);
     },
+    //跳转我的积分
+    gojifen() {
+      setTimeout(() => {
+        this.$router.push({
+          path: "/my_scores",
+          query: { income: this.all_income }
+        });
+      }, 200);
+    },
+    //跳转帮助中心
+    gohelp() {
+      setTimeout(() => {
+        this.$router.push({ path: "/help_center" });
+      }, 200);
+    },
+    //跳转关于我们
+    gowe() {
+      setTimeout(() => {
+        this.$router.push({ path: "/about_us" });
+      }, 200);
+    },
     goLink() {
       this.$router.push({ path: "/login" });
     },
+    //签到
     goUserName() {
-      this.$router.push({
-        name: "user"
+      let param = new Object();
+      param.login_token = this.log_token;
+      sign(param)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.login_token
+            });
+            this.show = true;
+          } else {
+            Toast("签到失败");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //个人中心
+    gouser() {
+      this.$router.push({ path: "/user" });
+    },
+    //去兑换
+    goexange() {
+      if (this.all_income <= 0) {
+        Toast({
+          message: "账户暂无积分",
+          duration: 1500
+        });
+        return false;
+      }
+      const toast = Toast.loading({
+        duration: 15000, // 持续展示 toast
+        forbidClick: true, // 禁用背景点击
+        loadingType: "spinner",
+        mask: false
       });
+      let nowparam = new Object();
+      nowparam.login_token = this.log_token;
+      nowparam.login_type = 1;
+      console.log(nowparam);
+      authorization(nowparam)
+        .then(res => {
+          console.log(res);
+          Toast.clear();
+          if (res.status == 0) {
+            if (res.data.bind_status == 1) {
+              setTimeout(() => {
+                this.$router.push({
+                  path: "/tomoney"
+                });
+              }, 200);
+            } else {
+              Toast.fail({
+                message: "未授权",
+                duration: 400
+              });
+              console.log(this.system);
+              if (this.system == "iPhone") {
+                console.log(this.system);
+                this.Authorization(res.url);
+              } else {
+                setTimeout(() => {
+                  this.$router.push({
+                    path: "/ding",
+                    query: { url: res.url }
+                  });
+                }, 400);
+              }
+            }
+          } else if (res.status == -999) {
+            Toast("登录已过期，请重新登录");
+            this.clearUser();
+            setTimeout(() => {
+              this.$router.push({ path: "/login" });
+            }, 1000);
+          } else if (res.status == -17) {
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -500) {
+            this.noint = true;
+          } else if (res.status == -900) {
+            this.$router.push({ path: "/login" });
+          } else if (res.status == -5) {
+            Toast(`请求超时，请稍后重试`);
+          } else {
+            const tip = this.$backStatusMap[res.status] || err[res.status];
+            const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
+            this.$toast(str);
+          }
+        })
+        .catch(error => {
+          // Toast("网络错误，请重新请求");
+        });
+    },
+    //获去手机系统
+    whatBrowser() {
+      let u = navigator.userAgent;
+      if (u.indexOf("Android") > -1 || u.indexOf("Linux") > -1) {
+        //安卓手机
+        this.system = "Android";
+        // window.location.href = "mobile/index.html";
+      } else if (u.indexOf("iPhone") > -1) {
+        //苹果手机
+        // window.location.href = "mobile/index.html";
+        this.system = "iPhone";
+      } else if (u.indexOf("Windows Phone") > -1) {
+        //winphone手机
+        this.system = "Windows Phone";
+        // window.location.href = "mobile/index.html";
+      }
     },
     goPassword() {
       //根据交易密码状态选择去那个页面
@@ -310,6 +521,9 @@ export default {
     },
     onClickRight() {
       this.$router.push({ path: "/message" });
+    },
+    govertion() {
+      this.$router.push({ path: "/income_overview" });
     }
   },
   components: {
@@ -320,6 +534,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-overlay {
+  z-index: 2001;
+}
 .van-nav-bar {
   color: #fff;
   // box-shadow: 0 5px 5px #e6e6e6;
@@ -367,7 +584,7 @@ export default {
         height: 0.88rem;
         font-size: 0.3rem;
         background: #ffffff;
-        border-bottom: 0.01rem solid #f3f3f3;
+        // border-bottom: 0.01rem solid #f3f3f3;
         padding: 0 0.5rem;
         color: #424b66;
         display: flex;
@@ -458,24 +675,50 @@ export default {
         }
       }
       .user_con_item:nth-child(2) {
-        margin-bottom: 0.2rem;
-        // border-radius: 0.12rem;
-        border: none;
-        .con_item_l {
-          img {
-            width: 25%;
-            height: 53%;
+        height: auto;
+        .user_con_item_border {
+          width: 100%;
+          margin: auto;
+          border: 4px solid #eeeeee;
+          border-radius: 0.2rem;
+          font-size: 0.3rem;
+          background: #ffffff;
+          padding: 0 0.3rem 0 0.5rem;
+          color: #424b66;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-sizing: border-box;
+          overflow: hidden;
+          margin-top: 0.2rem;
+          margin-bottom: 0.2rem;
+          .con_item_l {
+            text-align: left;
+            img {
+              margin-right: 0.1rem;
+            }
+            p {
+              color: #333333;
+              span {
+                color: #666666;
+                font-size: 0.18rem;
+              }
+            }
+            p:nth-child(2) {
+              font-size: 0.18rem;
+              color: #666666;
+            }
+          }
+          .con_item_r {
+            button {
+              border: #ff6c6c solid 0.01rem;
+              width: 1.2rem;
+              height: 0.6rem;
+              color: #ff6c6c;
+              background-color: #fff;
+            }
           }
         }
-      }
-      .user_con_item:nth-child(3) {
-        margin-bottom: 0.2rem;
-        // border-radius: 0.12rem;
-        border: none;
-      }
-      .user_con_item:nth-child(7) {
-        // border-radius: 0 0 0.12rem 0.12rem;
-        border: none;
       }
     }
   }
@@ -492,6 +735,43 @@ export default {
     margin: auto;
     margin-top: 0.8rem;
     border: none;
+  }
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .block {
+    width: 5.65rem;
+    height: 5.65rem;
+    border-radius: 0.2rem;
+    background-color: #fff;
+    .topclose {
+      text-align: right;
+      height: 0.6rem;
+      img {
+        width: 7%;
+        margin-right: 0.2rem;
+      }
+    }
+    img {
+      width: 45%;
+      margin: 0.2rem 0 0.4rem 0;
+    }
+    p {
+      color: #333333;
+      font-size: 0.26rem;
+      span {
+        color: red;
+      }
+    }
+    .add_num {
+      font-size: 0.18rem;
+      color: #666666;
+      margin-top: 0.1rem;
+    }
   }
 }
 </style>

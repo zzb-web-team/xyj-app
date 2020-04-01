@@ -19,25 +19,39 @@
           v-bind:key="index"
         >
           <div class="device_info_left">
-            <div class="dot" v-bind:style="{background:oldcolor}"></div>
-            <span>{{minnerstatus}}</span>
+            <div class="device_dot">
+              <!-- <div class="dot" v-bind:style="{background:oldcolor}"></div> -->
+              <span>{{minnerstatus}}</span>
+            </div>
+            <div class="device_btn" @click="go_monitor()">监控</div>
           </div>
-          <div class="device_info_img" @click="goRanking()"></div>
+          <!-- <div class="device_info_img" @click="goRanking()"></div> -->
           <div class="device_info_space">
-            <div class="device_top">已使用</div>
+            <div class="device_top">剩余</div>
             <van-circle
               v-model="currentRate"
-              color="#5D72F3"
-              layer-color="#EAE7FF"
+              color="#3477FD"
+              layer-color="#DEE9FF"
               :rate="currentRate"
               :speed="currentRate"
               :text="text"
-              :stroke-width="70"
+              :stroke-width="50"
               size="3.72rem"
             />
+
             <div
               class="device_already"
             >{{((item.total_cap-item.free_cap)/1024/1024/1024).toFixed(2)}}Gb/{{((item.total_cap)/1024/1024/1024).toFixed(2)}}Gb</div>
+          </div>
+          <div class="device_bandwidth">
+            <span>
+              上行{{up_bandwidth}}
+              <img src="../../assets/images/per_icon_arrow.png" alt />
+            </span>
+            <span>
+              下行{{down_bandwidth}}
+              <img src="../../assets/images/per_icon_arrow.png" alt />
+            </span>
           </div>
           <!-- <div class="device_info_item">储存力：{{item.minerStorage}}</div>
           <div class="device_info_item">空间：{{item.minerSpace}}</div>
@@ -48,16 +62,16 @@
               <img src="../../assets/images/icon_list_reboot.png" disabled="devsta" alt />
             </div>-->
             <div class="device_btn_item" @click="reStart()">
-              <img src="../../assets/images/icon_list_reboot.png" alt />
+              <img src="../../assets/images/chongqi.svg" alt />
             </div>
             <!-- <div class="device_btn_item" @click="reClose()">
           <img src="../../assets/images/guanbi.png" alt>
             </div>-->
             <div class="device_btn_item" @click="reUntied()">
-              <img src="../../assets/images/icon_list_unbind.png" alt />
+              <img src="../../assets/images/jiebang.svg" alt />
             </div>
             <div class="device_btn_item" @click="goMining(item)">
-              <img src="../../assets/images/icon_list_earnings.png" alt />
+              <img src="../../assets/images/shouyi.svg" alt />
             </div>
           </div>
           <div class="device_btns">
@@ -67,10 +81,10 @@
           </div>
           <div class="user_con">
             <div class="user_con_item">
-              <div class="con_item_l">设备名称：</div>
+              <div class="con_item_l">设备名称</div>
               <div class="con_item_r" v-if="setActive" @click="openSetname()">
                 <span>{{device_name}}</span>
-                <img src="../../assets/images/evenmore.png" alt />
+                <img src="../../assets/images/evenmore.png" alt @click="openSetname()" />
               </div>
               <div class="con_item_r" v-else>
                 <input type="text" v-model="device_name" @blur="resetDiv" maxlength="10" />
@@ -78,20 +92,24 @@
               </div>
             </div>
             <div class="user_con_item">
-              <div class="con_item_l">设备型号：</div>
+              <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
               <div class="con_item_r">{{item.rom_version}}</div>
             </div>
             <div class="user_con_item">
-              <div class="con_item_l">序列号：</div>
+              <div class="con_item_l">ROM</div>
+              <div class="con_item_r">{{item.rom_version}}</div>
+            </div>
+            <div class="user_con_item">
+              <div class="con_item_l">SN</div>
               <div class="con_item_r">{{item.dev_sn}}</div>
             </div>
             <div class="user_con_item">
-              <div class="con_item_l">MAC地址：</div>
+              <div class="con_item_l">MAC地址</div>
               <div class="con_item_r">{{item.dev_mac}}</div>
             </div>
             <div class="user_con_item">
-              <div class="con_item_l">IP地址：</div>
+              <div class="con_item_l">IP地址</div>
               <div class="con_item_r">{{item.dev_ip}}</div>
             </div>
           </div>
@@ -136,11 +154,15 @@ export default {
       setActive: true,
       show: false,
       devsta: false,
-      minerInfoArr: []
+      minerInfoArr: [],
+      up_bandwidth: "5092Mbps",
+      down_bandwidth: "1052Mbps",
+      dev_sn: ""
     };
   },
 
   mounted() {
+    console.log(window.screen.height);
     this.scan(0);
   },
   computed: {
@@ -224,6 +246,7 @@ export default {
                 this.minerInfoArr = res.data.dev_info_list;
                 this.device_name = res.data.dev_info_list[0].dev_name;
                 this.zdevname = res.data.dev_info_list[0].dev_name;
+                this.dev_sn = res.data.dev_info_list[0].dev_sn;
                 if (this.minerInfoArr[0].total_cap == 0) {
                   this.currentRate = 0.0;
                 } else {
@@ -287,6 +310,12 @@ export default {
             // Toast("网络错误，请重新请求");
           });
       }
+    },
+    go_monitor() {
+      this.$router.push({
+        path: "/monitor_details",
+        query: { devsn: this.dev_sn, devname: this.device_name }
+      });
     },
     goInfo() {
       this.$router.push({ path: "/login" });
@@ -643,42 +672,77 @@ export default {
         width: 50%;
       }
     }
+    .device_bandwidth {
+      width: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-around;
+      padding-top: 0.2rem;
+      padding-bottom: 0.2rem;
+      span {
+        display: inline-block;
+        width: 2.6rem;
+        height: 0.48rem;
+        line-height: 0.48rem;
+        background: #f8fafb;
+        border-radius: 0.1rem;
+        font-size: 0.24rem;
+        color: #666666;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 17%;
+        }
+      }
+    }
   }
   .device_info {
     overflow: hidden;
-    padding: 0.2rem 0;
     width: 100%;
-    height: 11.64rem;
+    // height: 11.64rem;
     color: #000000;
     margin: auto;
-    margin-top: 0.8rem;
+    margin-top: 0.9rem;
     background: #f8f8f8;
     border-radius: 0.12rem;
     .device_info_left {
-      width: 100%;
-      float: left;
-      padding-left: 0.3rem;
+      width: 94%;
+      height: 0.56rem;
+      padding-left: 3%;
+      padding-right: 3%;
+      padding-top: 0.3rem;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
       background-color: #fff;
-      .dot {
-        width: 0.2rem;
-        height: 0.2rem;
-        border-radius: 50%;
-        // background-color: #21E21C;
-        margin-right: 0.1rem;
+      .device_dot {
+        width: 2rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .dot {
+          width: 0.2rem;
+          height: 0.2rem;
+          border-radius: 50%;
+          // background-color: #21E21C;
+          margin-right: 0.1rem;
+        }
       }
-      img {
-        width: 0.16rem;
-        height: 0.16rem;
+      .device_btn {
+        width: 1.14rem;
+        height: 0.56rem;
+        background: rgba(255, 109, 110, 1);
+        box-shadow: 0 0.1rem 0.1rem 0 #ff6d6e1a;
+        border-radius: 0.1rem;
+        color: #ffffff;
+        margin: 0;
       }
     }
     .device_info_space {
       width: 100%;
       height: auto;
       position: relative;
-      margin-top: 0.4rem;
       background-color: #fff;
       /deep/.van-circle__text {
         color: #000000;
@@ -692,12 +756,12 @@ export default {
         top: 1.1rem;
         left: 43%;
         font-size: 0.26rem;
-        color: #808080;
+        color: #666666;
       }
       .device_already {
-        border-top: 0.01rem solid #5c74f3;
+        border-top: 0.01rem solid #dddddd;
         line-height: 0.7rem;
-        color: #5f7bf2;
+        color: #666666;
         font-size: 0.26rem;
         left: 50%;
         top: 75%;
@@ -713,15 +777,14 @@ export default {
     }
     .device_btn {
       width: 100%;
-      height: 1.4rem;
       margin: auto;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #fff;
-      margin-bottom: -0.1rem;
+      background: #f8fafb;
+      margin-top: 0.2rem;
       .device_btn_item {
-        width: 2rem;
+        width: 3rem;
         height: 1rem;
         border-radius: 50%;
         color: rgba(34, 42, 69, 1);
@@ -745,37 +808,38 @@ export default {
       color: #616c8a;
       background-color: #fff;
       margin-bottom: 0.2rem;
-      padding-bottom: 0.2rem;
+      background: #f8fafb;
       .device_btn_items {
-        width: 2rem;
+        width: 3rem;
         display: flex;
         align-items: center;
         justify-content: center;
       }
     }
     .user_con {
-      width: 90%;
+      width: 100%;
       height: auto;
       margin: 0 auto;
-      background-color: #fff;
-      border-radius: 0.12rem;
-      padding: 0 0.2rem;
+      background: #f8fafb;
       .user_con_item {
+        background-color: #fff;
+        margin-top: 0.1rem;
         width: 100%;
+        padding-left: 3%;
+        padding-right: 3%;
         height: 1rem;
         overflow: hidden;
         font-size: 0.3rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0rem 0.1rem;
         box-sizing: border-box;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border-bottom: 0.01rem solid #f3f3ff;
         .con_item_l {
-          color: #000000;
+          color: #333333;
+          font-size: 0.28rem;
         }
       }
     }
@@ -784,7 +848,8 @@ export default {
 .con_item_r {
   display: flex;
   justify-content: flex-start;
-  color: #616c8a;
+  color: #666666;
+  font-size: 0.28rem;
   align-items: center;
   span {
     max-width: 3rem;

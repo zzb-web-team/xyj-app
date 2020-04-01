@@ -10,9 +10,11 @@
       @click-right="onClickRight"
       :z-index="2000"
     >
-      <div slot="left">排行榜</div>
+      <div slot="left">
+        <van-icon name="search" color="black" size="0.5rem" />
+      </div>
       <div slot="right" class="titright">
-        <img src="../../assets/images/equ_nav_icon_mess.png" class="titimg" alt />
+        <van-icon name="plus" color="black" size="0.5rem" />
       </div>
       <!-- <van-icon name="comment" slot="right" size="0.46rem" color="#808080" /> -->
     </van-nav-bar>
@@ -43,14 +45,14 @@
         </div>
         <!--头部信息  -->
         <div class="my_income" v-show="!refresh">
-          <div class="tel" @click="goBind()">
+          <!-- <div class="tel" @click="goBind()">
             <div class="tel_ranking_title">
               <span>{{phone_number}}</span>的设备清单
             </div>
             <div class="tel_ranking">
               <img src="../../assets/images/device_icon_add.png" />
             </div>
-          </div>
+          </div>-->
           <!-- 没有请求到数据 -->
           <div class="nointerval" v-show="noint">
             <div>
@@ -59,16 +61,13 @@
             </div>
           </div>
           <!-- 主体内容 -->
-          <div class="my-top" v-show="!noint">
+          <!-- <div class="my-top" v-show="!noint">
             <div class="ranking_title">
               在线
               <span>{{onlineCnt}}</span>台,离线
               <span>{{offlineCnt}}</span>台
             </div>
-            <!-- <div class="ranking" @click="goRanking()">
-            <img src="../../assets/images/paihangbang.png" alt>排行榜
-            </div>-->
-          </div>
+          </div>-->
           <div class="ranking_con" v-for="(item,index) in minerInfo" v-bind:key="index">
             <div
               class="ranking_con_item"
@@ -79,24 +78,35 @@
               <div class="con_item_l">
                 <div class="item_l_top">
                   <div class="item_l_name">{{item.dev_name}}</div>
-                  <div class="dot" v-bind:style="{background:item.bgccolor}"></div>
-                  <span v-bind:style="{color:item.spancolor}">{{item.equipment}}</span>
+                  <!-- <div class="dot" v-bind:style="{background:item.bgccolor}"></div>
+                  <span v-bind:style="{color:item.spancolor}">{{item.equipment}}</span>-->
                 </div>
                 <div class="item_l_No">SN:{{item.dev_sn}}</div>
               </div>
               <div class="con_item_r">
-                <!-- <div>
-                  <van-button class="item_r_btn" @click="settingMiner(item)" v-show="devshow">启动</van-button>
-                </div>-->
+                <div class="item_center">
+                  <p v-if="item.node_level==0">
+                    <img src="../../assets/images/putong.svg" alt />普通节点
+                  </p>
+                  <p v-else-if="item.node_level==1">
+                    <img src="../../assets/images/huangjin.svg" alt />黄金节点
+                  </p>
+                  <p v-else-if="item.node_level==2">
+                    <img src="../../assets/images/bojin.svg" alt />铂金节点
+                  </p>
+                  <p v-else>
+                    <img src="../../assets/images/zuanshi.svg" alt />钻石节点
+                  </p>
+                  <p>算力：{{item.power}}</p>
+                </div>
                 <div class="item_r_img">
-                  <img src="../../assets/images/moy.png" />
+                  <img src="../../assets/images/per_icon_arrow.png" />
                 </div>
               </div>
             </div>
           </div>
           <div class="bind_new" @click="goBind()">
-            绑定新西柚机
-            <img src="../../assets/images/device_btn_icon_add.png" alt />
+            <img src="../../assets/images/device_btn_icon_add.png" alt /> 绑定新西柚机
           </div>
         </div>
         <!-- </scroller> -->
@@ -127,8 +137,8 @@ export default {
     return {
       repeats: 0, //防止重复点击
       rescount: 0, //请求计数
-      title: "西柚机管理",
-      active: 0,
+      title: "西柚机",
+      active: 2,
       refresh: false,
       topshow: false,
       noint: false,
@@ -144,21 +154,24 @@ export default {
       minerInfo: [
         // {
         //   dev_name: "我的西柚机一",
-        //   dev_sn: "FA12345GXete245u7002r428",
+        //   dev_sn: "FA12345GXete24",
         //   dev_online_state: 0,
-        //   equipment: "离线"
+        //   equipment: "离线",
+        //   power: 345702385523
         // },
         // {
         //   dev_name: "我的西柚机二",
-        //   dev_sn: "FA12345GXete245u7002r428",
+        //   dev_sn: "FA1234502r428",
         //   dev_online_state: 1,
-        //   equipment: "在线"
+        //   equipment: "在线",
+        //   power: 34589
         // },
         // {
         //   dev_name: "我的西柚机三",
-        //   dev_sn: "FA12345GXete245u7002r428",
+        //   dev_sn: "F5u7002r428",
         //   dev_online_state: 0,
-        //   equipment: "离线"
+        //   equipment: "离线",
+        //   power: 7502407039673026326983
         // }
       ]
     };
@@ -254,7 +267,7 @@ export default {
                 if (res.data.bind_devinfo_list.length > 0) {
                   this.localcache = res.data.bind_devinfo_list;
                   this.localcache.forEach((item, index, arr) => {
-                   if (item.dev_online_state == 1) {
+                    if (item.dev_online_state == 1) {
                       item.equipment = "在线";
                       item.spancolor = "#0FA427";
                       item.bgccolor = "#0FA427";
@@ -398,7 +411,8 @@ export default {
     },
     //排行榜
     goRanking() {
-      this.$router.push({ path: "/allranking" });
+      // this.$router.push({ path: "/allranking" });
+      this.$router.push({ path: "/search_dev" });
     },
     onClickRight() {
       this.$router.push({ path: "/message" });
@@ -420,18 +434,17 @@ export default {
 
 <style lang="less" scoped >
 /deep/.van-nav-bar__text {
-  color: #ffffff;
+  color: #333333;
   font-size: 0.26rem;
 }
 .van-nav-bar {
-  color: #fff;
+  color: #333333;
   // box-shadow: 0 5px 5px #e6e6e6;
-  background: linear-gradient(
-    45deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
-  );
+  background: #ffffff;
   /* border-bottom: 0.01rem solid #616c8a; */
+}
+.van-nav-bar__title {
+  color: #333333;
 }
 body {
   height: 100%;
@@ -446,7 +459,7 @@ body {
   background: #f8f8f8;
   position: relative;
   .titright {
-    line-height: 33px;
+    margin-right: 0.2rem;
     .titimg {
       width: 50%;
       height: 50%;
@@ -479,7 +492,7 @@ body {
 .my_income {
   width: 100%;
   height: auto;
-  // margin-top: 1rem;
+  margin-top: 1.3rem;
   position: relative;
   z-index: 200;
   background-color: #f8f8f8;
@@ -559,17 +572,17 @@ body {
   }
   .ranking_con {
     width: 90%;
-    height: 1.56rem;
+    height: 1.3rem;
     overflow: hidden;
     margin: auto;
-    margin-top: 0.1rem;
+    margin-top: 0.3rem;
     margin-bottom: 0.17rem;
-    box-shadow: 0px 0px 10px 0px rgba(224, 224, 224, 0.64);
+    box-shadow: 0 0.1rem 0.1rem 0 #6da4ff0f;
     .ranking_con_item {
       width: 100%;
-      height: 1.56rem;
+      height: 1.3rem;
       background: #ffffff;
-      border-radius: 0.12rem;
+      border-radius: 0.1rem;
       display: flex;
       box-sizing: border-box;
       justify-content: space-between;
@@ -581,6 +594,10 @@ body {
     .con_item_l {
       display: flex;
       flex-direction: column;
+      width: 55%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       .item_l_top {
         display: flex;
         flex-direction: row;
@@ -601,8 +618,8 @@ body {
         .item_l_name {
           text-align: left;
           margin-right: 0.2rem;
-          font-size: 0.36rem;
-          color: #000;
+          font-size: 0.28rem;
+          color: #333333;
         }
         span {
           display: inline-block;
@@ -611,26 +628,39 @@ body {
         }
       }
       .item_l_No {
-        color: #808080;
+        color: #666666;
         text-align: left;
         line-height: 0.52rem;
+        font-size: 0.24rem;
       }
     }
     .con_item_r {
       display: flex;
-      justify-content: flex-start;
-      .item_r_btn {
-        width: auto;
-        height: 0.56rem;
-        background: #ff467c;
-        border-radius: 0.12rem;
-        font-size: 0.3rem;
-        display: flex;
-        color: #ffffff;
-        align-items: center;
-        justify-content: center;
-        margin-right: 0.2rem;
-        border: none;
+      justify-content: space-between;
+      padding-left: 0.3rem;
+      width: 45%;
+      .item_center {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+        color: #333333;
+        p {
+          display: flex;
+          align-items: center;
+          font-size: 0.28rem;
+          color: #333333;
+          img {
+            width: 15%;
+            margin-right: 0.1rem;
+          }
+        }
+        p:nth-child(2) {
+          font-size: 0.24rem;
+          color: #666666;
+          margin-top: 0.1rem;
+        }
       }
       .item_r_img {
         width: 0.8rem;
@@ -649,10 +679,9 @@ body {
     }
   }
   .bind_new {
-    width: 2.61rem;
-    height: 0.6rem;
-    border-radius: 1rem;
-    // border: 0.02rem dashed #646b97;
+    width: 4rem;
+    height: 0.8rem;
+    border-radius: 0.1rem;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -660,13 +689,18 @@ body {
     margin-top: 0.64rem;
     font-size: 0.24rem;
     font-weight: 400;
-    color: #8d8d8d;
-    background-color: #e9e9e9;
+    color: #ffffff;
     line-height: 0.94;
     margin-bottom: 0.4rem;
+    background: linear-gradient(
+      90deg,
+      rgba(254, 168, 107, 1) 0%,
+      rgba(255, 109, 110, 1) 100%
+    );
+    box-shadow: 0 0.1rem 0.1rem 0 #ff6d6e1a;
     img {
-      width: 20%;
-      margin-left: 0.2rem;
+      width: 10%;
+      margin-right: 0.2rem;
     }
   }
 }

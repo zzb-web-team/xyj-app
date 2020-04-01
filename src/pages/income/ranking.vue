@@ -19,7 +19,7 @@
         <div class="ranking" v-show="!refresh">
           <div class="top">
             <div class="topimg">
-              <!-- <div class="ranking_title">收益排行榜</div> -->
+              <div class="ranking_title">收益排行</div>
               <div class="ranking_time">统计于：{{token_gen_ts}}</div>
             </div>
             <div class="ranking_img">
@@ -34,6 +34,7 @@
             <div class="ranking_con_title">
               <div class="tltle_l">名次</div>
               <div class="tltle_m">收益</div>
+              <div class="tltle_n">西柚机数量</div>
               <div class="tltle_r">用户</div>
             </div>
             <div class="ranking_item" v-for="(item,index) in incomeArr" v-bind:key="index">
@@ -50,6 +51,7 @@
                 </p>
                 <!-- <p>poc</p> -->
               </div>
+              <div class="ranking_item_n">{{item.bind_num}}</div>
               <div class="ranking_item_m">{{item.user_tel|newtel}}</div>
             </div>
           </div>
@@ -148,7 +150,9 @@ export default {
               if (res.err_code == 0) {
                 this.rescount = 0;
                 this.incomeArr = res.data.profit_rank;
-                 this.incomeArr.sort((a,b)=>{ return b.profit_rank-a.profit_rank})//降序
+                this.incomeArr.sort((a, b) => {
+                  return b.profit_rank - a.profit_rank;
+                }); //降序
                 if (this.incomeArr.length <= 0) {
                   this.noint = true;
                   this.int = false;
@@ -268,7 +272,7 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: flex-end;
-      background-image: url(../../assets/images/shouyipanghang.png);
+      background-image: url(../../assets/images/suanlimingxi.png);
       background-size: 100% 100%;
       margin-top: -0.5rem;
       .topimg {
@@ -281,7 +285,7 @@ export default {
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          font-size: 0.72rem;
+          font-size: 0.42rem;
           font-weight: bold;
           color: #ffffff;
           margin: 0 auto;
@@ -315,7 +319,7 @@ export default {
       align-items: center;
       box-sizing: border-box;
       color: #979797;
-      font-size: 0.32rem;
+      font-size: 0.26rem;
       // border-bottom: #aaaaaa 0.01rem solid;
       .tltle_l {
         padding-left: 0.4rem;
@@ -324,9 +328,13 @@ export default {
         padding-right: 1.2rem;
       }
       .tltle_m {
+        width: 20%;
+        text-align: right;
+        // padding-right: 1.1rem;
+      }
+      .tltle_n {
         width: 32%;
         text-align: center;
-        padding-right: 1.1rem;
       }
     }
     .ranking_item {

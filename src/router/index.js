@@ -6,6 +6,7 @@ import loginCode from '@/pages/login/loginCode'
 
 import find from '@/pages/login/find'
 import binding from '@/pages/login/binding'
+import first_bind from '@/pages/login/first_bind'
 import username from '@/pages/login/username'
 import saoma from '@/pages/login/saoma'
 import searchbinding from '@/pages/login/searchbinding'
@@ -15,6 +16,7 @@ import emailregistration from '@/pages/login/emailregistration'
 import reset from '@/pages/login/reset'
 import localsearch from '@/pages/login/localsearch'
 
+
 import minemachine from '@/pages/income/minemachine'
 import ranking from '@/pages/income/ranking'
 import allranking from '@/pages/income/allranking'
@@ -23,6 +25,10 @@ import recording from '@/pages/income/recording'
 import tomoney from '@/pages/income/tomoney'
 import billdetail from '@/pages/income/billdetail'
 import success from '@/pages/income/success'
+import income_overview from '@/pages/income/income_overview'
+import all_income_list from '@/pages/income/all_income_list'
+import income_list from '@/pages/income/income_list'
+import all_income_detail from '@/pages/income/all_income_detail'
 
 import management from '@/pages/management/management'
 import managementinfo from '@/pages/management/managementinfo'
@@ -45,6 +51,22 @@ import remotecontrol from '@/pages/userinfo/remotecontrol'
 import versioninformation from '@/pages/userinfo/versioninformation'
 import tiao from '@/pages/userinfo/tiao'
 import two from '@/pages/userinfo/two'
+import about_us from '@/pages/userinfo/about_us'
+import my_scores from '@/pages/userinfo/my_scores'
+import help_center from '@/pages/userinfo/help_center'
+
+
+import calculation_details from '@/pages/node/calculation_details'
+import dev_calculation from '@/pages/node/dev_calculation'
+import dynamic_node from '@/pages/node/dynamic_node'
+import mining_node from '@/pages/node/mining_node'
+import node_details from '@/pages/node/node_details'
+import node_recird from '@/pages/node/node_recird'
+import node_rules from '@/pages/node/node_rules'
+
+
+import monitor_details from '@/pages/monitor/monitor_details'
+import search_dev from '@/pages/management/search_dev'
 
 
 Vue.use(VueRouter)
@@ -95,6 +117,12 @@ const routes = [{
         meta: { index: 6 }
     },
     {
+        path: '/first_bind',
+        name: '/first_bind',
+        component: first_bind,
+        meta: { index: 6 }
+    },
+    {
         path: '/username',
         name: 'username',
         component: username,
@@ -108,6 +136,38 @@ const routes = [{
             index: 5,
             // keepalive: true, // 组件是否需要被保存
             // isBack: true,//判断是否是点击返回按钮进入页面的，默认是false
+        }
+    },
+    {
+        path: '/income_overview',
+        name: 'income_overview',
+        component: income_overview,
+        meta: {
+            index: 5,
+        }
+    },
+    {
+        path: '/all_income_list',
+        name: 'all_income_list',
+        component: all_income_list,
+        meta: {
+            index: 6,
+        }
+    },
+    {
+        path: '/all_income_detail',
+        name: 'all_income_detail',
+        component: all_income_detail,
+        meta: {
+            index: 7,
+        }
+    },
+    {
+        path: '/income_list',
+        name: 'income_list',
+        component: income_list,
+        meta: {
+            index: 6,
         }
     },
     {
@@ -215,6 +275,18 @@ const routes = [{
         meta: { index: 6 }
     },
     {
+        path: '/about_us',
+        name: 'about_us',
+        component: about_us,
+        meta: { index: 6 }
+    },
+    {
+        path: '/my_scores',
+        name: 'my_scores',
+        component: my_scores,
+        meta: { index: 6 }
+    },
+    {
         path: '/privacy',
         name: 'privacy',
         component: privacy,
@@ -254,6 +326,12 @@ const routes = [{
         path: '/tool',
         name: 'tool',
         component: tool,
+        meta: { index: 6 }
+    },
+    {
+        path: '/help_center',
+        name: 'help_center',
+        component: help_center,
         meta: { index: 6 }
     },
     {
@@ -307,7 +385,89 @@ const routes = [{
         component: two,
         meta: { index: 1 }
     },
+    {
+        path: '/calculation_details',
+        name: 'calculation_details',
+        component: calculation_details,
+        meta: {
+            index: 6,
+            keepalive: false, // 组件是否需要被保存
+        }
+    },
+    {
+        path: '/dev_calculation',
+        name: 'dev_calculation',
+        component: dev_calculation,
+        meta: {
+            index: 6,
+            keepalive: false, // 组件是否需要被保存
+        }
+    },
+    {
+        path: '/dynamic_node',
+        name: 'dynamic_node',
+        component: dynamic_node,
+        meta: {
+            index: 5,
+            keepalive: false, // 组件是否需要被保存
+        }
+    },
+    {
+        path: '/mining_node',
+        name: 'mining_node',
+        component: mining_node,
+        meta: {
+            index: 6,
+            keepalive: false, // 组件是否需要被保存
+        }
+    }, {
+        path: '/node_details',
+        name: 'node_details',
+        component: node_details,
+        meta: {
+            index: 6,
+            keepalive: false, // 组件是否需要被保存
+        }
+    }, {
+        path: '/node_recird',
+        name: 'node_recird',
+        component: node_recird,
+        meta: {
+            index: 6,
+            keepalive: false, // 组件是否需要被保存
+        }
+    }, {
+        path: '/node_rules',
+        name: 'node_rules',
+        component: node_rules,
+        meta: {
+            index: 7,
+            keepalive: false, // 组件是否需要被保存
+        }
+    },
+    {
+        path: '/monitor_details',
+        name: 'monitor_details',
+        component: monitor_details,
+        meta: {
+            index: 5,
+            keepalive: false, // 组件是否需要被保存
+        }
+    },
+    {
+        path: '/search_dev',
+        name: 'search_dev',
+        component: search_dev,
+        meta: {
+            index: 6,
+            keepalive: false, // 组件是否需要被保存
+            isBack: true, //判断是否是点击返回按钮进入页面的，默认是false
+        }
+    },
 ]
+
+
+
 
 // const router = new VueRouter({
 //   mode:'history',//默认是hash模式

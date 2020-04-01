@@ -26,11 +26,18 @@ import vuuPull from 'vuu-pull'
 // import base from './common/js/base'
 // Vue.use(base);
 
+import BaiduMap from 'vue-baidu-map'
 
-
+Vue.use(BaiduMap, {
+    // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+    ak: '6otZKgx2mh3FKLifdX6w7dqos5NYK86y'
+})
 
 Vue.use(vuuPull)
 Vue.use(Scroll)
+
+
+
 
 Vue.Cancel = [];
 router.beforeEach((to, from, next) => {

@@ -28,22 +28,35 @@ export default {
       leftshow: true,
       tabbars: [
         {
-          name: "management",
-          title: "设备",
-          normal: require("../assets/images/home_icon_equ_unselec@2x.png"),
-          active: require("../assets/images/home_icon_equ_selec@2x.png")
+          name: "dynamic_node",
+          title: "节点",
+          normal: require("../assets/images/Tab_jiedian.svg"),
+          active: require("../assets/images/Tab_jiedian_pre.svg")
         },
         {
-          name: "minemachine",
+          name: "monitor_details",
+          title: "监控",
+          normal: require("../assets/images/Tab_jiankong.svg"),
+          active: require("../assets/images/Tab_jiankong_pre.svg")
+        },
+        {
+          name: "search_dev",
+          // title: "西柚机",
+          normal: require("../assets/images/Tab_xiyouji.svg"),
+          active: require("../assets/images/Tab_xiyouji.svg")
+        },
+        {
+          // name: "minemachine",
+          name:"income_overview",
           title: "收益",
-          normal: require("../assets/images/home_icon_ear_unselec@2x.png"),
-          active: require("../assets/images/home_icon_ear_selec@2x.png")
+          normal: require("../assets/images/Tab_shouyi.svg"),
+          active: require("../assets/images/Tab_shouyi_pre.svg")
         },
         {
           name: "usercenter",
           title: "我的",
-          normal: require("../assets/images/home_icon_my_unselec@2x.png"),
-          active: require("../assets/images/home_icon_my_selec@2x.png")
+          normal: require("../assets/images/Tab_wode.svg"),
+          active: require("../assets/images/Tab_wode_pre.svg")
         }
       ]
     };
@@ -73,7 +86,7 @@ export default {
   height: 0.6rem;
 }
 .van-tabbar-item--active {
-  color: #5c74f3;
+  color: #ff6d6e;
 }
 span {
   font-size: 0.22rem;

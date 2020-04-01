@@ -2,8 +2,8 @@
 import axios from 'axios'
 
 
-// let serverUrl = 'http://test.zzb.com'//PHP服务域名
-let serverUrl = 'http://39.100.131.247' //PHP服务域名
+//let serverUrl = 'http://test.zzb.com' //PHP服务域名
+let serverUrl = 'http://zzb.onezen.net' //PHP服务域名
     //let serverUrl = 'http://xyj.grapefruitcloud.com/' //PHP服务域名
 
 
@@ -67,7 +67,7 @@ export const devrevenue = params => { return axios.post(`${serverUrl}/miner_earn
 export const alldevinformation = params => { return axios.post(`${serverUrl}/miner_earn/query_user_node_info_list`, params).then(res => res.data) }
     //获取用户所有设备收益
 export const alldevrevenue = params => { return axios.post(`${serverUrl}/miner_earn/query_user_node_profit_list`, params).then(res => res.data) }
-    //获取设备历史状态列表
+    //获取设备历史状态列表，
 export const devstatuslist = params => { return axios.post(`${serverUrl}/miner_ctrl/query_online_histgraph`, params).then(res => res.data) }
     //查询用户历史收益
 export const getuserdevlist = params => { return axios.post(`${serverUrl}/miner_earn/query_user_profit_list`, params).then(res => res.data) }
@@ -95,3 +95,27 @@ export const get_tag = params => { return axios.post(`${serverUrl}/noticepush/ge
 export const query_push_history_listex = params => { return axios.post(`${serverUrl}/noticepush/query_push_history_listex`, params).then(res => res.data) }
     /**APP用户删除推送消息 */
 export const delete_push_list = params => { return axios.post(`${serverUrl}/noticepush/delete_push_list`, params).then(res => res.data) }
+
+
+//监控
+/** 用户平均算力 */
+export const get_user_average_cp = params => { return axios.post(`${serverUrl}/miner_earn/get_user_average_cp`, params).then(res => res.data) }
+    /**监控-设备存储 */
+export const get_dev_cap_list = params => { return axios.post(`${serverUrl}/miner_earn/get_dev_cap_list`, params).then(res => res.data) }
+    /** 监控-设备带宽*/
+export const get_dev_bandwidth_list = params => { return axios.post(`${serverUrl}/miner_earn/get_dev_bandwidth_list`, params).then(res => res.data) }
+
+//算力
+/**算力值 */
+export const get_app_dev_cp_val = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_cp_val`, params).then(res => res.data) }
+    /**算力值列表 */
+export const get_app_dev_cp_list = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_cp_list`, params).then(res => res.data) }
+    /**节点动态列表 */
+export const query_node_dynamic_info = params => { return axios.post(`${serverUrl}/miner_ctrl/query_node_dynamic_info`, params).then(res => res.data) }
+
+//收益
+export const query_node_total_profit_info = params => { return axios.post(`${serverUrl}/miner_earn/query_node_total_profit_info`, params).then(res => res.data) }
+
+//我的
+/**签到 */
+export const sign = params => { return axios.post(`${serverUrl}/account/sign`, params).then(res => res.data) }

@@ -4,15 +4,15 @@
     left-text="返回"
     right-text
     rrow
-    
+    fixed
     left-arrow
     @click-left="onClickLeft"
     @click-right="onClickRight"
     :z-index="2000"
   >
     <div slot="left" class="alltitleleft">
-      <van-icon name="arrow-left" color="#ffffff" />
-      <span>返回</span>
+      <van-icon name="arrow-left" color="#000000" />
+      <span></span>
     </div>
   </van-nav-bar>
 </template>
@@ -38,8 +38,8 @@ export default {
   color: #fff;
   background: linear-gradient(
     45deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
+    #4C94FE 10%,
+    #2762FD 100%
   );
 }
 .van-hairline--bottom::after {

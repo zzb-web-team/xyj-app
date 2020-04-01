@@ -106,7 +106,7 @@ export default {
       repeats: 0, //防止重复点击
       rescount: 0, //请求计数
       title: "我的收益",
-      active: 1,
+      active: 3,
       noint: false,
       isLoading: false,
       refresh: false,
@@ -196,7 +196,7 @@ export default {
         let querydate = 90;
         let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
         let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
-        let starttime = endtimes - querydate * 24 * 3600; //获取7天的时间戳
+        let starttime = endtimes - querydate * 24 * 3600; //获取*天的时间戳
         let token = this.log_token;
 
         param.login_token = token;

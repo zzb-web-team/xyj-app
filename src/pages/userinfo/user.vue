@@ -5,18 +5,19 @@
     </navBar>
     <scroller>
       <div class="user_con">
+        <p>个人信息</p>
         <div class="user_con_item" @click="openSetname()">
           <div class="con_item_l">用户昵称</div>
           <div class="con_item_r" v-if="setActive">
             <p>{{ user_name }}</p>
-            <img src="../../assets/images/per_icon_amend2x.png" />
+            <img src="../../assets/images/evenmore.png" />
           </div>
         </div>
         <div class="user_con_item">
           <div class="con_item_l">性别</div>
           <div class="con_item_r" v-if="setActiveSex" @click="openSetSex()">
             <p>{{ user_sex }}</p>
-            <img src="../../assets/images/per_icon_amend2x.png" />
+            <img src="../../assets/images/evenmore.png" />
           </div>
           <div class="con_item_r" v-else>
             <van-radio-group v-model="user_sex" class="radio_own">
@@ -30,6 +31,14 @@
           <div class="con_item_l">手机号码</div>
           <div class="con_item_r">
             <p>{{ phone_number }}</p>
+            <img src="../../assets/images/evenmore.png" />
+          </div>
+        </div>
+        <p class="item_title">安全</p>
+        <div class="user_con_item" @click="goSetPhone()">
+          <div class="con_item_l">交易密码</div>
+          <div class="con_item_r">
+            <p>设置密码</p>
             <img src="../../assets/images/evenmore.png" />
           </div>
         </div>
@@ -214,7 +223,7 @@ export default {
   height: 100%;
   margin: 0 auto;
   overflow: hidden;
-  background: #f8f8f8;
+  background: #ffffff;
   color: #000000;
 
   .user_con {
@@ -223,8 +232,21 @@ export default {
     margin: 0 auto;
     margin-top: 1.08rem;
     background-color: #fff;
+    padding-top: 0.1rem;
+    p {
+      text-align: left;
+      padding-left: 4%;
+      color: #666666;
+      font-size: 0.2rem;
+    }
+    .item_title {
+      display: inline-block;
+      margin-top: 0.5rem;
+      text-align: left;
+      width: 100%;
+    }
     .user_con_item {
-      height: 0.88rem;
+      height: 1rem;
       width: 90%;
       margin: auto;
       background: #fff;
@@ -236,14 +258,17 @@ export default {
       align-items: center;
       box-sizing: border-box;
       font-size: 0.3rem;
-      border-top: 0.01rem solid #e0e0e0;
+      border-bottom: 0.01rem solid #eeeeee;
       &:nth-child(1) {
         border: none;
       }
       img {
-        width: 0.42rem;
-        height: 0.44rem;
+        width: 0.12rem;
+        height: 0.24rem;
       }
+    }
+    .con_item_r{
+      color: #333333;
     }
     .user_active {
       img {
@@ -256,7 +281,7 @@ export default {
 .con_item_r {
   display: flex;
   justify-content: flex-start;
-  color: rgba(97, 108, 138, 1);
+  color: #616c8a;
   align-items: center;
   p {
     display: flex;

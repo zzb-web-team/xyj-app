@@ -83,6 +83,7 @@ export default {
 
 <style>
 @import url(./common/font/font.css);
+@import '../src/assets/iconfont/iconfont.css';
 /* body{
  font-family: myself;
 } */

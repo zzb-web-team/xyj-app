@@ -1,162 +1,204 @@
 /*兼容iphoneX*/
+
+
 /*判断是否是iphoneX，使用@media 媒体查询尺寸*/
+
 @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-  body {
-    top: constant(safe-area-inset-top);
-    bottom: constant(safe-area-inset-bottom);
-    left: constant(safe-area-inset-left);
-    right: constant(safe-area-inset-right);
-  }
+    body {
+        top: constant(safe-area-inset-top);
+        bottom: constant(safe-area-inset-bottom);
+        left: constant(safe-area-inset-left);
+        right: constant(safe-area-inset-right);
+    }
 }
+
 .van-button--default {
-  /* color: #ff467c; */
-  /* background-color: #48537a; */
-  font-size: 0.34rem;
+    /* color: #ff467c; */
+    /* background-color: #48537a; */
+    font-size: 0.34rem;
 }
 
 .van-tab--active {
-  color: #ffffff;
+    color: #ffffff;
 }
+
 .van-tabs__nav {
-  background: linear-gradient(
-    90deg,
-    rgba(106, 81, 225, 1),
-    rgba(79, 102, 231, 1)
-  );
-  color: #ffffff;
+    background: linear-gradient( 90deg, rgba(106, 81, 225, 1), rgba(79, 102, 231, 1));
+    color: #ffffff;
 }
 
 html {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 body {
-  width: 100%;
+    width: 100%;
 }
+
 #app {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 .van-tabbar {
-  border-top: solid #e5e5e5 0.01rem;
-  height: 0.98rem;
-  z-index: 1000 !important;
+    border-top: solid #e5e5e5 0.01rem;
+    height: 0.98rem;
+    z-index: 1000 !important;
 }
+
 .van-tabbar-item__icon {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .van-tabbar-item__text {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
-.van-tabbar-item {
-  color: #616c8a !important;
-}
-.van-tabbar-item--active {
-  color: #5c74f3 !important;
-}
+
+
+/* .van-tabbar-item {
+    color: #616c8a !important;
+} */
+
+
+/* .van-tabbar-item--active {
+    color: #5c74f3 !important;
+} */
+
+
 /* .van-hairline--top-bottom::after {
   border-width: 0px 0px 1px 0px !important;
 } */
 
+
 /* [class*="van-hairline"]::after {
   border: #000;
 } */
+
 .van-popup {
-  width: 6.3rem;
-  border-radius: 0.12rem;
-  font-size: 0.24rem;
-  font-weight: 400;
-  color: rgb(0, 0, 0);
-  line-height: 0.34rem;
-  padding: 0.3rem;
-  overflow: visible;
-  background: #f8f8f8;
+    width: 6.3rem;
+    border-radius: 0.12rem;
+    font-size: 0.24rem;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    line-height: 0.34rem;
+    padding: 0.3rem;
+    overflow: visible;
+    background: #f8f8f8;
 }
+
 .van-icon-close {
-  position: absolute;
-  top: -0.68rem;
-  right: 0.1rem;
-  color: red;
+    position: absolute;
+    top: -0.68rem;
+    right: 0.1rem;
+    color: red;
 }
+
 .van-nav-bar {
-  color: #000;
-  line-height: 46px;
+    color: #000;
+    line-height: 46px;
 }
+
 .van-nav-bar__title {
-  color: rgb(255, 255, 255);
-  font-size: 0.36rem;
+    color: #333333;
+    font-size: 0.32rem;
 }
+
+
 /* .van-nav-bar__text:active {
   background: none;
 } */
 
 .van-radio__label {
-  color: #616c8a;
-  margin-left: 5px;
-  margin-right: 5px;
+    color: #616c8a;
+    margin-left: 5px;
+    margin-right: 5px;
 }
+
 .van-button {
-  line-height: 0px;
+    line-height: 0px;
 }
+
 .van-nav-bar__text {
-  color: #ffffff;
-  font-size: 0.3rem;
+    color: #ffffff;
+    font-size: 0.3rem;
 }
+
 .van-pull-refresh__track {
-  height: 100%;
+    height: 100%;
 }
+
 .van-nav-bar__arrow {
-  font-size: 0.4rem;
-  margin-right: -0.15rem;
+    font-size: 0.4rem;
+    margin-right: -0.15rem;
 }
+
 .van-nav-bar__left {
-  left: 0.1rem;
-  font-size: 0.32rem;
+    left: 0.1rem;
+    font-size: 0.32rem;
 }
-/* .van-password-input {
-  width: 100%;
-} */
+
+.van-password-input {
+    margin: 0;
+}
+
 .van-tab,
 .van-tag--large {
-  font-size: 0.28rem;
+    font-size: 0.28rem;
 }
+
 .container .device_info .device_info_space .device_already[data-v-b091a32e] {
-  font-size: 0.26rem;
+    font-size: 0.26rem;
 }
+
 .van-progress__pivot {
-  display: none;
+    display: none;
 }
+
 .van-progress {
-  border-radius: none;
+    border-radius: none;
 }
+
 .van-dialog__confirm,
 .van-dialog__confirm:active {
-  color: #5c74f3;
+    color: #5c74f3;
 }
+
 .van-progress__portion {
-  border-radius: none;
+    border-radius: none;
 }
+
 .van-dialog {
-  width: 75%;
+    width: 75%;
 }
-.van-nav-bar__arrow + .van-nav-bar__text {
-  margin-left: -0.3rem;
+
+.van-nav-bar__arrow+.van-nav-bar__text {
+    margin-left: -0.3rem;
 }
+
 .van-hairline--bottom::after {
-  border-bottom-width: 0px;
+    border-bottom-width: 0px;
 }
+
+
 /* 点击反馈 */
+
 .my_touchfeedback {
-  background: #0000002b !important;
+    background: #0000002b !important;
 }
+
+
 /* 点击缩放 */
+
 .my_stt {
-  transform: scale(0.9);
+    transform: scale(0.9);
 }
+
 .van-overlay {
-  background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.3);
 }
+
+
 /* [class*="van-hairline"]::after {
   -webkit-transform: none;
   transform: none;
@@ -164,12 +206,20 @@ body {
 [class*="van-hairline"]::after {
   border: none;
 } */
+
 .van-nav-bar__right {
-  right: 0;
+    right: 0;
 }
+
 .van-dialog__header {
-  color: #000;
+    color: #000;
 }
+
 .van-tabs__line {
-  background: none;
+    background: none;
+}
+
+.active_tab img:nth-child(2) {
+    width: 1rem;
+    height: 1rem;
 }

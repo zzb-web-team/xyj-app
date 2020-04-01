@@ -12,26 +12,18 @@
 
     <div class="container_introduction">
       <div class="introduction_text">
-        <div class="welcome">请输入验证码</div>
+        <div class="welcome">验证码</div>
         <div class="login_input">
           <div class="tel">
             <div>
-              <i>验证码已发送至手机</i>
-              <strong>{{ tel }}</strong>
+              <i>已发送至{{ tel }}(十分钟之内有效)</i>
             </div>
             <div class="codfe">
               <template v-if="YzmStatus">
-                <van-button
-                  class="codeYzm"
-                  :disabled="timeout"
-                  @click="getCode()"
-                ></van-button>
+                <van-button class="codeYzm" :disabled="timeout" @click="getCode()"></van-button>
               </template>
               <template v-else>
-                <van-button
-                  class="codeYzm"
-                  v-bind:text="count + 'S'"
-                ></van-button>
+                <van-button class="codeYzm" v-bind:text="count + 'S'"></van-button>
               </template>
             </div>
           </div>
@@ -58,9 +50,7 @@
             <div
               class="van-field__error-message"
               v-show="errors.has('yzm') && yzmFlag.touched"
-            >
-              {{ errors.first("yzm") }}
-            </div>
+            >{{ errors.first("yzm") }}</div>
           </div>
         </div>
         <div class="get_verification_code">
@@ -120,7 +110,6 @@ export default {
       if (value.length === 6) {
         this.verificationcode = value;
         this.value = this.verificationcode;
-        console.log(value);
         this.goNext();
       }
     }
@@ -130,8 +119,6 @@ export default {
   },
   mounted: function() {
     // this.changeData();
-    console.log(this.allid.pid);
-
     try {
       window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
     } catch (e) {}
@@ -200,7 +187,6 @@ export default {
     // },
     //点击下一步验证
     goNext() {
-      console.log(this.value);
       const toast = Toast.loading({
         duration: 15000, // 持续展示 toast
         forbidClick: true, // 禁用背景点击
@@ -238,10 +224,8 @@ export default {
             param.user_name = this.$route.query.phoneNum;
             param.user_passwd = this.value;
             param.login_type = 1;
-            console.log(param);
             login(param)
               .then(res => {
-                console.log(res);
                 Toast.clear();
                 this.repeats = 0;
                 if (res.status == 0) {
@@ -259,7 +243,6 @@ export default {
                       "user_sex"
                     ];
                     params.login_token = res.data.login_token;
-                    console.log(params);
                     this.repeats = 1;
                     if (this.rescount >= 3) {
                       this.repeats = 0;
@@ -268,7 +251,6 @@ export default {
                     }
                     getUserinfo(params)
                       .then(res => {
-                        console.log(res);
                         this.repeats = 0;
                         //res==-1时，token过期，重新登登录
                         if (res.status == 0) {
@@ -285,13 +267,11 @@ export default {
                           params.login_token = this.log_token;
                           get_tag(params)
                             .then(res => {
-                              console.log(res);
                               if (res.status == 0) {
                                 if (res.err_code == 0) {
                                   this.updateUser({
                                     log_token: res.token_info.token
                                   });
-                                  console.log(res.data.tag);
                                   this.tag = res.data.tag;
                                   //调用原生方法并传递tag
                                   this.push_tag();
@@ -299,10 +279,9 @@ export default {
                               }
                             })
                             .catch(error => {
-                              console.log(error);
                             });
                           this.$router.push({
-                            path: "/binding"
+                            path: "/first_bind"
                           });
                         } else if (res.status == -900) {
                           this.rescount = 0;
@@ -336,7 +315,6 @@ export default {
                     this.rescount = 0;
                     // if (res.err_code == 0) {
                     //获取个人信息
-                    console.log(res);
                     let params = new Object();
                     params.col_name = [
                       "user_name",
@@ -346,7 +324,6 @@ export default {
                       "user_sex"
                     ];
                     params.login_token = res.data.login_token;
-                    console.log(params);
                     this.repeats = 1;
                     if (this.rescount >= 3) {
                       this.repeats = 0;
@@ -355,7 +332,6 @@ export default {
                     }
                     getUserinfo(params)
                       .then(res => {
-                        console.log(res);
                         this.repeats = 0;
                         if (res.status == 0) {
                           this.rescount = 0;
@@ -369,16 +345,13 @@ export default {
                           //消息推送;
                           let params = new Object();
                           params.login_token = this.log_token;
-                          console.log(params);
                           get_tag(params)
                             .then(res => {
-                              console.log(res);
                               if (res.status == 0) {
                                 if (res.err_code == 0) {
                                   this.updateUser({
                                     log_token: res.token_info.token
                                   });
-                                  console.log(res.data.tag);
                                   this.tag = res.data.tag;
                                   //调用原生方法并传递tag
                                   this.push_tag();
@@ -386,10 +359,9 @@ export default {
                               }
                             })
                             .catch(error => {
-                              console.log(error);
                             });
                           this.$router.push({
-                            path: "/management"
+                            path: "/dynamic_node"
                           });
                         } else {
                           this.rescount = 0;
@@ -464,10 +436,8 @@ export default {
         let change_telnumflag = 0;
         params.user_tel = this.$route.query.phoneNum;
         params.change_telnum_flag = change_telnumflag;
-        console.log(params);
         get_code(params) //获取验证码
           .then(res => {
-            console.log(res);
             if (res.status == 0) {
               if (res.err_code == 499) {
                 //验证码倒计时
@@ -517,7 +487,6 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
           });
       }
     },
@@ -555,10 +524,10 @@ export default {
   height: 0.85rem;
 }
 /deep/.van-password-input__security li {
-  border: 1px solid #5c74f3;
+  border-bottom: 1px solid #333333;
   font-weight: 600;
   font-size: 0.5rem;
-  border-radius: 0.12rem;
+  // border-radius: 0.12rem;
   line-height: 0.9rem;
 }
 /deep/.van-nav-bar {
@@ -585,15 +554,17 @@ body {
     height: 100%;
     margin: 0 auto;
     overflow: hidden;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
+    background: url(../../assets/images/log_bottom.png) no-repeat;
+    background-size: 100% auto;
+    background-position: bottom;
     .introduction_text {
       font-size: 0.4rem;
       color: #000;
-      width: 6.9rem;
+      width: 76%;
+      margin: auto;
       // height: 6.4rem;
       border-radius: 0.12rem;
       display: flex;
@@ -601,38 +572,29 @@ body {
       align-items: stretch;
       flex-direction: column;
       .welcome {
-        width: 100%;
+        margin-top: -2.5rem;
         text-align: left;
-        font-size: 0.64rem;
-        padding-left: 0.4rem;
-        margin-top: -4.5rem;
-        font-weight: 900; //加粗
-        color: #252834;
+        font-size: 0.48rem;
+        font-weight: 500; //加粗
+        color: #333333;
       }
       .login_input {
-        margin-top: 1rem;
+        margin-top: 0.5rem;
         // padding-right: 0.5rem;
         .tel {
           width: 100%;
           height: 0.6rem;
           text-align: left;
           color: #818181;
-          font-size: 0.26rem;
+          font-size: 0.14rem;
           margin-bottom: 0.16rem;
           display: flex;
           justify-content: space-between;
           .codfe {
             margin-top: -0.1rem;
           }
-          i {
-            margin-left: 0.4rem;
-          }
-          strong {
-            color: #000;
-            font-size: 0.3rem;
-          }
           span {
-            color: #5c74f3;
+            color: #333333;
             font-size: 0.3rem;
           }
         }
@@ -645,7 +607,7 @@ body {
           background: none;
           text-align: left;
           outline: none;
-          border-bottom: #38446f 1px solid;
+          border-bottom: #333333 1px solid;
           padding-bottom: 0.1rem;
           padding-left: 0.4rem;
           width: 3.7rem;
@@ -669,10 +631,9 @@ body {
         }
       }
       .get_verification_code {
-        margin-top: 0.2rem;
+        margin-top: 0.4rem;
         font-size: 0.26rem;
         text-align: left;
-        padding-left: 0.4rem;
         width: 100%;
         i {
           color: #808080;
