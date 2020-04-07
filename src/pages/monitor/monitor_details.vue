@@ -235,7 +235,7 @@ export default {
               devobj.value = item.dev_sn;
               this.actions1.push(devobj);
             });
-          }else{
+          } else {
             Toast(res.err_msg);
           }
         })
@@ -260,9 +260,9 @@ export default {
                 res.data.total_cap / 1048576 -
                 res.data.free_cap / 1048576
               ).toFixed(2);
-              this.cap.online_time=(res.data.online_time/3600).toFixed(2);
-              this.cap.offline_times_num=res.data.offline_times;
-            }else{
+              this.cap.online_time = (res.data.online_time / 3600).toFixed(2);
+              this.cap.offline_times_num = res.data.offline_times;
+            } else {
               Toast(res.err_msg);
             }
           }
@@ -283,9 +283,9 @@ export default {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
             if (res.err_code == 0) {
-              this.band.online_time=(res.data.online_time/3600).toFixed(2);
-              this.band.offline_times_num=res.data.offline_times;
-            }else{
+              this.band.online_time = (res.data.online_time / 3600).toFixed(2);
+              this.band.offline_times_num = res.data.offline_times;
+            } else {
               Toast(res.err_msg);
             }
           }
@@ -471,7 +471,9 @@ export default {
           }
         },
         grid: {
-          bottom: 90
+          bottom: 90,
+          left: "4%",
+          right: "4%"
         },
         dataZoom: [
           {
@@ -495,6 +497,22 @@ export default {
         yAxis: {
           splitArea: {
             show: false
+          },
+          //取消网格线
+          splitLine: {
+            show: false
+          },
+          //取消坐标值
+          axisLabel: {
+            show: false
+          },
+          //取消刻度线
+          axisTick: {
+            show: false
+          },
+          //取消坐标轴
+          axisLine: {
+            show: false
           }
         },
         series: [
@@ -502,7 +520,18 @@ export default {
             type: "bar",
             data: data.valueData,
             // Set `large` for large data amount
-            large: true
+            large: true,
+            markLine: {
+              symbol: "none",
+              label: {
+                position: "middle", //将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
+                formatter: function(params) {
+                  return `${params.value} Mb/s`;
+                }
+              },
+
+              data: [{ type: "max", name: "最大值" }]
+            }
           }
         ]
       };
