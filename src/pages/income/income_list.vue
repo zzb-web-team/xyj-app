@@ -36,16 +36,16 @@
             </div>
             <div class="income_bottom_con_item con_item_center">
               <p>上行带宽</p>
-              <p>{{devarrlist.up_bandwidth}}Mbps</p>
+              <p>{{(devarrlist.up_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
             </div>
             <div class="income_bottom_con_item con_item_right">
               <p>下行带宽</p>
-              <p>{{devarrlist.down_bandwidth}}Mbps</p>
+              <p>{{(devarrlist.down_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
             </div>
           </div>
           <div class="income_bottom_bot">
             <div>算力：{{item.com_power}}</div>
-            <div>在线时长：{{devarrlist.online_time}}h</div>
+            <div>在线时长：{{(devarrlist.online_time/3600).toFixed(2)}}h</div>
           </div>
         </van-collapse-item>
       </van-collapse>

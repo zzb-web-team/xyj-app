@@ -121,13 +121,13 @@
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>-->
-            <!-- <div class="user_con_item" @click="govertion()">
+            <div class="user_con_item" @click="goversioninformation()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_version@3x.png" alt />
                 <span>跳转测试</span>
               </div>
               <div class="con_item_r"></div>
-            </div> -->
+            </div>
           </div>
           <div>
             <van-button class="out_login" @click="loginOut()" v-fb="{ cls: 'my_touchfeedback' }">
@@ -160,7 +160,12 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/barBarActive";
 import { Tabbar, TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
-import { userInfoCenter, loginout, sign,authorization } from "../../common/js/api.js";
+import {
+  userInfoCenter,
+  loginout,
+  sign,
+  authorization
+} from "../../common/js/api.js";
 import {
   logout,
   getUserinfo,
@@ -181,7 +186,7 @@ export default {
       isLoading: false,
       show: false,
       all_income: 0,
-      system:""
+      system: ""
     };
   },
   computed: mapState({

@@ -56,15 +56,15 @@ export default {
       node_pic: "xxxxxx",
       node_suan: 0,
       datalist: [
-        {
-          node_name: "节点00020275037407",
-          node_status: 0,
-          update_time: "一个小时前"
-        },
-        { node_name: "节点0003", node_status: 1, update_time: 1580114065 },
-        { node_name: "节点0004", node_status: 0, update_time: "两天前" },
-        { node_name: "节点0005", node_status: 0, update_time: 1578011665 },
-        { node_name: "节点0005", node_status: 0, update_time: "一分钟前" }
+        // {
+        //   node_name: "节点00020275037407",
+        //   node_status: 0,
+        //   update_time: "一个小时前"
+        // },
+        // { node_name: "节点0003", node_status: 1, update_time: 1580114065 },
+        // { node_name: "节点0004", node_status: 0, update_time: "两天前" },
+        // { node_name: "节点0005", node_status: 0, update_time: 1578011665 },
+        // { node_name: "节点0005", node_status: 0, update_time: "一分钟前" }
       ]
     };
   },

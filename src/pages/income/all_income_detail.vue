@@ -13,10 +13,10 @@
           <div class="content_body_top" @click="go_income_list(item)">
             <span>
               <img src="../../assets/images/income_name.png" alt />
-              {{item.devname}}
+              {{item.dev_name}}
             </span>
             <span>
-              算力：{{item.shouyi}}
+              算力：{{item.dev_profit}}
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </span>
           </div>
@@ -26,17 +26,17 @@
               <div class="content_body_bottom_right_detail">
                 <p>累计收益</p>
                 <p>
-                  {{item.shouyi}}
+                  {{item.dev_profit}}
                   <span>gfm</span>
                 </p>
               </div>
             </div>
             <div class="content_body_bottom_right item_right">
               <div class="content_body_bottom_right_detail">
-                <p>占用空间：{{item.hold_bandwidth}}GB</p>
-                <p>上行带宽：{{item.up_bandwidth}}Mbps</p>
-                <p>下行带宽：{{item.down_bandwidth}}Mbps</p>
-                <p>在线时长：{{item.online_time}}h</p>
+                <p>占用空间：{{((item.total_cap-item.free_cap)/1024/1024).toFixed(2)}}GB</p>
+                <p>上行带宽：{{(item.up_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
+                <p>下行带宽：{{(item.down_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
+                <p>在线时长：{{(item.online_time/3600).toFixed(2)}}h</p>
               </div>
             </div>
           </div>
@@ -51,83 +51,15 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
+import { alldevinformation, alldevrevenue } from "../../common/js/api";
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
       total_revenue: 0,
       revenue_time: 0,
-      dev_income_list: [
-        {
-          devname: "我的西柚机1",
-          shouyi: 6334,
-          suanli: 56,
-          sn: 0,
-          hold_bandwidth: 45,
-          up_bandwidth: 346,
-          down_bandwidth: 346,
-          online_time: 346
-        },
-        {
-          devname: "我的西柚机2",
-          shouyi: 546,
-          suanli: 34656,
-          sn: 1,
-          hold_bandwidth: 2346,
-          up_bandwidth: 567,
-          down_bandwidth: 3298,
-          online_time: 46
-        },
-        {
-          devname: "我的西柚机3",
-          shouyi: 2745,
-          suanli: 346,
-          sn: 2,
-          hold_bandwidth: 3445,
-          up_bandwidth: 342,
-          down_bandwidth: 17,
-          online_time: 956
-        },
-        {
-          devname: "我的西柚机4",
-          shouyi: 547,
-          suanli: 2345,
-          sn: 3,
-          hold_bandwidth: 436,
-          up_bandwidth: 457,
-          down_bandwidth: 437586,
-          online_time: 235
-        },
-        {
-          devname: "我的西柚机5",
-          shouyi: 6334,
-          suanli: 93684,
-          sn: 4,
-          hold_bandwidth: 437,
-          up_bandwidth: 23,
-          down_bandwidth: 4676,
-          online_time: 244
-        },
-        {
-          devname: "我的西柚机6",
-          shouyi: 15073,
-          suanli: 46,
-          sn: 5,
-          hold_bandwidth: 4673,
-          up_bandwidth: 13,
-          down_bandwidth: 574,
-          online_time: 876
-        },
-        {
-          devname: "我的西柚机7",
-          shouyi: 45,
-          suanli: 102375,
-          sn: 6,
-          hold_bandwidth: 346,
-          up_bandwidth: 135,
-          down_bandwidth: 583,
-          online_time: 346
-        }
-      ]
+      dev_income_list: [],
+      income_detail: []
     };
   },
   filters: {
@@ -142,11 +74,88 @@ export default {
       }
     }
   },
+  computed: mapState({
+    log_token: state => state.user.log_token,
+    phone_number: state => state.user.phone_number,
+    user_name: state => state.user.user_name,
+    user_sex: state => state.user.user_sex,
+    charge_psd: state => state.user.charge_psd
+  }),
   mounted() {
-    this.total_revenue = this.$route.query.allshou.num;
-    this.revenue_time = this.$route.query.allshou.record_time;
+    this.total_revenue = this.$route.query.allshou.user_total_profit;
+    this.revenue_time = this.$route.query.allshou.date_stamp;
+    this.get_income(0);
   },
   methods: {
+    ...mapMutations(["updateUser", "clearUser"]),
+    //收益
+    get_income(page) {
+      let params = new Object();
+      let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
+      let endtime = statime + 86400;
+      params.login_token = this.log_token;
+      params.cur_page = page;
+      params.start_time = statime;
+      params.end_time = endtime;
+      alldevrevenue(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.income_detail = res.data.dev_profit_list;
+            this.get_dev_detail();
+          }
+        })
+        .catch();
+    },
+    //详情
+    get_dev_detail() {
+      let params = new Object();
+      let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
+      let endtime = statime + 86400;
+      params.login_token = this.log_token;
+      params.start_time = statime;
+      params.end_time = endtime;
+      alldevinformation(params)
+        .then(res => {
+          if (res.status == 0) {
+            for (let i = 0; i < this.income_detail.length; i++) {
+              for (let j = 0; j < res.data.dev_info_list.length; j++) {
+                if (
+                  this.income_detail[i].dev_sn ==
+                  res.data.dev_info_list[j].dev_sn
+                ) {
+                  this.income_detail[i].total_cap =
+                    res.data.dev_info_list[j].total_cap;
+                  this.income_detail[i].free_cap =
+                    res.data.dev_info_list[j].free_cap;
+                  this.income_detail[i].up_bandwidth =
+                    res.data.dev_info_list[j].up_bandwidth;
+                  this.income_detail[i].down_bandwidth =
+                    res.data.dev_info_list[j].down_bandwidth;
+                  this.income_detail[i].online_time =
+                    res.data.dev_info_list[j].online_time;
+                }
+              }
+            }
+            this.dev_income_list = this.income_detail;
+            console.log(this.dev_income_list);
+          }
+        })
+        .catch();
+    },
+    //事件戳转时间
+    timestampToTime(timestamp) {
+      var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate() + " ";
+      var h = 0 + ":";
+      var m = 0 + ":";
+      var s = 0;
+      return Y + M + D + h + m + s;
+    },
     onClickLeft() {
       this.$router.go(-1);
     },
