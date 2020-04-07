@@ -52,7 +52,7 @@
               <div class="content_body_bottom_right_detail">
                 <p>累计收益</p>
                 <p>
-                  {{item.total_profit}}
+                  {{(item.total_profit/100).toFixed(2)}}
                   <span>gfm</span>
                 </p>
               </div>
@@ -189,9 +189,9 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.all_income = (res.data.user_total_profit / 10000).toFixed(6);
-            this.last_income = (res.data.yes_profit / 10000).toFixed(6);
-            this.weak_income = (res.data.one_week_profit / 10000).toFixed(6);
+            this.all_income = (res.data.user_total_profit / 100).toFixed(2);
+            this.last_income = (res.data.yes_profit / 100).toFixed(2);
+            this.weak_income = (res.data.one_week_profit / 100).toFixed(2);
           }
         })
         .catch(error => {

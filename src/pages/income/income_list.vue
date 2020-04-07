@@ -5,7 +5,7 @@
     <div class="income_con">
       <div class="income_con_top">
         <p>累计收益(gfm)</p>
-        <p class="dev_num">{{total_revenue}}</p>
+        <p class="dev_num">{{(total_revenue/100).toFixed(2)}}</p>
       </div>
       <div class="income_con_btn">
         <van-dropdown-menu>
@@ -21,7 +21,7 @@
         @change="item_open(item)"
       >
         <van-collapse-item
-          :title="'+'+item.dev_profit+'GFM'"
+          :title="'+'+(item.dev_profit/100).toFixed(2)+'GFM'"
           :name="index"
           :value="item.date_stamp |formatDate"
         >
