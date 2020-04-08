@@ -168,23 +168,7 @@ export default {
       },
       value1: "全部",
       value2: "今天",
-      actions1: [
-        { name: "全部", value: 0 }
-        // { name: "设备154", value: 1 },
-        // { name: "设备2", value: 2 },
-        // { name: "设备3", value: 3 },
-        // { name: "设备4", value: 4 },
-        // { name: "设备433", value: 5 },
-        // { name: "设备243", value: 6 },
-        // { name: "设备33456", value: 7 },
-        // { name: "设备15", value: 8 },
-        // { name: "设备2", value: 9 },
-        // { name: "设备3", value: 10 },
-        // { name: "设备4", value: 11 },
-        // { name: "设备433", value: 12 },
-        // { name: "设备243", value: 13 },
-        // { name: "设备334", value: 14 }
-      ],
+      actions1: [{ name: "全部", value: 0 }],
       actions2: [
         { name: "昨天", value: 0 },
         { name: "今天", value: 1 },
@@ -235,6 +219,25 @@ export default {
               devobj.value = item.dev_sn;
               this.actions1.push(devobj);
             });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
           } else {
             Toast(res.err_msg);
           }
@@ -265,6 +268,25 @@ export default {
             } else {
               Toast(res.err_msg);
             }
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
           }
         })
         .catch(error => {
@@ -288,7 +310,26 @@ export default {
             } else {
               Toast(res.err_msg);
             }
-          }
+          }else if (res.status == -17) {
+              this.rescount = 0;
+              Dialog.alert({
+                message: "账号在其它地方登录，请重新登录"
+              }).then(() => {
+                this.clearUser();
+                this.$router.push({ path: "/login" });
+              });
+            } else if (res.status == -13) {
+              this.rescount = 0;
+              if (res.err_code == 424) {
+                Toast({
+                  message: "您的账户已被冻结，请联系相关工作人员",
+                  duration: 3000
+                });
+                setTimeout(() => {
+                  this.$router.push({ path: "/login" });
+                }, 3000);
+              }
+            } 
         })
         .catch(error => {
           console.log(error);
@@ -357,7 +398,26 @@ export default {
                 1024
               ).toFixed(2);
             }
-          }
+          }else if (res.status == -17) {
+              this.rescount = 0;
+              Dialog.alert({
+                message: "账号在其它地方登录，请重新登录"
+              }).then(() => {
+                this.clearUser();
+                this.$router.push({ path: "/login" });
+              });
+            } else if (res.status == -13) {
+              this.rescount = 0;
+              if (res.err_code == 424) {
+                Toast({
+                  message: "您的账户已被冻结，请联系相关工作人员",
+                  duration: 3000
+                });
+                setTimeout(() => {
+                  this.$router.push({ path: "/login" });
+                }, 3000);
+              }
+            } 
         })
         .catch(error => {
           console.log(error);

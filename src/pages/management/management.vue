@@ -415,7 +415,7 @@ export default {
       this.$router.push({ path: "/search_dev" });
     },
     onClickRight() {
-      this.$router.push({ path: "/message" });
+      this.$router.push({ path: "/binding" });
     }
   },
   beforeRouteEnter(to, from, next) {

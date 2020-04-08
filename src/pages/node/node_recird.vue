@@ -96,6 +96,12 @@ export default {
   color: #000000;
   background: #ffffff;
 }
+/deep/.van-nav-bar__title{
+  color: #333333;
+}
+/deep/.van-icon-arrow-left:before {
+    color: #333333;
+}
 /deep/.income_overview{
   color: #333333;}
 .recird {

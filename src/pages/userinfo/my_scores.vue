@@ -63,37 +63,37 @@ export default {
       system: "",
       income_list: [
         {
-          num: "+63934525533GFM",
+          num: "+6.70gfm",
           remaining: 1584962688,
           income_type: 1,
           current_time: 1585149384
         },
         {
-          num: "+54625GFM",
+          num: "+54.09gfm",
           remaining: 1584452688,
           income_type: 1,
           current_time: 1585149384
         },
         {
-          num: "+634GFM",
+          num: "+6.03gfm",
           remaining: 1584962688,
           income_type: 1,
           current_time: 1585149384
         },
         {
-          num: "+2459GFM",
+          num: "+20.45gfm",
           remaining: 1584622688,
           income_type: 0,
           current_time: 1585149384
         },
         {
-          num: "+5GFM",
+          num: "+9.88gfm",
           remaining: 1584969708,
           income_type: 0,
           current_time: 1585149384
         },
         {
-          num: "+76GFM",
+          num: "+0.8gfm",
           remaining: 1584456688,
           income_type: 1,
           current_time: 1585149384

@@ -291,6 +291,9 @@ export default {
 /deep/.van-nav-bar__right {
   right: 0.2rem;
 }
+/deep/.van-icon-arrow-left:before{
+  color: #333333;
+}
 .van-nav-bar {
   color: #333333;
   background: #ffffff;

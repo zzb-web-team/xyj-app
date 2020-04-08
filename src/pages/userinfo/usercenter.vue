@@ -340,7 +340,26 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.all_income = (res.data.user_total_profit / 10000).toFixed(6);
+            this.all_income = (res.data.user_total_profit / 100).toFixed(2);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
           }
         })
         .catch(error => {
@@ -391,6 +410,25 @@ export default {
               log_token: res.data.login_token
             });
             this.show = true;
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
           } else {
             Toast("签到失败");
           }
@@ -717,10 +755,11 @@ export default {
           .con_item_r {
             button {
               border: #ff6c6c solid 0.01rem;
-              width: 1.2rem;
+              // width: 1.2rem;
               height: 0.6rem;
               color: #ff6c6c;
               background-color: #fff;
+              font-size: 0.28rem;
             }
           }
         }

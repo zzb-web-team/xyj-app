@@ -28,7 +28,8 @@ export default {
       Toast(val);
     },
     onCancel() {
-      Toast("取消");
+      this.$router.back(-1);
+      
     }
   },
   components: {
