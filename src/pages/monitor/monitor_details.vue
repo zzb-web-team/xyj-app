@@ -17,7 +17,7 @@
             <span>离线：{{storage.offline}}</span>
           </div>
         </div>
-        <div class="monitor_top_right">
+        <div class="monitor_top_right" @click="go_dev_calculation()">
           <p>{{storage.power}}</p>
           <p>平均算力</p>
           <div class="monitor_income">昨日收益：{{storage.income}}</div>
@@ -92,15 +92,15 @@
             <p>网络信息</p>
             <div class="action_cunchu">
               <span>上行带宽</span>
-              <span class="action_cunchu_con">{{band.up_bandwidth}}GB</span>
+              <span class="action_cunchu_con">{{band.up_bandwidth}}Mbps</span>
             </div>
             <div class="action_cunchu">
               <span>下行带宽</span>
-              <span class="action_cunchu_con">{{band.down_bandwidth}}GB</span>
+              <span class="action_cunchu_con">{{band.down_bandwidth}}Mbps</span>
             </div>
             <div class="action_cunchu">
               <span>占用带宽</span>
-              <span class="action_cunchu_con">{{band.use_bandwidth}}GB</span>
+              <span class="action_cunchu_con">{{band.use_bandwidth}}Mbps</span>
             </div>
             <p>在线信息</p>
             <div class="action_cunchu">
@@ -346,6 +346,16 @@ export default {
             this.updateUser({ log_token: res.data.token_info.token });
             if (res.err_code == 0) {
               this.storage.power = res.data.average_cp;
+              this.band.up_bandwidth = (
+                res.data.up_bandwidth /
+                1024 /
+                1024
+              ).toFixed(2);
+              this.band.down_bandwidth = (
+                res.data.down_bandwidth /
+                1024 /
+                1024
+              ).toFixed(2);
             }
           }
         })
@@ -402,6 +412,12 @@ export default {
     //跳转页面
     go_management() {
       this.$router.push({ path: "/management" });
+    },
+    go_dev_calculation() {
+      this.$router.push({
+        path: "/dev_calculation",
+        query: { suanli: this.storage.power }
+      });
     },
     //条形图
     drawLine(label) {
@@ -464,6 +480,7 @@ export default {
         //     }
         //   }
         // },
+        color: ["#3980ff"],
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -594,7 +611,7 @@ export default {
 <style lang="less" scoped>
 /deep/.van-nav-bar {
   color: #000;
-  background-color: #fff;
+  background: #ffffff;
 }
 /deep/.van-dropdown-menu {
   width: 50%;

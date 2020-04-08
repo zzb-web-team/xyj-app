@@ -12,7 +12,7 @@
       <div slot="left" class="alltitleleft">
         <!-- <van-icon name="arrow-left" color="#ffffff" /> -->
       </div>
-      <div slot="right" class="titright">
+      <div slot="right" class="titrights">
         <span>排行</span>
       </div>
     </van-nav-bar>
@@ -46,8 +46,8 @@
             </span>
             <img src="../../assets/images/per_icon_arrow.png" alt />
           </div>
-          <div class="content_body_bottom" @click="go_income_list(item)">
-            <div class="content_body_bottom_left">
+          <div class="content_body_bottom">
+            <div class="content_body_bottom_left" @click="go_income_list(item)">
               <img src="../../assets/images/income_shouyi.png" alt />
               <div class="content_body_bottom_right_detail">
                 <p>累计收益</p>
@@ -57,7 +57,7 @@
                 </p>
               </div>
             </div>
-            <div class="content_body_bottom_right">
+            <div class="content_body_bottom_right" @click="go_calculation_details(item)">
               <img src="../../assets/images/income_suanli.png" alt />
               <div class="content_body_bottom_right_detail">
                 <p>算力</p>
@@ -215,6 +215,16 @@ export default {
         path: "/income_list",
         query: { allshou: val }
       });
+    },
+    go_calculation_details(val) {
+      let detail = new Object();
+      detail.dev_sn = val.dev_sn;
+      detail.power = val.total_com_power;
+      detail.dev_name = "";
+      this.$router.push({
+        path: "/calculation_details",
+        query: { item_detail: detail }
+      });
     }
   },
   components: {
@@ -224,11 +234,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-nav-bar {
+  background: none;
+}
 .income_overview {
   width: 100%;
   height: 100%;
   background-color: #fff;
-  .titright {
+  .titrights {
     margin-right: 0.2rem;
     color: #666666;
   }

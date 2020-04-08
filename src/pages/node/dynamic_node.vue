@@ -4,7 +4,7 @@
       <div class="bandwidth">
         <span class="bandwidth_left">
           <i></i>
-          上行带宽 {{up_bandwidth}}
+          上行带宽 {{up_bandwidth}}Mbps
         </span>
         <div class="bandwidth_right" @click="go_mining_node">
           <img src="../../assets/images/jiedian_icon.svg" alt />
@@ -14,7 +14,7 @@
       <div class="bandwidth">
         <span class="bandwidth_left">
           <i></i>
-          下行带宽{{down_bandwidth}}
+          下行带宽{{down_bandwidth}}Mbps
         </span>
         <div class="bandwidth_right down_right" @click="go_calculation">
           <img src="../../assets/images/suanli_icon.svg" alt />
@@ -46,7 +46,10 @@
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { query_node_dynamic_info,get_user_average_cp } from "../../common/js/api";
+import {
+  query_node_dynamic_info,
+  get_user_average_cp
+} from "../../common/js/api";
 export default {
   data() {
     return {
@@ -104,10 +107,9 @@ export default {
       query_node_dynamic_info(parmas)
         .then(res => {
           console.log(res);
-          if(res.status==0){
-           // this.updateUser({ log_token: res.token_info.login_token });
-            if(res.err_code==0){
-
+          if (res.status == 0) {
+            // this.updateUser({ log_token: res.token_info.login_token });
+            if (res.err_code == 0) {
             }
           }
         })
@@ -115,7 +117,7 @@ export default {
           console.log(error);
         });
     },
-     //获取用户平均算力
+    //获取用户平均算力
     get_cp() {
       let params = new Object();
       params.login_token = this.log_token;
@@ -125,6 +127,14 @@ export default {
             this.updateUser({ log_token: res.data.token_info.token });
             if (res.err_code == 0) {
               this.node_suan = res.data.average_cp;
+              this.up_bandwidth = (res.data.up_bandwidth / 1024 / 1024).toFixed(
+                2
+              );
+              this.down_bandwidth = (
+                res.data.down_bandwidth /
+                1024 /
+                1024
+              ).toFixed(2);
             }
           }
         })
@@ -139,7 +149,10 @@ export default {
       this.$router.push("/mining_node");
     },
     go_calculation() {
-      this.$router.push({ path: "/dev_calculation",query:{suanli:this.node_suan} });
+      this.$router.push({
+        path: "/dev_calculation",
+        query: { suanli: this.node_suan }
+      });
     }
   },
   components: {
@@ -172,6 +185,7 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        margin-left: 4%;
         i {
           display: inline-block;
           width: 0.1rem;

@@ -131,11 +131,11 @@ export default {
     },
     //筛选状态
     get_status() {
-      console.log(this.value1);
+      this.get_power_list();
     },
     //筛选月份
     get_thmonth() {
-      console.log(this.value2);
+      this.get_power_list();
     }
   }
 };

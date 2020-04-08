@@ -16,7 +16,6 @@
           :offset="{width: -5, height: 30}"
         />
       </bm-marker>
-      
     </baidu-map>
     <div class="con_dop">
       <div class="redic_title">
@@ -85,6 +84,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-nav-bar {
+  background: #f8f8f8;
+}
+/deep/.van-nav-bar__title {
+  color: #333333;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #333333;
+}
 .content {
   width: 100%;
   height: 100%;

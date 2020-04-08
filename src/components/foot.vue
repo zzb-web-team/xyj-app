@@ -40,7 +40,7 @@ export default {
           active: require("../assets/images/Tab_jiankong_pre.svg")
         },
         {
-          name: "search_dev",
+          name: "management",
           // title: "西柚机",
           normal: require("../assets/images/Tab_xiyouji.svg"),
           active: require("../assets/images/Tab_xiyouji.svg")
