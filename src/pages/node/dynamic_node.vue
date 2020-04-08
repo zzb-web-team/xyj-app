@@ -48,7 +48,8 @@ import foot from "../../components/foot";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import {
   query_node_dynamic_info,
-  get_user_average_cp
+  get_user_average_cp,
+  isbindinglist
 } from "../../common/js/api";
 export default {
   data() {
@@ -95,9 +96,50 @@ export default {
   mounted() {
     this.get_my_dynace_info();
     this.get_cp();
+    this.get_use_dev_list();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
+    //获取用户设备列表
+    get_use_dev_list() {
+      let params = new Object();
+      params.login_token = this.log_token;
+      isbindinglist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.token_info.login_token });
+            this.node_pic = res.data.bind_devinfo_list[0].dev_name;
+            // res.data.bind_devinfo_list.forEach(item => {
+            //   let devobj = new Object();
+            //   devobj.text = item.dev_name;
+            //   devobj.value = item.dev_sn;
+            //   // this.option1.push(devobj);
+            // });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //获取我的节点动态
     get_my_dynace_info() {
       let parmas = new Object();
@@ -136,26 +178,26 @@ export default {
                 1024
               ).toFixed(2);
             }
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
           console.log(error);

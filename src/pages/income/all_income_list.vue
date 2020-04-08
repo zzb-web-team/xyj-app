@@ -16,7 +16,7 @@
       <div class="income_con_body" v-for="(item,index) in income_list" :key="index">
         <van-cell
           is-link
-          :title="'+'+(item.user_total_profit/100).toFixed(2)+'GFM'"
+          :title="'+'+(item.user_total_profit/100).toFixed(2)+'gfm'"
           @click="go_income_detail(item)"
         >{{item.date_stamp |formatDate}}</van-cell>
       </div>

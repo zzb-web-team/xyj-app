@@ -21,7 +21,7 @@
         @change="item_open(item)"
       >
         <van-collapse-item
-          :title="'+'+(item.dev_profit/100).toFixed(2)+'GFM'"
+          :title="'+'+(item.dev_profit/100).toFixed(2)+'gfm'"
           :name="index"
           :value="item.date_stamp |formatDate"
         >
@@ -56,7 +56,12 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { devrevenue, isbindinglist, devinformation } from "../../common/js/api";
+import {
+  devrevenue,
+  isbindinglist,
+  devinformation,
+  getuserdevlist
+} from "../../common/js/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
@@ -148,26 +153,26 @@ export default {
               devobj.value = item.dev_sn;
               this.option1.push(devobj);
             });
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
           console.log(error);
@@ -186,37 +191,86 @@ export default {
           console.log(res);
           if (res.status == 0) {
             this.income_list = res.data.dev_profit_list;
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
           console.log(error);
         });
+    },
+    //获取所有设备收益列表
+    get_income_list(page) {
+      let params = new Object();
+      params.start_time = this.starttime;
+      params.end_time = this.endtime;
+      params.login_token = this.log_token;
+      params.query_type = 2;
+      params.cur_page = page;
+      getuserdevlist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            res.data.user_profit_list.forEach((item, index) => {
+              let dev_obj = new Object();
+              dev_obj.dev_profit = item.user_total_profit;
+              dev_obj.date_stamp = item.date_stamp;
+              this.income_list.push(dev_obj);
+            });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        }); //获取每天总收益
     },
     onClickLeft() {
       this.$router.go(-1);
     },
     changedev() {
       this.income_list = [];
-      this.get_dev_income_day(0);
+      if (this.value11 == 0) {
+        this.get_income_list();
+      } else {
+        this.get_dev_income_day();
+      }
     },
     changetime() {
       var _this = this;

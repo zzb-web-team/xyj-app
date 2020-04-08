@@ -51,7 +51,7 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { authorization } from "../../common/js/api";
+import { authorization, redeems } from "../../common/js/api";
 import { TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -147,14 +147,91 @@ export default {
     let date = new Date();
     this.value2 = date.getMonth() + 1;
     this.whatBrowser();
+    this.redemptionrecord(0);
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
     onClickLeft() {
       this.$router.go(-1);
     },
+    //积分收支记录
+    redemptionrecord(pages) {
+      if (this.$parent.onLine == false) {
+        Toast("无法连接网络，请检查网络状态");
+      } else {
+        let params = new Object();
+        let querydate = 7;
+        // let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳
+        let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
+        let starttime = endtimes - querydate * 24 * 3600; //获取前7天的时间戳
+        let token = this.log_token;
+        params.start_time = starttime;
+        params.end_time = endtimes + 24 * 3600;
+        params.login_token = token;
+        params.cur_page = pages;
+        console.log(params);
+        redeems(params) //兑换记录
+          .then(res => {
+            if (res) {
+              this.$loading.hide();
+            }
+            if (res.status == 0) {
+              this.updateUser({ log_token: res.token_info.token });
+              if (res.err_code == 0) {
+                this.moneyArr = this.moneyArr.concat(res.deal_info_list);
+                this.allpage = res.total_page;
+                this.pagenum = res.page;
+              } else if (res.err_code == -5) {
+              } else if (res.err_code == 500) {
+                this.noint = true;
+              } else {
+                const sta = err[res.err_code]
+                  ? this.$t(err[res.err_code])
+                  : `请稍后重试 ${res.err_code}`;
+                this.$toast(sta);
+              }
+            } else if (res.status == -13) {
+              if (res.err_code == 424) {
+                Toast({
+                  message: "您的账户已被冻结，请联系相关工作人员",
+                  duration: 3000
+                });
+                setTimeout(() => {
+                  this.$router.push({ path: "/login" });
+                }, 3000);
+              }
+            } else if (res.status == -999) {
+              Toast("登录已过期，请重新登录");
+              this.clearUser();
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 1000);
+            } else if (res.status == -900) {
+              this.$router.push({ path: "/login" });
+            } else if (res.status == -5) {
+              Toast("服务器响应超时");
+            } else if (res.status == -17) {
+              Dialog.alert({
+                message: "账号在其它地方登录，请重新登录"
+              }).then(() => {
+                this.clearUser();
+                this.$router.push({ path: "/login" });
+              });
+            } else if (res.status == -500) {
+            } else {
+              const tip = this.$backStatusMap[res.status] || err[res.status];
+              const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
+              this.$toast(str);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            // Toast("网络错误，请重新请求");
+          });
+      }
+    },
+    //兑换
     onClickRight() {
-      console.log("兑换");
       if (this.total_revenue <= 0) {
         Toast({
           message: "账户暂无积分",

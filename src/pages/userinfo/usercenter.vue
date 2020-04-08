@@ -367,7 +367,8 @@ export default {
         });
     },
     goversioninformation() {
-      this.$router.push({ path: "/versioninformation" });
+      //this.$router.push({ path: "/versioninformation" });
+       this.$router.push({path:"/minemachine"})
     },
     gotool() {
       setTimeout(() => {
@@ -567,6 +568,7 @@ export default {
     },
     govertion() {
       this.$router.push({ path: "/income_overview" });
+     
     }
   },
   components: {
