@@ -523,7 +523,7 @@ export default {
       //     }
       //   ]
       // };
-      var dataCount = 5e5;
+      var dataCount = 744;
       var data = generateData(dataCount);
       var option = {
         // title: {//头部的下载按钮

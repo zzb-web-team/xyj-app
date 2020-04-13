@@ -112,6 +112,8 @@ export const get_app_dev_cp_val = params => { return axios.post(`${serverUrl}/mi
 export const get_app_dev_cp_list = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_cp_list`, params).then(res => res.data) }
     /**节点动态列表 */
 export const query_node_dynamic_info = params => { return axios.post(`${serverUrl}/miner_ctrl/query_node_dynamic_info`, params).then(res => res.data) }
+    /**查询节点位置信息 */
+export const query_node_address_info = params => { return axios.post(`${serverUrl}/miner_ctrl/query_node_address_info`, params).then(res => res.data) }
 
 //收益
 export const query_node_total_profit_info = params => { return axios.post(`${serverUrl}/miner_earn/query_node_total_profit_info`, params).then(res => res.data) }
@@ -119,3 +121,8 @@ export const query_node_total_profit_info = params => { return axios.post(`${ser
 //我的
 /**签到 */
 export const sign = params => { return axios.post(`${serverUrl}/account/sign`, params).then(res => res.data) }
+
+//帮助中心
+export const app_query_help_cat_info = params => { return axios.post(`${serverUrl}/miner_ctrl/app_query_help_cat_info `, params).then(res => res.data) }
+    //帮助中心详情
+export const app_query_help_item_info = params => { return axios.post(`${serverUrl}/miner_ctrl/app_query_help_item_info`, params).then(res => res.data) }

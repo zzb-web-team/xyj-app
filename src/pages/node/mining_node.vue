@@ -5,11 +5,7 @@
     </navBar>
 
     <baidu-map class="map" :center="center" :zoom="zoom">
-      <bm-marker
-        :position="{lng: 116.404, lat: 39.915}"
-        :dragging="true"
-        animation="BMAP_ANIMATION_BOUNCE"
-      >
+      <bm-marker :position="center" :dragging="true" animation="BMAP_ANIMATION_BOUNCE">
         <bm-label
           content="节点1"
           :labelStyle="{color: 'red', fontSize : '12px'}"
@@ -45,7 +41,7 @@
             钻石节点
           </span>
 
-          <span class="recird_content_center">{{item.node_name}}</span>
+          <span class="recird_content_center">{{item.dev_name}}</span>
           <span class="recird_content_right">贡献值 {{item.contribution}}</span>
         </div>
       </div>
@@ -57,21 +53,112 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import BaiduMap from "vue-baidu-map/components/Map/Map.vue";
+import { query_node_address_info,isbindinglist } from "../../common/js/api";
+import {Toast} from "vant";
 // import {meap} from "../../components/my_map"
 export default {
   data() {
     return {
       center: { lng: 116.404, lat: 39.915 },
       zoom: 7, //缩放等级
-      datalist: [{ node_level: 0, node_name: "我的111", contribution: 1580 }]
+      datalist: [{ node_level: 0, dev_name: "我的111", contribution: 1580 }]
     };
   },
   components: {
     navBar,
     BaiduMap
   },
-  mounted() {},
+  computed: mapState({
+    log_token: state => state.user.log_token,
+    phone_number: state => state.user.phone_number,
+    user_name: state => state.user.user_name,
+    user_sex: state => state.user.user_sex,
+    charge_psd: state => state.user.charge_psd,
+    minerstates: state => state.management.minerstates,
+    devsn: state => state.management.devsn
+  }),
+  mounted() {
+    this.get_use_dev_list();
+    this.get_coordinate();
+  },
   methods: {
+    ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
+        //获取用户设备列表
+    get_use_dev_list() {
+      let params = new Object();
+      params.login_token = this.log_token;
+      isbindinglist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.token_info.login_token });
+            this.datalist = res.data.bind_devinfo_list;
+            // res.data.bind_devinfo_list.forEach(item => {
+            //   let devobj = new Object();
+            //   devobj.text = item.dev_name;
+            //   devobj.value = item.dev_sn;
+            //   // this.option1.push(devobj);
+            // });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //获取设备坐标
+    get_coordinate() {
+      let params = new Object();
+      params.dev_sn = "";
+      query_node_address_info(params)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.token_info.login_token });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          } else {
+            Toast(res.err_msg);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     onClickLeft() {
       this.$router.go(-1);
     },

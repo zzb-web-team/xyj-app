@@ -54,6 +54,7 @@ import two from '@/pages/userinfo/two'
 import about_us from '@/pages/userinfo/about_us'
 import my_scores from '@/pages/userinfo/my_scores'
 import help_center from '@/pages/userinfo/help_center'
+import help_detail from '@/pages/userinfo/help_detail'
 
 
 import calculation_details from '@/pages/node/calculation_details'
@@ -333,6 +334,12 @@ const routes = [{
         name: 'help_center',
         component: help_center,
         meta: { index: 6 }
+    },
+    {
+        path: '/help_detail',
+        name: 'help_detail',
+        component: help_detail,
+        meta: { index: 7 }
     },
     {
         path: '/remotecontrol',
