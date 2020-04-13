@@ -19,7 +19,7 @@
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
-        <p>积分(gfm)</p>
+        <p>积分()</p>
         <p class="dev_num">{{total_revenue}}</p>
       </div>
       <div class="income_con_btn">
@@ -32,13 +32,13 @@
       <div class="incon_con_body">
         <div class="incon_con_body_item" v-for="(item,index) in income_list" :key="index">
           <div class="incon_con_body_left">
-            <p>{{item.num}}</p>
-            <p>{{item.remaining}}gfm</p>
+            <p>{{item.profit_type==1?"+":"-"}}{{(item.cur_profit/100).toFixed(2)}}gfm</p>
+            <p>{{(item.total_profit/100).toFixed(2)}}gfm</p>
           </div>
           <div class="incon_con_body_right">
             <div>
-              <p>{{item.income_type>0?"兑换":"收益"}}</p>
-              <p>{{item.current_time |formatDate}}</p>
+              <p>{{item.profit_type==2?"兑换":"收益"}}</p>
+              <p>{{item.time_stamp |formatDate}}</p>
             </div>
             <van-icon name="arrow" />
           </div>
@@ -51,7 +51,11 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { authorization, redeems } from "../../common/js/api";
+import {
+  authorization,
+  redeems,
+  query_user_node_exchange_list
+} from "../../common/js/api";
 import { TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -63,47 +67,49 @@ export default {
       system: "",
       income_list: [
         {
-          num: "+6.70gfm",
-          remaining: 1584962688,
-          income_type: 1,
-          current_time: 1585149384
+          cur_profit: 3,
+          total_profit: 1584962688,
+          profit_type: 1,
+          time_stamp: 1585149384
         },
         {
-          num: "+54.09gfm",
-          remaining: 1584452688,
-          income_type: 1,
-          current_time: 1585149384
+          cur_profit: 5,
+          total_profit: 1584452688,
+          profit_type: 1,
+          time_stamp: 1585149384
         },
         {
-          num: "+6.03gfm",
-          remaining: 1584962688,
-          income_type: 1,
-          current_time: 1585149384
+          cur_profit: 23,
+          total_profit: 1584962688,
+          profit_type: 1,
+          time_stamp: 1585149384
         },
         {
-          num: "+20.45gfm",
-          remaining: 1584622688,
-          income_type: 0,
-          current_time: 1585149384
+          cur_profit: 43,
+          total_profit: 1584622688,
+          profit_type: 0,
+          time_stamp: 1585149384
         },
         {
-          num: "+9.88gfm",
-          remaining: 1584969708,
-          income_type: 0,
-          current_time: 1585149384
+          cur_profit: 35,
+          total_profit: 1584969708,
+          profit_type: 0,
+          time_stamp: 1585149384
         },
         {
-          num: "+0.8gfm",
-          remaining: 1584456688,
-          income_type: 1,
-          current_time: 1585149384
+          cur_profit: 5,
+          total_profit: 1584456688,
+          profit_type: 1,
+          time_stamp: 1585149384
         }
       ],
       value11: 0,
       value22: 0,
+      starttime: 0,
+      endtime: 0,
       option1: [
         { text: "全部", value: 0 },
-        { text: "收入", value: 1 },
+        { text: "收益", value: 1 },
         { text: "兑换", value: 2 }
       ],
       option2: [
@@ -147,7 +153,7 @@ export default {
     let date = new Date();
     this.value2 = date.getMonth() + 1;
     this.whatBrowser();
-    this.redemptionrecord(0);
+    this.changetime();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
@@ -160,27 +166,28 @@ export default {
         Toast("无法连接网络，请检查网络状态");
       } else {
         let params = new Object();
-        let querydate = 7;
-        // let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳
-        let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
-        let starttime = endtimes - querydate * 24 * 3600; //获取前7天的时间戳
+
         let token = this.log_token;
-        params.start_time = starttime;
-        params.end_time = endtimes + 24 * 3600;
+        params.start_time = this.starttime;
+        params.end_time = this.endtime;
         params.login_token = token;
         params.cur_page = pages;
+        params.profit_type = this.value11;
         console.log(params);
-        redeems(params) //兑换记录
+        query_user_node_exchange_list(params) //兑换记录
           .then(res => {
-            if (res) {
-              this.$loading.hide();
-            }
+            // if (res) {
+            //   this.$loading.hide();
+            // }
             if (res.status == 0) {
-              this.updateUser({ log_token: res.token_info.token });
+              this.updateUser({ log_token: res.data.token_info.token });
               if (res.err_code == 0) {
-                this.moneyArr = this.moneyArr.concat(res.deal_info_list);
-                this.allpage = res.total_page;
-                this.pagenum = res.page;
+                this.income_list = this.income_list.concat(
+                  res.data.total_profit_list
+                );
+                // this.allpage = res.data.total_page;
+                // this.pagenum = res.data.total_num;
+                console.log(this.income_list);
               } else if (res.err_code == -5) {
               } else if (res.err_code == 500) {
                 this.noint = true;
@@ -325,10 +332,27 @@ export default {
       }
     },
     changetime() {
+      if (this.value22 == 0) {
+        let querydate = 90;
+        this.endtime = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
+        this.starttime = this.endtime - querydate * 24 * 3600; //获取前九十天的时间戳
+      } else {
+        var _this = this;
+        var date = new Date();
+        var y = date.getFullYear();
+        function computeTime(year, month) {
+          _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
+          _this.endtime = new Date(year, month, 0).getTime() / 1000;
+          console.log(_this.starttime, _this.endtime);
+        }
+        computeTime(y, this.value22);
+      }
       this.income_list = [];
+      this.redemptionrecord(0);
     },
     changegrow() {
       this.income_list = [];
+      this.redemptionrecord(0);
     },
     go_income_detail(data) {
       console.log(data);

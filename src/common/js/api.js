@@ -121,6 +121,8 @@ export const query_node_total_profit_info = params => { return axios.post(`${ser
 //我的
 /**签到 */
 export const sign = params => { return axios.post(`${serverUrl}/account/sign`, params).then(res => res.data) }
+    /**积分收支记录 */
+export const query_user_node_exchange_list = params => { return axios.post(`${serverUrl}/miner_earn/query_user_node_exchange_list`, params).then(res => res.data) }
 
 //帮助中心
 export const app_query_help_cat_info = params => { return axios.post(`${serverUrl}/miner_ctrl/app_query_help_cat_info `, params).then(res => res.data) }
