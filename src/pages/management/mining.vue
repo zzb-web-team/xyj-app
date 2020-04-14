@@ -222,7 +222,6 @@ export default {
     // //上拉加载
     // infinite() {
     //   let self = this;
-    //   console.log(self.numpag);
     //   if (self.numpag - 1 <= self.curpage) {
     //     if (self.numpag * 1 == 0 && self.curpage * 1 == 0) {
     //       self.$refs.myscroller.finishInfinite(true);
@@ -233,7 +232,6 @@ export default {
     //     }
     //   } else {
     //     self.curpage++;
-    //     console.log(self.curpage);
     //     self.infolist(self.curpage, 1);
     //     self.$refs.myscroller.finishInfinite(false);
     //   }
@@ -285,13 +283,11 @@ export default {
         params.end_time = endtimes;
         params.cur_page = page;
         params.dev_sn = this.devsn;
-        console.log(params);
         devinformation(params) //所有设备详情
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.updateUser({
@@ -301,23 +297,18 @@ export default {
               if (res.err_code == 0) {
                 this.rescount = 0;
                 this.mewarr = res.data.dev_info_list;
-                console.log(this.mewarr);
-                console.log(params);
                 devrevenue(params) //所有设备收益
                   .then(res => {
-                    console.log(res);
                     this.repeats = 0;
                     if (res.status == 0) {
                       this.updateUser({
                         log_token: res.data.token_info.token
                       });
                       if (res.err_code == 0) {
-                        console.log(this.noint, this.refresh);
                         this.rescount = 0;
                         this.noint = false;
                         this.numpag = res.data.total_page;
                         this.curpage = res.data.page;
-                        console.log(res);
                         // res.data.dev_profit_list.forEach((item, index) => {
                         //   this.mewarr.forEach((xtems, zindex) => {
                         //     if (
@@ -354,7 +345,6 @@ export default {
                               item.store_ability;
                           }
                         });
-                        console.log(ary);
                         var newAry = [];
                         for (let index in ary) {
                           newAry.push(ary[index]);
@@ -364,7 +354,6 @@ export default {
                         } else {
                           this.miningArr.push(...newAry); //数组拼接
                         }
-                        console.log(this.miningArr);
                       } else {
                         this.rescount = 0;
                         const sta = err[res.err_code]
@@ -406,7 +395,6 @@ export default {
                   .catch(error => {
                     this.repeats = 0;
                     this.rescount++;
-                    console.log(error);
                     // this.infolist(0, 0);
                     // Toast("网络错误，请重新请求");
                   });

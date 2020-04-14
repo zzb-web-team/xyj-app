@@ -5,7 +5,12 @@
     </navBar>
 
     <div class="xiala">
-      <Scroll ref="myscroller" :autoUpdate="true" :listenScroll="true" @pullingDown="onRefresh">
+      <Scroll
+        ref="myscroller"
+        :autoUpdate="true"
+        :listenScroll="true"
+        @pullingDown="onRefresh"
+      >
         <!-- 网络异常 -->
         <div class="refresh" v-show="refresh">
           <div
@@ -20,7 +25,7 @@
           <div class="top">
             <div class="topimg">
               <div class="ranking_title">收益排行</div>
-              <div class="ranking_time">统计于：{{token_gen_ts}}</div>
+              <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
             </div>
             <div class="ranking_img">
               <!-- <img src="../../assets/images/earnings_bg1_trophy.png" /> -->
@@ -37,22 +42,36 @@
               <div class="tltle_n">西柚机数量</div>
               <div class="tltle_r">用户</div>
             </div>
-            <div class="ranking_item" v-for="(item,index) in incomeArr" v-bind:key="index">
+            <div
+              class="ranking_item"
+              v-for="(item, index) in incomeArr"
+              v-bind:key="index"
+            >
               <div
                 class="ranking_item_l"
-                :class="{'ranking_item_l1':index==0,'ranking_item_l2':index==1,'ranking_item_l3':index==2}"
-              >{{(index+1)|screen}}</div>
+                :class="{
+                  ranking_item_l1: index == 0,
+                  ranking_item_l2: index == 1,
+                  ranking_item_l3: index == 2
+                }"
+              >
+                {{ (index + 1) | screen }}
+              </div>
               <div
                 class="ranking_item_r"
-                :class="{'ranking_item_r1':index==0,'ranking_item_r2':index==1,'ranking_item_r3':index==2}"
+                :class="{
+                  ranking_item_r1: index == 0,
+                  ranking_item_r2: index == 1,
+                  ranking_item_r3: index == 2
+                }"
               >
                 <p class="item_p1">
-                  <b>{{((item.profit_rank)/1000000).toFixed(6)}}</b>
+                  <b>{{ (item.profit_rank / 1000000).toFixed(6) }}</b>
                 </p>
                 <!-- <p>poc</p> -->
               </div>
-              <div class="ranking_item_n">{{item.bind_num}}</div>
-              <div class="ranking_item_m">{{item.user_tel|newtel}}</div>
+              <div class="ranking_item_n">{{ item.bind_num }}</div>
+              <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
             </div>
           </div>
         </div>
@@ -134,13 +153,11 @@ export default {
         let querytype = 1;
         params.login_token = this.log_token;
         params.query_type = querytype;
-        console.log(params);
         rank(params)
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.updateUser({
@@ -233,8 +250,20 @@ export default {
   }
 };
 </script>
- 
-<style lang="less" scoped >
+
+<style lang="less" scoped>
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
+}
 .container {
   width: 100%;
   height: 100%;
@@ -272,9 +301,9 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: flex-end;
-      background-image: url(../../assets/images/suanlimingxi.png);
+      background-image: url(../../assets/images/paihang_bgc.png);
       background-size: 100% 100%;
-      margin-top: -0.5rem;
+      margin-top: 0.1rem;
       .topimg {
         width: 60%;
         display: flex;

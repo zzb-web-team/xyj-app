@@ -179,7 +179,6 @@ export default {
     },
     //查询和收益
     revenue(page, key) {
-      console.log(this.repeats, this.rescount);
       this.nelist = [];
       this.devlist = [];
       if (this.$parent.onLine == false) {
@@ -217,7 +216,6 @@ export default {
               this.$loading.hide();
             }
             this.repeats = 0;
-            console.log(res);
             if (res.status == 0) {
               this.updateUser({
                 log_token: res.data.token_info.token
@@ -304,7 +302,6 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    console.log(sessionStorage.cachedata);
     if (!sessionStorage.askPositon || from.name != "billdetail") {
       sessionStorage.askPositon = "";
 
@@ -317,7 +314,6 @@ export default {
         if (vm && vm.$refs.myscroller) {
           //通过vm实例访问this
           setTimeout(function() {
-            console.log("位置", sessionStorage.askPositon);
             try {
               setTimeout(() => {
                 vm.$refs.myscroller.scrollTo(
@@ -338,7 +334,6 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     // 记录离开时的位置;
-    console.log(this.scrollTop);
     sessionStorage.askid = this.scrollTop;
     sessionStorage.cachedata = this.moneyListdetails;
     next();

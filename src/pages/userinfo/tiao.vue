@@ -102,13 +102,11 @@ export default {
       params.cur_page = page;
       getuserdevlist(params) //获取每天总收益
         .then(res => {
-          console.log(res);
           this.cardList = res.data.user_profit_list;
           this.pagenum = res.data.page;
           this.tolpage = res.data.total_page;
           setTimeout(() => {
             if (this.cardList.length <= 0) {
-              console.log("暂无数据");
             } else {
               for (let i = 0; i < this.cardList.length; i++) {
                 this.infiniteLoadData.pullUpList.push(this.cardList[i]);
@@ -117,7 +115,7 @@ export default {
           });
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
     },
     /**
@@ -133,7 +131,6 @@ export default {
      */
     getStartPullUpState() {
       if (this.infiniteLoadData.pullUpList.length) {
-          console.log(this.infiniteLoadData.pullUpList);
         if (this.tolpage <= this.pagenum) {
           // 修改子组件的pullUpState状态
           this.infiniteLoadData.pullUpState = 3;
@@ -141,7 +138,6 @@ export default {
           this.infiniteLoadData.pullUpState = 1;
         }
       } else {
-           console.log(this.infiniteLoadData.pullUpList,"********");
         this.infiniteLoadData.pullUpState = 0;
       }
     },
@@ -193,7 +189,6 @@ export default {
      * 上拉加载
      */
     onInfiniteLoad(done) {
-      console.log("上拉");
       if (this.infiniteLoadData.pullUpState === 1) {
         this.getPullUpMoreData();
       }

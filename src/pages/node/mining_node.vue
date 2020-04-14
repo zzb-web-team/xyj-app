@@ -120,7 +120,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     //获取设备坐标
@@ -129,7 +129,6 @@ export default {
       params.dev_sn = "";
       query_node_address_info(params)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             this.updateUser({ log_token: res.token_info.login_token });
           } else if (res.status == -17) {
@@ -156,14 +155,13 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     onClickLeft() {
       this.$router.go(-1);
     },
     go_node_setail(str) {
-      console.log(str);
       this.$router.push({ path: "/node_details", query: { dev: str } });
     }
   }

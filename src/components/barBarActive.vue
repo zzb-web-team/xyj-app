@@ -9,7 +9,7 @@
     :z-index="2000"
   >
     <div slot="right" class="titright">
-      <img src="../../src/assets/images/equ_nav_icon_mess.png" class="titimg" alt />
+      <img src="../../src/assets/images/per_nav_inform_icon.png" class="titimg" alt />
     </div>
 
     <!-- <van-icon name="chat-o" slot="right" size="0.46rem" color="#808080"/> -->
@@ -33,17 +33,24 @@ export default {
 <style >
 .van-nav-bar {
   color: #fff;
-  background: linear-gradient(
+  /* background: linear-gradient(
     45deg,
     rgba(116, 90, 243, 1) 10%,
     rgba(92, 116, 243, 1) 100%
-  );
+  ); */
+}
+.van-hairline--bottom::after {
+    border-bottom-width: 0px;
+    color: #333333;
+}
+.van-nav-bar__title {
+    color: #333333;
 }
 .van-icon-arrow-left:before{
-  color: #fff;
+  color: #333333;
 }
 .van-nav-bar__text {
-    color: #ffffff;
+    color: #333333;
 }
 .titright {
   line-height: 33px;
@@ -53,10 +60,10 @@ export default {
   height: 50%;
 }
 .van-icon-bell:before {
-  color: #000000;
+  color: #333333;
 }
 .van-icon-bullhorn-o:before {
-  color: #000000;
+  color: #333333;
 }
 @font-face {
   font-family: "my-icon";

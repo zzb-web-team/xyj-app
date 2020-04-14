@@ -24,44 +24,51 @@
             累计收益(gfm)
             <van-icon name="play" />
           </p>
-          <div>{{all_income}}</div>
+          <div>{{ all_income }}</div>
         </div>
         <div class="content_top_detail">
           <div class="content_top_detail_left">
-            <p>{{last_income}}</p>
+            <p>{{ last_income }}</p>
             <p>昨日收益(gfm)</p>
           </div>
           <div class="content_top_detail_right">
-            <p>{{weak_income}}</p>
+            <p>{{ weak_income }}</p>
             <p>近一周收益(gfm)</p>
           </div>
         </div>
       </div>
       <div class="content_body">
-        <div class="content_con" v-for="(item,index) in dev_income_list" :key="index">
+        <div
+          class="content_con"
+          v-for="(item, index) in dev_income_list"
+          :key="index"
+        >
           <div class="content_body_top" @click="go_income_list(item)">
             <span>
-              <img src="../../assets/images/income_name.png" alt />
-              {{item.devname}}
+              <img src="../../assets/images/income_dev_name.png" alt />
+              {{ item.devname }}
             </span>
             <img src="../../assets/images/per_icon_arrow.png" alt />
           </div>
           <div class="content_body_bottom">
             <div class="content_body_bottom_left" @click="go_income_list(item)">
-              <img src="../../assets/images/income_shouyi.png" alt />
+              <img src="../../assets/images/income_shouyi_new.png" alt />
               <div class="content_body_bottom_right_detail">
                 <p>累计收益</p>
                 <p>
-                  {{(item.total_profit/100).toFixed(2)}}
+                  {{ (item.total_profit / 100).toFixed(2) }}
                   <span>gfm</span>
                 </p>
               </div>
             </div>
-            <div class="content_body_bottom_right" @click="go_calculation_details(item)">
-              <img src="../../assets/images/income_suanli.png" alt />
+            <div
+              class="content_body_bottom_right"
+              @click="go_calculation_details(item)"
+            >
+              <img src="../../assets/images/income_suanli_new.png" alt />
               <div class="content_body_bottom_right_detail">
                 <p>算力</p>
-                <p>{{item.total_com_power}}</p>
+                <p>{{ item.total_com_power }}</p>
               </div>
             </div>
           </div>
@@ -155,7 +162,6 @@ export default {
       params.cur_page = page;
       query_node_total_profit_info(params)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             this.updateUser({
               log_token: res.data.token_info.token
@@ -185,7 +191,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
         });
     },
     //获取总收益
@@ -200,10 +205,8 @@ export default {
       params.end_time = endtimes;
       params.query_type = 1;
       params.cur_page = 0;
-      console.log(params);
       getuserdevlist(params)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             this.updateUser({
               log_token: res.data.token_info.token
@@ -233,7 +236,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
         });
     },
 
@@ -273,7 +275,7 @@ export default {
 
 <style lang="less" scoped>
 /deep/.van-nav-bar {
-  background: none;
+  background: none !important;
 }
 .income_overview {
   width: 100%;
@@ -294,7 +296,7 @@ export default {
       text-align: left;
       margin: auto;
       border-radius: 0.1rem;
-      background: url(../../assets/images/suanlibg.png) no-repeat;
+      background: url(../../assets/images/all_income.png) no-repeat;
       background-size: 100% 100%;
       .content_top_all {
         padding-top: 10%;
@@ -350,6 +352,11 @@ export default {
           margin-bottom: 0.2rem;
           font-size: 0.28rem;
           font-weight: 600;
+          span{
+            img{
+              width: 50%;
+            }
+          }
         }
         .content_body_bottom {
           width: 100%;
@@ -366,7 +373,7 @@ export default {
             border: solid 0.01rem #eeeeee;
             border-radius: 0.1rem;
             img {
-              width: 28%;
+              width:40%;
             }
             .content_body_bottom_right_detail {
               width: 96%;

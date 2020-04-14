@@ -118,14 +118,12 @@ export default {
         let params = new Object();
         params.login_token = this.log_token;
         params.page_num = page;
-        console.log(params);
         isbindinglist(params)
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
             this.repeats = 0;
-            console.log(res);
             if (res.status == 0) {
               this.updateUser({ log_token: res.token_info.login_token });
               // this.$refs.myscroller.scrollToTop();
@@ -213,7 +211,6 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
             this.repeats = 0;
             this.rescount++;
             this.device(0, 0);
@@ -235,6 +232,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
+}
 .calculation {
   width: 100%;
   height: 100%;

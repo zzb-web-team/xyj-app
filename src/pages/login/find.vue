@@ -227,7 +227,6 @@ export default {
       this.startingpoint = right;
     },
     onChange(index) {
-      console.log(index);
       if (this.deviceArr.length <= 1) {
         this.rightstyle = 0.2;
       }
@@ -278,10 +277,8 @@ export default {
         let params = new Object();
         params.login_token = this.log_token;
         params.dev_sn = this.devlist;
-        console.log(params);
         getMinerInfo(params) //获取设备信息
           .then(res => {
-            console.log(res);
             Toast.clear();
             if (res.status == 0) {
               this.repeats = 0;
@@ -311,7 +308,6 @@ export default {
                     }
                   }
                 });
-                console.log(this.deviceArr);
                 this.$router.push({
                   name: "find",
                   // name: "localsearch",
@@ -348,7 +344,6 @@ export default {
           })
           .catch(error => {
             Toast.clear();
-            console.log("无网络连接");
             this.repeats = 0;
             this.$router.push({ path: "/searchbinding" });
           });
@@ -385,10 +380,8 @@ export default {
         params.dev_name = devname;
         params.dev_sn = devsn;
         params.bind_user_tel_num = this.phone_number;
-        console.log(params);
         bindsetname(params) //设置设备名称
           .then(res => {
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.updateUser({ log_token: res.token_info.login_token });
@@ -480,7 +473,6 @@ export default {
       });
     },
     onClickRight() {
-      console.log("扫码绑定");
       try {
         window.webkit.messageHandlers.scanQRCodeByCamera.postMessage(
           "scancode"
@@ -492,7 +484,6 @@ export default {
       window.scancode = this.scancode; //绑定在window全局变量上，不加括号
     },
     scancode: function(data) {
-      console.log(data);
       try {
         let nowarr = JSON.parse(data);
         if (!nowarr.sn) {

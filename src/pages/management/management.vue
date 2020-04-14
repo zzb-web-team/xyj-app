@@ -192,7 +192,6 @@ export default {
       //如果是苹果手机
       this.topshow = true;
     } else {
-      console.log("22222");
       this.topshow = false;
     }
     try {
@@ -245,14 +244,12 @@ export default {
         let params = new Object();
         params.login_token = this.log_token;
         params.page_num = page;
-        console.log(params);
         isbindinglist(params)
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
             this.repeats = 0;
-            console.log(res);
             if (res.status == 0) {
               this.updateUser({ log_token: res.token_info.login_token });
               this.$refs.myscroller.scrollToTop();
@@ -353,7 +350,6 @@ export default {
             }
           })
           .catch(error => {
-            console.log("错误");
             this.repeats = 0;
             this.rescount++;
             this.device(0, 0);

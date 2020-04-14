@@ -162,7 +162,6 @@ export default {
   },
 
   mounted() {
-    console.log(window.screen.height);
     this.scan(0);
   },
   computed: {
@@ -229,20 +228,17 @@ export default {
         let token = this.log_token;
         params.login_token = token;
         params.dev_sn = minersn;
-        console.log(params);
         getMinerInfo(params) // 获取我的西柚机详情
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.refresh = false;
               this.updateUser({ log_token: res.token_info.login_token });
               if (res.err_code == 0) {
                 this.rescount = 0;
-                console.log(res);
                 this.minerInfoArr = res.data.dev_info_list;
                 this.device_name = res.data.dev_info_list[0].dev_name;
                 this.zdevname = res.data.dev_info_list[0].dev_name;
@@ -361,10 +357,8 @@ export default {
             this.device_name = this.zdevname;
             return this.$toast("昵称不能含有非法字符");
           }
-          console.log(params);
           setDevName(params)
             .then(res => {
-              console.log(res);
               Toast.clear();
               this.repeats = 0;
               if (res.status == 0) {
@@ -459,10 +453,8 @@ export default {
             param.dev_sn = this.devsn;
             param.login_token = this.log_token;
             param.extra_info = extrainfo;
-            console.log(param);
             restarts(param)
               .then(res => {
-                console.log(res);
                 this.repeats = 0;
                 if (res.status == 0) {
                   this.rescount = 0;
@@ -543,10 +535,8 @@ export default {
             params.dev_sn = minersn;
             params.bind_type = bindtype;
             params.bind_user_tel_num = "";
-            console.log(params);
             bindingmill(params)
               .then(res => {
-                console.log(res);
                 Toast.clear();
                 this.repeats = 0;
                 if (res.status == 0) {

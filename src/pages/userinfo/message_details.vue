@@ -82,7 +82,6 @@ export default {
       );
     } catch (error) {}
     // this.fromname = JSON.parse(sessionStorage.getItem("frname"));
-    console.log(this.$route.query.push_id);
     this.pushid = this.$route.query.push_id;
     this.getlist();
   },
@@ -98,7 +97,6 @@ export default {
       parmas.back_id = this.pushid;
       query_push_history_listex(parmas)
         .then(res => {
-          console.log(res);
           if (res.status == 0 && res.data.data) {
             this.notice_content = res.data.data[0].Notice_content;
             this.notice_push_time = res.data.data[0].Notice_push_time;
@@ -110,7 +108,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+       //   console.log(error);
         });
     },
     onClickLeft() {

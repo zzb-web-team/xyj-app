@@ -20,25 +20,40 @@
     <div class="income_con">
       <div class="income_con_top">
         <p>积分()</p>
-        <p class="dev_num">{{total_revenue}}</p>
+        <p class="dev_num">{{ total_revenue }}</p>
       </div>
       <div class="income_con_btn">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="value11" :options="option1" @change="changegrow" />
-          <van-dropdown-item v-model="value22" :options="option2" @change="changetime" />
+          <van-dropdown-item
+            v-model="value11"
+            :options="option1"
+            @change="changegrow"
+          />
+          <van-dropdown-item
+            v-model="value22"
+            :options="option2"
+            @change="changetime"
+          />
         </van-dropdown-menu>
       </div>
       <!--  -->
       <div class="incon_con_body">
-        <div class="incon_con_body_item" v-for="(item,index) in income_list" :key="index">
+        <div
+          class="incon_con_body_item"
+          v-for="(item, index) in income_list"
+          :key="index"
+        >
           <div class="incon_con_body_left">
-            <p>{{item.profit_type==1?"+":"-"}}{{(item.cur_profit/100).toFixed(2)}}gfm</p>
-            <p>{{(item.total_profit/100).toFixed(2)}}gfm</p>
+            <p>
+              {{ item.profit_type == 1 ? "+" : "-"
+              }}{{ (item.cur_profit / 100).toFixed(2) }}gfm
+            </p>
+            <p>{{ (item.total_profit / 100).toFixed(2) }}gfm</p>
           </div>
           <div class="incon_con_body_right">
             <div>
-              <p>{{item.profit_type==2?"兑换":"收益"}}</p>
-              <p>{{item.time_stamp |formatDate}}</p>
+              <p>{{ item.profit_type == 2 ? "兑换" : "收益" }}</p>
+              <p>{{ item.time_stamp | formatDate }}</p>
             </div>
             <van-icon name="arrow" />
           </div>
@@ -173,7 +188,6 @@ export default {
         params.login_token = token;
         params.cur_page = pages;
         params.profit_type = this.value11;
-        console.log(params);
         query_user_node_exchange_list(params) //兑换记录
           .then(res => {
             // if (res) {
@@ -187,7 +201,6 @@ export default {
                 );
                 // this.allpage = res.data.total_page;
                 // this.pagenum = res.data.total_num;
-                console.log(this.income_list);
               } else if (res.err_code == -5) {
               } else if (res.err_code == 500) {
                 this.noint = true;
@@ -232,7 +245,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
+          // console.log(error);
             // Toast("网络错误，请重新请求");
           });
       }
@@ -255,10 +268,8 @@ export default {
       let nowparam = new Object();
       nowparam.login_token = this.log_token;
       nowparam.login_type = 1;
-      console.log(nowparam);
       authorization(nowparam)
         .then(res => {
-          console.log(res);
           Toast.clear();
           if (res.status == 0) {
             if (res.data.bind_status == 1) {
@@ -272,9 +283,7 @@ export default {
                 message: "未授权",
                 duration: 400
               });
-              console.log(this.system);
               if (this.system == "iPhone") {
-                console.log(this.system);
                 this.Authorization(res.url);
               } else {
                 setTimeout(() => {
@@ -343,7 +352,6 @@ export default {
         function computeTime(year, month) {
           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
           _this.endtime = new Date(year, month, 0).getTime() / 1000;
-          console.log(_this.starttime, _this.endtime);
         }
         computeTime(y, this.value22);
       }
@@ -355,7 +363,6 @@ export default {
       this.redemptionrecord(0);
     },
     go_income_detail(data) {
-      console.log(data);
     },
     show_dev() {
       this.showdev = true;
@@ -393,18 +400,42 @@ export default {
 /deep/.van-dropdown-menu {
   justify-content: space-between;
   background-color: #f8fafb;
+  height: 1.26rem;
 }
-/deep/.van-dropdown-menu__item {
+/deep/.van-dropdown-menu__item:nth-child(1) {
   flex: none;
-  width: 2rem;
+  width: 1.56rem;
   height: 0.6rem;
   border-radius: 1rem;
   background-color: #fff;
   margin: auto;
   border: 1px solid #eeeeee;
+  margin-left: 4%;
+}
+/deep/.van-dropdown-menu__item:nth-child(2) {
+  flex: none;
+  width: 1.56rem;
+  height: 0.6rem;
+  border-radius: 1rem;
+  background-color: #fff;
+  margin: auto;
+  border: 1px solid #eeeeee;
+  margin-right: 4%;
 }
 /deep/.van-collapse-item__content {
   background-color: #f9f9fd;
+}
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
 }
 .all_income {
   width: 100%;
@@ -419,7 +450,7 @@ export default {
     .income_con_top {
       width: 100%;
       height: 24.5%;
-      background: url(../../assets/images/suanlimingxi.png) no-repeat;
+      background: url(../../assets/images/jifen_bgc.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
       p {

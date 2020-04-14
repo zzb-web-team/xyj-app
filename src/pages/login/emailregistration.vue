@@ -152,10 +152,8 @@ export default {
         let change_telnumflag = 0;
         param.user_tel = this.$route.query.phoneNum;
         param.change_telnum_flag = change_telnumflag;
-        console.log(param);
         get_code(param) //获取验证码
           .then(res => {
-            console.log(res);
             if (res.status == 0) {
               if (res.err_code == 499) {
                 //验证码倒计时

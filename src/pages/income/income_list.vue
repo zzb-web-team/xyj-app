@@ -129,7 +129,6 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted() {
-    console.log(this.$route.query.allshou);
     this.total_revenue = this.$route.query.allshou.total_profit;
     this.value11 = this.$route.query.allshou.dev_sn;
     let date = new Date();
@@ -175,7 +174,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
         });
     },
     //获取单台设备每日收益
@@ -188,7 +186,6 @@ export default {
       params.dev_sn = this.value11;
       devrevenue(params)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             this.income_list = res.data.dev_profit_list;
           } else if (res.status == -17) {
@@ -213,7 +210,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
         });
     },
     //获取所有设备收益列表
@@ -258,7 +254,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
         }); //获取每天总收益
     },
     onClickLeft() {
@@ -279,7 +274,6 @@ export default {
       function computeTime(year, month) {
         _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
         _this.endtime = new Date(year, month, 0).getTime() / 1000;
-        console.log(_this.starttime, _this.endtime);
       }
       computeTime(y, this.value22);
       this.income_list = [];
@@ -290,8 +284,6 @@ export default {
       this.showdev = false;
     },
     item_open(activeNames) {
-      console.log(activeNames, this.slcsi);
-
       if (activeNames.date_stamp == this.slcsi.date_stamp) {
         return false;
       }
@@ -322,7 +314,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
         });
     },
     //事件戳转时间
@@ -380,6 +371,18 @@ export default {
 }
 /deep/.van-collapse-item__content {
   background-color: #f9f9fd;
+}
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
 }
 .all_income {
   width: 100%;

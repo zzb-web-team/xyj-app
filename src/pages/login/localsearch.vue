@@ -101,7 +101,6 @@ export default {
     gobing(id) {
       let idlist = [];
       idlist.push(id);
-      console.log(idlist);
       this.$router.push({
         name: "find",
         query: {

@@ -84,7 +84,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     get_help_detail() {
@@ -122,7 +122,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     }
   }

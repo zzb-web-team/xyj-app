@@ -47,21 +47,27 @@
             <p>设备链接电源后不在线怎么处理?</p>
           </div>
         </div>-->
-        <div class="help_center_content_con_item" v-for="(item,index) in datalist" :key="index">
-          <div class="con_item_left" @click="show_problem(item,index)">
+        <div
+          class="help_center_content_con_item"
+          v-for="(item, index) in datalist"
+          :key="index"
+        >
+          <div class="con_item_left" @click="show_problem(item, index)">
             <div>
               <img src="../../assets/images/help_shouyi.png" alt />
             </div>
-            <div>{{item.title}}</div>
+            <div>{{ item.title }}</div>
             <van-icon name="arrow-down" />
           </div>
           <div class="con_item_right">
             <p
-              v-for="(items,indexs) in item.problem"
-              :key="indexs+'problem'"
-              v-show="indexs<item.aoenbum"
+              v-for="(items, indexs) in item.problem"
+              :key="indexs + 'problem'"
+              v-show="indexs < item.aoenbum"
               @click="go_help_detail(items)"
-            >{{items.problem_item}}</p>
+            >
+              {{ items.problem_item }}
+            </p>
           </div>
         </div>
       </div>
@@ -123,7 +129,7 @@ export default {
     devsn: state => state.management.devsn
   }),
   mounted() {
-    this.get_help();
+    //this.get_help();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
@@ -174,7 +180,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     }
   }
@@ -182,6 +188,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
+}
 .help_center {
   width: 100%;
   height: 100%;

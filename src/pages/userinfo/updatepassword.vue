@@ -119,10 +119,8 @@ export default {
         param.login_token = this.log_token;
         param.col_name = colname;
         param.col_value = colvalue;
-        console.log(param);
         updateUserinfo(param)
           .then(res => {
-            console.log(res);
             Toast.clear();
             this.repeats = 0;
             // res==-1时，token过期，重新登登录
@@ -229,7 +227,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 .van-nav-bar {
   color: #000;

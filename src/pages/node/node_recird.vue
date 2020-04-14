@@ -72,7 +72,6 @@ export default {
       parmas.page_size = 10;
       query_node_dynamic_info(parmas)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             // this.updateUser({ log_token: res.token_info.login_token });
             if (res.err_code == 0) {
@@ -80,7 +79,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     onClickLeft() {

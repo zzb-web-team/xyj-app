@@ -99,7 +99,6 @@ export default {
   }),
   mounted() {
     this.dev_details = this.$route.query.item_detail;
-    console.log(this.dev_details);
     var date = new Date();
     this.value2 = date.getMonth() + 1;
     this.get_power_list();
@@ -118,7 +117,6 @@ export default {
       parmas.cur_page = 0;
       get_app_dev_cp_list(parmas)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.login_token });
           }else if (res.status == -17) {
@@ -145,7 +143,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     //筛选状态
@@ -165,6 +163,18 @@ export default {
   width: 94%;
   padding: 3%;
   overflow-y: scroll;
+}
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
 }
 .calculation {
   width: 100%;

@@ -57,7 +57,6 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted: function() {
-    console.log(this.$route.query.url);
     this.iframesrc = this.$route.query.url;
   },
   methods: {

@@ -120,10 +120,8 @@ export default {
         params.user_tel = this.tel;
         params.change_telnum_flag = changetelnumflag;
         params.login_token = this.log_token; //token;
-        console.log(params);
         get_code(params)
           .then(res => {
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               if (res.err_code == 499) {
@@ -199,10 +197,8 @@ export default {
         params.tel_num = this.tel; //新的手机号
         params.user_passwd = this.YzmCodeInput; //验证码
         params.login_token = this.log_token; //token;
-        console.log(params);
         settelnum(params)
           .then(res => {
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.rescount = 0;
@@ -212,7 +208,6 @@ export default {
               param.login_token = this.log_token;
               logout(param)
                 .then(res => {
-                  console.log(res);
                   this.repeats = 0;
                   if (res.status == 0) {
                     this.rescount = 0;
@@ -277,7 +272,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 .container {
   width: 100%;

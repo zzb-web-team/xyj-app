@@ -194,7 +194,6 @@ export default {
           return false;
         }
         this.repeats = 1;
-        console.log(this.rescount);
         if (this.rescount >= 3) {
           this.rescount = 0;
           this.repeats = 0;
@@ -208,14 +207,9 @@ export default {
         let querytype = 3;
         params.login_token = this.log_token;
         params.query_type = querytype;
-        console.log(params);
         rank(params)
           .then(res => {
-            if (res) {
-            }
-            console.log(res);
             this.repeats = 0;
-
             if (res.status == 0) {
               this.rescount = 0;
               this.updateUser({
@@ -296,10 +290,8 @@ export default {
       let querytype = 2;
       params.login_token = this.log_token;
       params.query_type = querytype;
-      console.log(params);
       rank(params)
         .then(res => {
-          console.log(res);
           this.$loading.hide();
           if (res.status == 0) {
             this.rankList = res.data.bind_rank;
@@ -367,7 +359,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 /deep/.van-tabs__nav {
   color: #ffffff;

@@ -167,7 +167,7 @@ export default {
     ...mapMutations(["updateUser", "clearUser"]),
     mea(pos) {
       if (pos) {
-        console.log(pos.y);
+        // console.log(pos.y);
       }
     },
     //获取总受益
@@ -203,13 +203,11 @@ export default {
         param.start_time = starttime;
         param.end_time = endtimes;
         param.query_type = 1;
-        console.log(param);
         getuserdevlist(param) //获取总收益
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             // this.mytime = res.dev_profit_list[0].date_stamp;
             if (res.status == 0) {
@@ -275,7 +273,6 @@ export default {
     },
     //获取折线图
     getalldevrevenue(key) {
-      console.log(this.repeats, this.rescount);
       this.arres = [];
       this.listInfoTim = [];
       //正常日期
@@ -319,13 +316,11 @@ export default {
         params.end_time = endtimes;
         params.query_type = 2;
         params.cur_page = 0;
-        console.log(params);
         getuserdevlist(params) //获取7天总收益明细
           .then(res => {
             if (res != -5) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             // this.mytime = res.dev_profit_list[0].date_stamp;
             if (res.status == 0) {
@@ -387,8 +382,6 @@ export default {
                   //   this.listInfoNum.push("0");
                   // }
                 }
-                console.log(this.listInfoNum, this.control);
-
                 if (this.control == 7) {
                   this.noint = true;
                 }
@@ -499,10 +492,8 @@ export default {
       let nowparam = new Object();
       nowparam.login_token = this.log_token;
       nowparam.login_type = 1;
-      console.log(nowparam);
       authorization(nowparam)
         .then(res => {
-          console.log(res);
           Toast.clear();
           if (res.status == 0) {
             if (res.data.bind_status == 1) {
@@ -516,9 +507,7 @@ export default {
                 message: "未授权",
                 duration: 400
               });
-              console.log(this.system);
               if (this.system == "iPhone") {
-                console.log(this.system);
                 this.Authorization(res.url);
               } else {
                 setTimeout(() => {
@@ -560,7 +549,6 @@ export default {
     },
     //ios获取权限
     Authorization: function(url) {
-      console.log(url);
       window.goTomoney = this.goTomoney; //绑定在window全局变量上，不加括号
       try {
         window.webkit.messageHandlers.openWebView.postMessage(url);

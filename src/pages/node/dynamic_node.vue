@@ -137,7 +137,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+         // console.log(error);
         });
     },
     //获取我的节点动态
@@ -148,7 +148,6 @@ export default {
       parmas.page_size = 10;
       query_node_dynamic_info(parmas)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             // this.updateUser({ log_token: res.token_info.login_token });
             if (res.err_code == 0) {
@@ -156,7 +155,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+         // console.log(error);
         });
     },
     //获取用户平均算力
@@ -200,7 +199,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+       //   console.log(error);
         });
     },
     go_recird() {

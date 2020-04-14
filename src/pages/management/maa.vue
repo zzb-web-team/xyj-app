@@ -58,11 +58,9 @@ export default {
         nowparam.user_tel = 13305123016;
         authorization(nowparam)
           .then(response => {
-            console.log(response);
             this.repeats = 0;
             if (response.status == 1) {
               this.rescount = 0;
-              console.log(response.msg);
               window.location.href = response.msg;
             }
           })

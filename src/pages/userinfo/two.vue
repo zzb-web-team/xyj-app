@@ -98,7 +98,6 @@ export default {
       params.cur_page = page;
       getuserdevlist(params) //获取每天总收益
         .then(res => {
-          console.log(res);
           if (res.data.page == 0) {
             this.paneList = res.data.user_profit_list;
           } else {
@@ -107,10 +106,8 @@ export default {
 
           this.pagenum = res.data.page;
           this.tolpage = res.data.total_page;
-          console.log(this.paneList);
         })
         .catch(error => {
-          console.log(error);
         });
     },
     //上拉

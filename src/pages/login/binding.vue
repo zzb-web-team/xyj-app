@@ -130,9 +130,7 @@ export default {
       this.$router.push({
         path: "/searchbinding" //没有搜索到设备就去扫码搜索界面
       });
-      console.log(data);
       let nowarr = JSON.parse(data);
-      console.log(nowarr);
       Toast.clear();
       if (nowarr.length <= 0) {
         Toast.clear();
@@ -171,7 +169,6 @@ export default {
       window.scancode = this.scancode; //绑定在window全局变量上，不加括号
     },
     scancode: function(data) {
-      console.log(data);
       try {
         let nowarr = JSON.parse(data);
         if (!nowarr.sn) {
@@ -203,10 +200,8 @@ export default {
         let params = new Object();
         params.login_token = this.log_token;
         params.dev_sn = this.devlist;
-        console.log(params);
         getMinerInfo(params) //获取设备信息
           .then(res => {
-            console.log(res);
             Toast.clear();
             if (res.status == 0) {
               this.repeats = 0;
@@ -236,7 +231,6 @@ export default {
                     }
                   }
                 });
-                console.log(this.deviceArr);
                 this.$router.push({
                   name: "find",
                   // name: "localsearch",
@@ -273,7 +267,6 @@ export default {
           })
           .catch(error => {
             Toast.clear();
-            console.log("无网络连接");
             this.repeats = 0;
             this.$router.push({ path: "/searchbinding" });
           });

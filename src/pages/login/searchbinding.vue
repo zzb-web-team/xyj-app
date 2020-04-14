@@ -84,7 +84,6 @@ export default {
       window.scancode = this.scancode; //绑定在window全局变量上，不加括号
     },
     scancode: function(data) {
-      console.log(data);
       try {
         let nowarr = JSON.parse(data);
         if (!nowarr.sn) {
@@ -126,7 +125,6 @@ export default {
       });
     },
     getMinerInfolist: function(data) {
-      console.log(data);
       let nowarr = JSON.parse(data);
       if (nowarr.length <= 0) {
         Toast(`未搜索到设备`);
@@ -155,7 +153,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 /deep/.van-nav-bar .van-icon {
   color: #ffffff;

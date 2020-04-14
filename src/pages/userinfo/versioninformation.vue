@@ -109,16 +109,16 @@ export default {
         // y 上下滑动距离 以及方向 上滑 大于0 下滑小于0
         // 判断滑动方向 上下
         if (x > 0) {
-          console.log("左滑距离:" + x + "px");
+        //  console.log("左滑距离:" + x + "px");
         } else if (x < 0) {
           x = x * -1;
-          console.log("右滑距离:" + x + "px");
+        //  console.log("右滑距离:" + x + "px");
         }
         if (y > 0) {
-          console.log("上滑距离:" + y + "px");
+        //  console.log("上滑距离:" + y + "px");
         } else if (y < 0) {
           y = y * -1;
-          console.log("下滑距离:" + y + "px");
+        //  console.log("下滑距离:" + y + "px");
         }
         e.preventDefault();
       } //

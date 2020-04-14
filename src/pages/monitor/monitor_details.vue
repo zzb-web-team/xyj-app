@@ -10,28 +10,28 @@
     <div class="monitor_y">
       <div class="monitor_top">
         <div class="monitor_top_left" @click="go_management()">
-          <p>{{storage.total}}</p>
+          <p>{{ storage.total }}</p>
           <p>设备</p>
           <div class="monitor_status">
-            <span>在线：{{storage.online}}</span>
-            <span>离线：{{storage.offline}}</span>
+            <span>在线：{{ storage.online }}</span>
+            <span>离线：{{ storage.offline }}</span>
           </div>
         </div>
         <div class="monitor_top_right" @click="go_dev_calculation()">
-          <p>{{storage.power}}</p>
+          <p>{{ storage.power }}</p>
           <p>平均算力</p>
-          <div class="monitor_income">昨日收益：{{storage.income}}</div>
+          <div class="monitor_income">昨日收益：{{ storage.income }}</div>
         </div>
       </div>
       <p class="monitor_title">检测图表</p>
 
       <div class="monitor_btn">
         <van-button type="default" @click="xiuxiuxiu1">
-          {{value1}}
+          {{ value1 }}
           <van-icon name="play" size="0.3rem" />
         </van-button>
         <van-button type="default" @click="xiuxiuxiu2">
-          {{value2}}
+          {{ value2 }}
           <van-icon name="play" size="0.3rem" />
         </van-button>
       </div>
@@ -57,24 +57,24 @@
             <p>存储信息</p>
             <div class="action_cunchu">
               <span>总存储</span>
-              <span class="action_cunchu_con">{{cap.total}}GB</span>
+              <span class="action_cunchu_con">{{ cap.total }}GB</span>
             </div>
             <div class="action_cunchu">
               <span>占用空间</span>
-              <span class="action_cunchu_con">{{cap.use}}GB</span>
+              <span class="action_cunchu_con">{{ cap.use }}GB</span>
             </div>
             <div class="action_cunchu">
               <span>剩余存储</span>
-              <span class="action_cunchu_con">{{cap.free}}GB</span>
+              <span class="action_cunchu_con">{{ cap.free }}GB</span>
             </div>
             <p>在线信息</p>
             <div class="action_cunchu">
               <span>累计在线时长</span>
-              <span class="action_cunchu_con">{{cap.online_time}}h</span>
+              <span class="action_cunchu_con">{{ cap.online_time }}h</span>
             </div>
             <div class="action_cunchu">
               <span>离线次数</span>
-              <span class="action_cunchu_con">{{cap.offline_times_num}}</span>
+              <span class="action_cunchu_con">{{ cap.offline_times_num }}</span>
             </div>
           </van-tab>
 
@@ -92,24 +92,30 @@
             <p>网络信息</p>
             <div class="action_cunchu">
               <span>上行带宽</span>
-              <span class="action_cunchu_con">{{band.up_bandwidth}}Mbps</span>
+              <span class="action_cunchu_con">{{ band.up_bandwidth }}Mbps</span>
             </div>
             <div class="action_cunchu">
               <span>下行带宽</span>
-              <span class="action_cunchu_con">{{band.down_bandwidth}}Mbps</span>
+              <span class="action_cunchu_con"
+                >{{ band.down_bandwidth }}Mbps</span
+              >
             </div>
             <div class="action_cunchu">
               <span>占用带宽</span>
-              <span class="action_cunchu_con">{{band.use_bandwidth}}Mbps</span>
+              <span class="action_cunchu_con"
+                >{{ band.use_bandwidth }}Mbps</span
+              >
             </div>
             <p>在线信息</p>
             <div class="action_cunchu">
               <span>累计在线时长</span>
-              <span class="action_cunchu_con">{{band.online_time}}h</span>
+              <span class="action_cunchu_con">{{ band.online_time }}h</span>
             </div>
             <div class="action_cunchu">
               <span>离线次数</span>
-              <span class="action_cunchu_con">{{band.offline_times_num}}</span>
+              <span class="action_cunchu_con">{{
+                band.offline_times_num
+              }}</span>
             </div>
           </van-tab>
         </van-tabs>
@@ -243,7 +249,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     //获取数据--监控（存储）
@@ -290,7 +296,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     //获取数据--监控（设备带宽）
@@ -310,29 +316,29 @@ export default {
             } else {
               Toast(res.err_msg);
             }
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     //存储和网络显示切换
@@ -398,29 +404,29 @@ export default {
                 1024
               ).toFixed(2);
             }
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
     //下拉折叠菜单显示
@@ -668,7 +674,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style type="text/less" lang="less" scoped>
 /deep/.van-nav-bar {
   color: #000;
   background: #ffffff;

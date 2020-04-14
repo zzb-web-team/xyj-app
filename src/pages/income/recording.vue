@@ -105,14 +105,11 @@ export default {
     },
     //上拉加载
     loadMore() {
-      console.log("上拉");
       let self = this;
-      console.log(self.allpage, self.pagenum, "上拉");
       if (self.allpage - 1 <= self.pagenum) {
         self.$refs.myscroller.update(true); //关闭上拉
       } else {
         self.pagenum++;
-        console.log(self.pagenum);
         self.redemptionrecord(self.pagenum, 1);
         self.$refs.myscroller.update(false); //不关闭上拉
       }
@@ -138,7 +135,6 @@ export default {
           Toast(`请求超时，请稍后重试`);
           return false;
         }
-        console.log(pages, key);
         let params = new Object();
         let querydate = 7;
         // let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳
@@ -149,13 +145,11 @@ export default {
         params.end_time = endtimes + 24 * 3600;
         params.login_token = token;
         params.cur_page = pages;
-        console.log(params);
         redeems(params) //兑换记录
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.updateUser({ log_token: res.token_info.token });
@@ -230,7 +224,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 .container {
   width: 100%;

@@ -36,31 +36,33 @@ export default {
 .van-nav-bar {
   /* z-index: 2 !important; */
   color: #fff;
-  background: linear-gradient(
+  /* background: linear-gradient(
     45deg,
     #4C94FE 10%,
     #2762FD 100%
-  );
+  ); */
 }
+
 .van-hairline--bottom::after {
-  border-bottom-width: 0px;
+    border-bottom-width: 0px;
+    color: #333333;
 }
 .van-nav-bar__title {
   font-size: 0.34rem;
-  color: #ffffff;
+  color: #333333;
 }
 .van-nav-bar__text {
-  color: #ffffff;
+  color: #333333;
   font-size: 0.28rem;
 }
 .van-nav-bar__left {
   font-size: 0.36rem;
 }
 .van-icon-arrow-left:before {
-  color: #ffffff;
+  color: #333333;
 }
 .alltitleleft span {
-  color: #ffffff;
+  color: #333333;
   font-size: 0.28rem;
 }
 </style>

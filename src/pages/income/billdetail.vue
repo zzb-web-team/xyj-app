@@ -222,13 +222,11 @@ export default {
         params.end_time = this.mytime + 1;
         params.login_token = token;
         params.cur_page = page;
-        console.log(params);
         alldevinformation(params) //所有设备详情
           .then(res => {
             if (res) {
               this.$loading.hide();
             }
-            console.log(res);
             this.repeats = 0;
             if (res.status == 0) {
               this.rescount = 0;
@@ -256,13 +254,11 @@ export default {
                 }
               });
               this.absx = this.absx.concat(this.absa);
-              console.log(this.miningArr);
               alldevrevenue(params) //所有设备收益
                 .then(res => {
                   if (res) {
                     this.$loading.hide();
                   }
-                  console.log(res);
                   this.repeats = 0;
                   if (res.status == 0) {
                     if (res.data.page == 0) {
@@ -309,7 +305,6 @@ export default {
                         this.allListdetails = this.allListdetails.concat(
                           this.absx
                         );
-                        console.log(this.allListdetails);
                         return false;
                       } else {
                         page++;
@@ -377,7 +372,6 @@ export default {
                   }
                 })
                 .catch(error => {
-                  console.log(error);
                   this.repeats = 0;
                   this.rescount++;
                   this.allrevenue(0, 1);
@@ -424,7 +418,6 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
             this.repeats = 0;
             this.rescount++;
             this.allrevenue(0);
@@ -440,10 +433,8 @@ export default {
       params.start_ts = startime;
       params.end_ts = this.mytime + 1;
       params.login_token = token;
-      console.log(params, "**************");
       getdevhistoricalname(params)
         .then(res => {
-          console.log(res, "**************");
           if (res.status == 0) {
             this.updateUser({ log_token: res.token_info.login_token });
             this.devhistoricalname = res.data;

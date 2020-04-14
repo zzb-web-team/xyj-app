@@ -1,22 +1,31 @@
 <template>
   <div class="all_income">
-    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="收益明细"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
-        <p>{{revenue_time |formatDate}}累计收益(gfm)</p>
-        <p class="dev_num">{{total_revenue}}</p>
+        <p>{{ revenue_time | formatDate }}累计收益(gfm)</p>
+        <p class="dev_num">{{ total_revenue }}</p>
       </div>
       <!--  -->
       <div class="content_body">
-        <div class="content_con" v-for="(item,index) in dev_income_list" :key="index">
+        <div
+          class="content_con"
+          v-for="(item, index) in dev_income_list"
+          :key="index"
+        >
           <div class="content_body_top" @click="go_income_list(item)">
             <span>
               <img src="../../assets/images/income_name.png" alt />
-              {{item.dev_name}}
+              {{ item.dev_name }}
             </span>
             <span>
-              算力：{{item.dev_profit}}
+              算力：{{ item.dev_profit }}
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </span>
           </div>
@@ -26,17 +35,29 @@
               <div class="content_body_bottom_right_detail">
                 <p>累计收益</p>
                 <p>
-                  {{(item.dev_profit/100).toFixed(2)}}
+                  {{ (item.dev_profit / 100).toFixed(2) }}
                   <span>gfm</span>
                 </p>
               </div>
             </div>
             <div class="content_body_bottom_right item_right">
               <div class="content_body_bottom_right_detail">
-                <p>占用空间：{{((item.total_cap-item.free_cap)/1024/1024).toFixed(2)}}GB</p>
-                <p>上行带宽：{{(item.up_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
-                <p>下行带宽：{{(item.down_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
-                <p>在线时长：{{(item.online_time/3600).toFixed(2)}}h</p>
+                <p>
+                  占用空间：{{
+                    ((item.total_cap - item.free_cap) / 1024 / 1024).toFixed(2)
+                  }}GB
+                </p>
+                <p>
+                  上行带宽：{{
+                    (item.up_bandwidth / 1024 / 1024).toFixed(2)
+                  }}Mbps
+                </p>
+                <p>
+                  下行带宽：{{
+                    (item.down_bandwidth / 1024 / 1024).toFixed(2)
+                  }}Mbps
+                </p>
+                <p>在线时长：{{ (item.online_time / 3600).toFixed(2) }}h</p>
               </div>
             </div>
           </div>
@@ -82,7 +103,9 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted() {
-    this.total_revenue = (this.$route.query.allshou.user_total_profit/100).toFixed(2);
+    this.total_revenue = (
+      this.$route.query.allshou.user_total_profit / 100
+    ).toFixed(2);
     this.revenue_time = this.$route.query.allshou.date_stamp;
     this.get_income(0);
   },
@@ -102,26 +125,26 @@ export default {
           if (res.status == 0) {
             this.income_detail = res.data.dev_profit_list;
             this.get_dev_detail();
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch();
     },
@@ -156,27 +179,26 @@ export default {
               }
             }
             this.dev_income_list = this.income_detail;
-            console.log(this.dev_income_list);
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch();
     },
@@ -198,7 +220,7 @@ export default {
       this.$router.go(-1);
     },
     go_income_detail(data) {
-      console.log(data);
+     // console.log(data);
     },
     show_dev() {
       this.showdev = true;
@@ -248,6 +270,18 @@ export default {
   background-color: #fff;
   margin: auto;
   border: 1px solid #eeeeee;
+}
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
 }
 .all_income {
   width: 100%;

@@ -131,7 +131,6 @@ export default {
         param.login_token = this.log_token;
         param.col_name = colname;
         param.col_value = colvalue;
-        console.log(param);
         updateUserinfo(param)
           .then(res => {
             Toast.clear();
@@ -216,7 +215,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 .container {
   width: 100%;

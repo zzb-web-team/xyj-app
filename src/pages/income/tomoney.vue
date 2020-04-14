@@ -221,8 +221,6 @@ export default {
     this.toMoneyNum = (
       JSON.parse(sessionStorage.getItem("money")) / 1000000
     ).toFixed(6);
-    console.log(this.toMoneyNum);
-
     if (this.$parent.onLine == false) {
       Toast("无法连接网络，请检查网络状态");
     } else {
@@ -328,10 +326,8 @@ export default {
         params.amount = this.toMoneyText;
         params.wallet_type = "EUSD";
         // params.charge_psd = this.valuee;
-        console.log(params);
         confirmorder(params)
           .then(res => {
-            console.log(res);
             if (res.status == 0) {
               this.repeats = 0;
               this.rescount = 0;
@@ -427,7 +423,6 @@ export default {
             return res;
           })
           .then(res => {
-            console.log(res);
             if (res) {
               Toast.clear();
             }
@@ -488,11 +483,10 @@ export default {
       }
     },
     cancel() {
-      console.log("取消");
+      //console.log("取消");
     },
     //取消
     leavefalse() {
-      console.log("取消");
       this.levelshow = false;
       this.ave = false;
     },
@@ -523,7 +517,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 /deep/.van-password-input {
   width: 100%;

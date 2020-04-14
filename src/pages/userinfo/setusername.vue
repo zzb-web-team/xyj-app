@@ -92,7 +92,6 @@ export default {
           Toast(`请求超时，请稍后重试`);
           return false;
         }
-        console.log(JSON.stringify(this.userName));
         this.$validator.validate().then(valid => {
           if (!valid) {
             // do stuff if not valid.
@@ -106,10 +105,8 @@ export default {
             param.login_token = this.log_token;
             param.col_name = colname;
             param.col_value = colvalue;
-            console.log(param);
             updateUserinfo(param)
               .then(res => {
-                console.log(res);
                 Toast.clear();
                 this.repeats = 0;
                 if (res.status == 0) {
@@ -204,7 +201,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 .container {
   width: 100%;

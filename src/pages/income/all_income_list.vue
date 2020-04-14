@@ -1,24 +1,42 @@
 <template>
   <div class="all_income">
-    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="收益明细"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
         <p>累计收益(gfm)</p>
-        <p class="dev_num">{{total_revenue}}</p>
+        <p class="dev_num">{{ total_revenue }}</p>
       </div>
       <div class="income_con_btn">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="value11" :options="option1" @change="changedev(value11)" />
-          <van-dropdown-item v-model="value22" :options="option2" @change="changetime(value22)" />
+          <van-dropdown-item
+            v-model="value11"
+            :options="option1"
+            @change="changedev(value11)"
+          />
+          <van-dropdown-item
+            v-model="value22"
+            :options="option2"
+            @change="changetime(value22)"
+          />
         </van-dropdown-menu>
       </div>
-      <div class="income_con_body" v-for="(item,index) in income_list" :key="index">
+      <div
+        class="income_con_body"
+        v-for="(item, index) in income_list"
+        :key="index"
+      >
         <van-cell
           is-link
-          :title="'+'+(item.user_total_profit/100).toFixed(2)+'gfm'"
+          :title="'+' + (item.user_total_profit / 100).toFixed(2) + 'gfm'"
           @click="go_income_detail(item)"
-        >{{item.date_stamp |formatDate}}</van-cell>
+          >{{ item.date_stamp | formatDate }}</van-cell
+        >
       </div>
     </div>
   </div>
@@ -108,31 +126,30 @@ export default {
               devobj.text = item.dev_name;
               devobj.value = item.dev_sn;
               this.option1.push(devobj);
-              console.log(this.option1);
             });
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
     },
     //获取收益列表
@@ -152,29 +169,29 @@ export default {
             this.income_list = this.income_list.concat(
               res.data.user_profit_list
             );
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         }); //获取每天总收益
     },
     //获取单台设备每日收益
@@ -187,7 +204,6 @@ export default {
       params.dev_sn = this.value11;
       devrevenue(params)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             //this.income_list=res.data.dev_profit_list;
             res.data.dev_profit_list.forEach(item => {
@@ -196,34 +212,34 @@ export default {
               dev_obj.date_stamp = item.date_stamp;
               this.income_list.push(dev_obj);
             });
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            } 
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
         })
         .catch(error => {
-          console.log(error);
+          //console.log(error);
         });
     },
     changetime() {
       this.income_list = [];
-      console.log(this.income_list);
+
       if (this.value22 == 0) {
         let querydate = 90;
         this.endtime = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
@@ -235,7 +251,6 @@ export default {
         function computeTime(year, month) {
           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
           _this.endtime = new Date(year, month, 0).getTime() / 1000;
-          console.log(_this.starttime, _this.endtime);
         }
         computeTime(y, this.value22);
       }
@@ -310,6 +325,18 @@ export default {
   margin: auto;
   border: 1px solid #eeeeee;
 }
+/deep/.van-nav-bar {
+  z-index: 2 !important;
+  color: #fff;
+  background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  color: #ffffff;
+}
 .all_income {
   width: 100%;
   height: 100%;
@@ -319,7 +346,7 @@ export default {
     .income_con_top {
       width: 100%;
       height: 24.5%;
-      background: url(../../assets/images/suanlimingxi.png) no-repeat;
+      background: url(../../assets/images/shouyi_bgc.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
       p {

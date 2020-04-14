@@ -37,7 +37,6 @@ export default {
   }),
   created() {
     window.get_pushid = this.get_pushid;
-    console.log(window, this.allid.pid);
   },
   mounted: function() {
     // this.get_pushid();
@@ -114,10 +113,8 @@ export default {
         "user_sex"
       ];
       params.login_token = this.log_token;
-      console.log(params);
       getUserinfo(params)
         .then(res => {
-          console.log(res);
           if (res.status == 0) {
             this.updateUser({
               log_token: res.data.login_token,
@@ -130,7 +127,6 @@ export default {
             params.login_token = this.log_token;
             get_tag(params)
               .then(res => {
-                console.log(res);
                 if (res.status == 0) {
                   if (res.err_code == 0) {
                     this.updateUser({
@@ -141,20 +137,16 @@ export default {
                     params.version = this.version;
                     turnon(params)
                       .then(res => {
-                        console.log(res);
                       })
                       .catch(error => {
-                        console.log(error);
                       });
                     this.tag = res.data.tag;
-                    console.log(res.data.tag);
                     //调用原生方法并传递tag
                     this.push_tag();
                   }
                 }
               })
               .catch(error => {
-                console.log(error);
               });
             setTimeout(() => {
               try {

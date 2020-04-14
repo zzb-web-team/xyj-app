@@ -220,7 +220,6 @@ export default {
     ser(key) {
       var starts = JSON.parse(sessionStorage.getItem("pushid"));
       let arr2 = Array.from(new Set(starts)); //去重
-      console.log(arr2);
       if (arr2.indexOf(key) < 0) {
         return false;
       }
@@ -240,13 +239,11 @@ export default {
     },
     //Tab 标签页点击事件
     onClick(name, title) {
-      console.log(title, name);
       this.tabnum = name;
       this.gettag(this.tabnum);
     },
     //跳转页面
     goother(data, num) {
-      console.log(data);
       if (data.notice_type == 0) {
         this.rankList[num].isActive = true;
         this.id.push(data.push_id);
@@ -275,10 +272,8 @@ export default {
       params.cur_page = this.pagenum;
       query_push_history_listex(params)
         .then(res => {
-          console.log(res);
           this.pagenum = res.data.cur_page;
           this.tolpage = res.data.total_num;
-          console.log(res.data.token_info.token);
           this.updateUser({
             log_token: res.data.token_info.token
           });
@@ -302,7 +297,6 @@ export default {
                 }
               }
             });
-            console.log(this.announcement, this.rankList);
           }
           if (this.rankList.length <= 0) {
             this.notext = true;
@@ -316,13 +310,12 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+        //  console.log(error);
         });
     },
 
     //上拉加载
     loadBottom() {
-      console.log("上拉加载更多");
       setTimeout(() => {
         if (this.pagenum <= this.tolpage / 10 - 1) {
           this.pagenum++;
@@ -341,7 +334,6 @@ export default {
     },
     //下拉刷新
     loadTop() {
-      console.log(this.active_tab);
       setTimeout(() => {
         if (this.tabnum == 0) {
           this.rankList = [];
