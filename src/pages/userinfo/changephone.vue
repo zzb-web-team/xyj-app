@@ -8,13 +8,13 @@
         <div class="user_con">
           <div class="user_con_item">
             <div class="con_item_l topnumber">
-              <img src="../../assets/images/icon_bg_alteration.png" alt />
-              <span>您正在为 {{phoneNum}} 变更手机号</span>
+              <!-- <img src="../../assets/images/icon_bg_alteration.png" alt /> -->
+              <span>验证原手机号</span>
             </div>
           </div>
           <div class="user_con_item">
             <div class="con_item_l">
-              <span>手机号</span>
+              <!-- <span>手机号</span> -->
               <input
                 type="tel"
                 v-model="tel"
@@ -22,12 +22,13 @@
                 @blur="resetDiv"
                 oninput="this.value=this.value.length>4?this.value.substr(0,11):this.value;"
                 autofocus
+                disabled
               />
             </div>
           </div>
           <div class="user_con_item user_con_item_active">
             <div class="con_item_l">
-              <span>验证码</span>
+              <!-- <span>验证码</span> -->
               <input
                 class="yanzhengma"
                 type="tel"
@@ -37,20 +38,26 @@
                 oninput="this.value=this.value.length>4?this.value.substr(0,6):this.value;"
               />
               <div v-if="YzmStatus">
-                <van-button class="codeYzm" @click="gettelCode()">获取验证码</van-button>
+                <van-button class="codeYzm" @click="gettelCode()"
+                  >获取</van-button
+                >
               </div>
               <div v-else>
-                <van-button class="codeYzm" v-if="!YzmStatus">{{count}}S</van-button>
+                <van-button class="codeYzm" v-if="!YzmStatus"
+                  >{{ count }}S</van-button
+                >
               </div>
             </div>
           </div>
         </div>
 
         <div>
-          <van-button class="introduction_start" @click="goLink()">完成</van-button>
+          <van-button class="introduction_start" @click="goLink()"
+            >验证</van-button
+          >
         </div>
 
-        <div class="login_title">更换新手机后需重新登录</div>
+        <!-- <div class="login_title">更换新手机后需重新登录</div> -->
       </div>
     </scroller>
   </div>
@@ -68,7 +75,7 @@ export default {
     return {
       repeats: 0, //防止重复点击
       rescount: 0, //请求计数
-      title: "手机号变更",
+      title: "",
       active: 2,
       timer: null,
       YzmStatus: true,
@@ -89,6 +96,7 @@ export default {
   }),
   mounted: function() {
     this.phoneNum = this.$route.params.usertel;
+    this.tel = this.$route.params.usertel;
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
@@ -273,18 +281,18 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 .container {
   width: 100%;
   height: 100%;
   margin: 0 auto;
   overflow: hidden;
-  background: #f8f8f8;
+  background: #ffffff;
   .user {
     margin: 1.3rem 0;
     width: 100%;
     height: 6.72rem;
-    background: #f8f8f8;
+    background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
 
@@ -300,10 +308,9 @@ export default {
         align-items: center;
         box-sizing: border-box;
         margin: auto;
-        margin-top: 0.02rem;
         font-size: 0.3rem;
         background-color: #fff;
-
+        border-bottom: 0.01rem solid #eeeeee;
         .con_item_l {
           width: 100%;
           height: 0.82rem;
@@ -321,31 +328,35 @@ export default {
           border: none;
           color: #aaaaaa;
           display: flex;
-          justify-content: center;
+          justify-content: flex-start;
           align-items: center;
+          text-align: left;
+          margin-left: 4%;
+          font-size: 0.5rem;
+          font-weight: 600;
           img {
             width: 7%;
           }
           span {
-            color: #808080;
+            color: #333333;
           }
         }
         &:nth-child(1) {
           width: 100%;
-          text-align: center;
+          text-align: left;
           margin: auto;
           margin-top: -0.2rem;
         }
         input {
           margin: 0.1rem 0;
-          width: 80%;
+          width: 100%;
           height: 0.4rem;
           line-height: 0.4rem;
           outline: none;
           background: none;
           border: none;
           color: #000000;
-          padding-left: 0.1rem;
+          padding-left: 0.4rem;
         }
         &.user_con_item_active {
           .con_item_l {
@@ -357,39 +368,37 @@ export default {
             color: rgb(0, 0, 0);
             line-height: 0.82rem;
             text-align: center;
-            width: 60%;
-            position: relative;
+            width: 92%;
             padding-left: 0.2rem;
             input {
               margin-left: 0.1rem;
             }
             .yanzhengma {
-              width: 60%;
+              width: 100%;
+              padding-left: 0.1rem;
             }
           }
           .codeYzm {
             width: 2rem;
             height: 0.62rem;
-            border-radius: 0.12rem;
             background: none;
-            color: #5c74f3;
-            border-radius: 0.1rem;
-            position: absolute;
-            right: -2.2rem;
-            bottom: 0.04rem;
-            // display: flex;
-            // align-items: center;
-            // justify-content: center;
-            border: none;
+            color: #3c7cfe;
+            width: 1.35rem;
+            height: 0.6rem;
+            border: 0.02rem solid;
+            border-image: linear-gradient(90deg, #5199ff, #205aff) 10 10;
+            border-radius: 1rem;
             span {
-              color: #5c74f3;
+              color: #3c7cfe;
+              font-size: 0.24rem;
             }
           }
         }
       }
       .user_con_item:nth-child(1) {
+        border: none;
         .con_item_l {
-          background: #f8f8f8;
+          background: #ffffff;
         }
       }
     }
@@ -411,14 +420,14 @@ export default {
   color: rgba(136, 143, 169, 1);
 }
 .introduction_start {
-  width: 6.9rem;
+  width: 6.87rem;
   height: 0.88rem;
   background: linear-gradient(
     90deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
+    rgba(254, 168, 107, 1) 0%,
+    rgba(255, 109, 110, 1) 100%
   );
-  border-radius: 1rem;
+  border-radius: 0.1rem;
   font-size: 0.3rem;
   font-weight: 400;
   color: rgba(255, 255, 255, 1);

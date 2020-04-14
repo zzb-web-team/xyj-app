@@ -129,7 +129,7 @@ export default {
     devsn: state => state.management.devsn
   }),
   mounted() {
-    //this.get_help();
+    this.get_help();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),

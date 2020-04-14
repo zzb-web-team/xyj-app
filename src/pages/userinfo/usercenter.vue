@@ -141,13 +141,13 @@
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>-->
-            <div class="user_con_item" @click="goversioninformation()">
+            <!-- <div class="user_con_item" @click="goversioninformation()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_version@3x.png" alt />
                 <span>跳转测试</span>
               </div>
               <div class="con_item_r"></div>
-            </div>
+            </div> -->
           </div>
           <div>
             <van-button
@@ -835,7 +835,7 @@ export default {
     font-size: 0.28rem;
     color: #252834;
     margin: auto;
-    margin-top: 2.5rem;
+    margin-top: 2.8rem;
     border: none;
     background: rgba(247, 247, 247, 1);
     border-radius: 0.1rem;

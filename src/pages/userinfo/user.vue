@@ -20,11 +20,11 @@
             <img src="../../assets/images/evenmore.png" />
           </div>
           <div class="con_item_r" v-else>
-            <van-radio-group v-model="user_sex" class="radio_own">
+            <!-- <van-radio-group v-model="user_sex" class="radio_own">
               <van-radio name="男" size="0.2rem">男</van-radio>
               <van-radio name="女" size="0.2rem">女</van-radio>
             </van-radio-group>
-            <div @click.stop="closeSetSex()">确定</div>
+            <div @click.stop="closeSetSex()">确定</div> -->
           </div>
         </div>
         <div class="user_con_item user_active" @click="goSetPhone()">
@@ -44,13 +44,20 @@
         </div>
       </div>
     </scroller>
+    <van-action-sheet
+      v-model="show"
+      :actions="actions"
+      @select="onSelect"
+      cancel-text="取消"
+      @cancel="onCancel"
+    />
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
-import { Toast, Dialog } from "vant";
+import { Toast, Dialog, ActionSheet } from "vant";
 import { userInfo, getUserinfo, updateUserinfo } from "../../common/js/api.js";
 import { err } from "../../common/js/status";
 
@@ -61,11 +68,12 @@ export default {
       rescount: 0, //请求计数
       title: "个人信息",
       active: 2,
-      userName: "",
+      usersex: "",
       currentRate: 60,
       setActive: true,
+      setActiveSex: true,
       show: false,
-      setActiveSex: true
+      actions: [{ name: "男" }, { name: "女" }]
     };
   },
   computed: {
@@ -76,6 +84,7 @@ export default {
       // user_sex: (state) => state.user.user_sex,
       charge_psd: state => state.user.charge_psd
     }),
+
     user_sex: {
       get() {
         return this.$store.state.user.user_sex;
@@ -98,7 +107,16 @@ export default {
       this.$router.push({ path: "/setusername" });
       this.setActive = false;
     },
+    onSelect(item) {
+      this.usersex = item.name;
+      this.show = false;
+      this.closeSetSex();
+    },
+    onCancel() {
+      this.show = false;
+    },
     openSetSex() {
+      this.show = true;
       this.setActiveSex = false;
     },
     //更改性别
@@ -127,7 +145,7 @@ export default {
         let param = new Object();
         let colname = ["user_sex"];
         let colvalue = [];
-        colvalue.push(this.user_sex);
+        colvalue.push(this.usersex);
         param.login_token = this.log_token;
         param.col_name = colname;
         param.col_value = colvalue;
@@ -144,6 +162,7 @@ export default {
                 message: "修改成功",
                 duration: 800
               });
+              this.user_sex = this.usersex;
               if (res.err_code == 0) {
               } else if (res.err_code == 500) {
                 this.rescount = 0;
@@ -176,7 +195,7 @@ export default {
               this.$router.push({ path: "/login" });
             } else if (res.status == -5) {
               this.rescount++;
-              this.closeSetSex;
+              this.closeSetSex();
             } else if (res.status == -17) {
               this.rescount = 0;
               Dialog.alert({
@@ -216,7 +235,12 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
+/deep/.van-popup {
+  width: 94%;
+  padding: 3%;
+  overflow-y: scroll;
+}
 .container {
   width: 100%;
   height: 100%;
@@ -224,7 +248,7 @@ export default {
   overflow: hidden;
   background: #ffffff;
   color: #000000;
-
+  font-size: 0.24rem;
   .user_con {
     width: 100%;
     height: auto;
@@ -236,7 +260,7 @@ export default {
       text-align: left;
       padding-left: 4%;
       color: #666666;
-      font-size: 0.2rem;
+      font-size: 0.24rem;
     }
     .item_title {
       display: inline-block;
@@ -256,7 +280,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       box-sizing: border-box;
-      font-size: 0.3rem;
+      font-size: 0.26rem;
       border-bottom: 0.01rem solid #eeeeee;
       &:nth-child(1) {
         border: none;
@@ -265,8 +289,11 @@ export default {
         width: 0.12rem;
         height: 0.24rem;
       }
+      .con_item_l {
+        font-size: 0.26rem;
+      }
     }
-    .con_item_r{
+    .con_item_r {
       color: #333333;
     }
     .user_active {
