@@ -1,54 +1,84 @@
 <template>
   <div class="all_income">
-    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="收益明细"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
         <p>累计收益(gfm)</p>
-        <p class="dev_num">{{(total_revenue/100).toFixed(2)}}</p>
+        <p class="dev_num">{{ (total_revenue / 100).toFixed(2) }}</p>
       </div>
-      <div class="income_con_btn">
+      <div class="income_con_btn" v-show="income_list.length > 0">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="value11" :options="option1" @change="changedev" />
-          <van-dropdown-item v-model="value22" :options="option2" @change="changetime" />
+          <van-dropdown-item
+            v-model="value11"
+            :options="option1"
+            @change="changedev"
+          />
+          <van-dropdown-item
+            v-model="value22"
+            :options="option2"
+            @change="changetime"
+          />
         </van-dropdown-menu>
       </div>
-      <van-collapse
-        v-model="activeNames"
-        v-for="(item,index) in income_list"
-        :key="index"
-        accordion
-        @change="item_open(item)"
-      >
-        <van-collapse-item
-          :title="'+'+(item.dev_profit/100).toFixed(2)+'gfm'"
-          :name="index"
-          :value="item.date_stamp |formatDate"
+      <div v-if="income_list.length > 0">
+        <van-collapse
+          v-model="activeNames"
+          v-for="(item, index) in income_list"
+          :key="index"
+          accordion
+          @change="item_open(item)"
         >
-          <div class="income_bottom_top">
-            <span></span>
-            <p>{{item.devname}}</p>
-          </div>
-          <div class="income_bottom_con">
-            <div class="income_bottom_con_item con_item_left">
-              <p>占用空间</p>
-              <p>{{((devarrlist.total_cap-devarrlist.free_cap)/1024/1024).toFixed(2)}}GB</p>
+          <van-collapse-item
+            :title="'+' + (item.dev_profit / 100).toFixed(2) + 'gfm'"
+            :name="index"
+            :value="item.date_stamp | formatDate"
+          >
+            <div class="income_bottom_top">
+              <span></span>
+              <p>{{ item.devname }}</p>
             </div>
-            <div class="income_bottom_con_item con_item_center">
-              <p>上行带宽</p>
-              <p>{{(devarrlist.up_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
+            <div class="income_bottom_con">
+              <div class="income_bottom_con_item con_item_left">
+                <p>占用空间</p>
+                <p>
+                  {{
+                    (
+                      (devarrlist.total_cap - devarrlist.free_cap) /
+                      1024 /
+                      1024
+                    ).toFixed(2)
+                  }}GB
+                </p>
+              </div>
+              <div class="income_bottom_con_item con_item_center">
+                <p>上行带宽</p>
+                <p>
+                  {{ (devarrlist.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
+                </p>
+              </div>
+              <div class="income_bottom_con_item con_item_right">
+                <p>下行带宽</p>
+                <p>
+                  {{ (devarrlist.down_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
+                </p>
+              </div>
             </div>
-            <div class="income_bottom_con_item con_item_right">
-              <p>下行带宽</p>
-              <p>{{(devarrlist.down_bandwidth/1024/1024).toFixed(2)}}Mbps</p>
+            <div class="income_bottom_bot">
+              <div>算力：{{ item.com_power }}</div>
+              <div>
+                在线时长：{{ (devarrlist.online_time / 3600).toFixed(2) }}h
+              </div>
             </div>
-          </div>
-          <div class="income_bottom_bot">
-            <div>算力：{{item.com_power}}</div>
-            <div>在线时长：{{(devarrlist.online_time/3600).toFixed(2)}}h</div>
-          </div>
-        </van-collapse-item>
-      </van-collapse>
+          </van-collapse-item>
+        </van-collapse>
+      </div>
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -60,7 +90,8 @@ import {
   devrevenue,
   isbindinglist,
   devinformation,
-  getuserdevlist
+  getuserdevlist,
+  query_node_total_profit_info
 } from "../../common/js/api";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -129,15 +160,66 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted() {
-    this.total_revenue = this.$route.query.allshou.total_profit;
-    this.value11 = this.$route.query.allshou.dev_sn;
     let date = new Date();
     this.value22 = date.getMonth() + 1;
+    this.value11 = this.$route.query.allshou.dev_sn;
+    if (this.$route.query.allshou.total_profit) {
+      this.total_revenue = this.$route.query.allshou.total_profit;
+    } else {
+      this.get_all_dev_income(0);
+    }
     this.changetime();
     this.get_use_dev_list();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
+    //获取设备收益列表
+    get_all_dev_income(page) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      params.cur_page = page;
+      query_node_total_profit_info(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            for (
+              let index = 0;
+              index < res.data.dev_total_profit_list.length;
+              index++
+            ) {
+              if (
+                res.data.dev_total_profit_list[index].dev_sn == this.value11
+              ) {
+                this.total_revenue =
+                  res.data.dev_total_profit_list[index].total_profit;
+                return false;
+              }
+            }
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
+    },
     //获取用户设备列表
     get_use_dev_list() {
       let params = new Object();
@@ -173,8 +255,7 @@ export default {
             }
           }
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
     //获取单台设备每日收益
     get_dev_income_day(page) {
@@ -209,8 +290,7 @@ export default {
             }
           }
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
     //获取所有设备收益列表
     get_income_list(page) {
@@ -253,8 +333,7 @@ export default {
             }
           }
         })
-        .catch(error => {
-        }); //获取每天总收益
+        .catch(error => {}); //获取每天总收益
     },
     onClickLeft() {
       this.$router.go(-1);
@@ -313,8 +392,7 @@ export default {
             this.item_open();
           }
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
     //事件戳转时间
     timestampToTime(timestamp) {
@@ -383,6 +461,9 @@ export default {
 }
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
+}
+/deep/.van-empty {
+  margin-top: 2rem;
 }
 .all_income {
   width: 100%;

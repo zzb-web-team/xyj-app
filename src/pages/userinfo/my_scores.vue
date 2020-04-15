@@ -17,7 +17,7 @@
       </div>
     </van-nav-bar>
     <!--  -->
-    <div class="income_con">
+    <div class="income_con" v-if="income_list.length > 0">
       <div class="income_con_top">
         <p>积分()</p>
         <p class="dev_num">{{ total_revenue }}</p>
@@ -60,6 +60,7 @@
         </div>
       </div>
     </div>
+    <van-empty image="search" description="暂无数据" v-else />
   </div>
 </template>
 
@@ -80,44 +81,7 @@ export default {
       activeNames: ["1"],
       showdev: false,
       system: "",
-      income_list: [
-        {
-          cur_profit: 3,
-          total_profit: 1584962688,
-          profit_type: 1,
-          time_stamp: 1585149384
-        },
-        {
-          cur_profit: 5,
-          total_profit: 1584452688,
-          profit_type: 1,
-          time_stamp: 1585149384
-        },
-        {
-          cur_profit: 23,
-          total_profit: 1584962688,
-          profit_type: 1,
-          time_stamp: 1585149384
-        },
-        {
-          cur_profit: 43,
-          total_profit: 1584622688,
-          profit_type: 0,
-          time_stamp: 1585149384
-        },
-        {
-          cur_profit: 35,
-          total_profit: 1584969708,
-          profit_type: 0,
-          time_stamp: 1585149384
-        },
-        {
-          cur_profit: 5,
-          total_profit: 1584456688,
-          profit_type: 1,
-          time_stamp: 1585149384
-        }
-      ],
+      income_list: [],
       value11: 0,
       value22: 0,
       starttime: 0,
@@ -245,7 +209,7 @@ export default {
             }
           })
           .catch(error => {
-          // console.log(error);
+            // console.log(error);
             // Toast("网络错误，请重新请求");
           });
       }
@@ -362,8 +326,7 @@ export default {
       this.income_list = [];
       this.redemptionrecord(0);
     },
-    go_income_detail(data) {
-    },
+    go_income_detail(data) {},
     show_dev() {
       this.showdev = true;
     },
@@ -436,6 +399,9 @@ export default {
 }
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
+}
+/deep/.van-empty {
+  margin-top: 4rem;
 }
 .all_income {
   width: 100%;

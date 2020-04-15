@@ -8,7 +8,7 @@
     left-arrow
     @click-left="onClickLeft"
     @click-right="onClickRight"
-    :z-index="2000"
+    :z-index="2050"
   >
     <div slot="left" class="alltitleleft">
       <van-icon name="arrow-left" color="#000000" />
@@ -44,8 +44,8 @@ export default {
 }
 
 .van-hairline--bottom::after {
-    border-bottom-width: 0px;
-    color: #333333;
+  border-bottom-width: 0px;
+  color: #333333;
 }
 .van-nav-bar__title {
   font-size: 0.34rem;

@@ -1,42 +1,49 @@
 <template>
   <div class="calculation">
-    <navBar title="设备算力" left-text="返回" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="设备算力"
+      left-text="返回"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <div class="content">
       <div class="calculation_top">
-        <p class="dev_num">{{node_suanli}}</p>
+        <p class="dev_num">{{ node_suanli }}</p>
         <p>平均算力</p>
       </div>
-      <div class="calculation_bottom">
+      <div class="calculation_bottom" v-if="minerInfo.length > 0">
         <div
           class="calculation_item"
-          v-for="(item,index) in minerInfo"
+          v-for="(item, index) in minerInfo"
           :key="index"
           @click="go_calculation_details(item)"
         >
           <div class="item_left">
-            <p>{{item.dev_name}}</p>
-            <p>SN:{{item.dev_sn}}</p>
+            <p>{{ item.dev_name }}</p>
+            <p>SN:{{ item.dev_sn }}</p>
           </div>
           <div class="item_center">
-            <p v-if="item.node_level==0">
+            <p v-if="item.node_level == 0">
               <img src="../../assets/images/putong.svg" alt />普通节点
             </p>
-            <p v-else-if="item.node_level==1">
+            <p v-else-if="item.node_level == 1">
               <img src="../../assets/images/huangjin.svg" alt />黄金节点
             </p>
-            <p v-else-if="item.node_level==2">
+            <p v-else-if="item.node_level == 2">
               <img src="../../assets/images/bojin.svg" alt />铂金节点
             </p>
             <p v-else>
               <img src="../../assets/images/zuanshi.svg" alt />钻石节点
             </p>
-            <p>算力：{{item.power}}</p>
+            <p>算力：{{ item.power }}</p>
           </div>
           <div class="item_right">
             <img src="../../assets/images/per_icon_arrow.png" alt />
           </div>
         </div>
       </div>
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -44,7 +51,7 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
-import {isbindinglist} from "../../common/js/api"
+import { isbindinglist } from "../../common/js/api";
 import { TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
 export default {
   data() {
@@ -53,18 +60,18 @@ export default {
       repeats: 0, //防止重复点击
       rescount: 0, //请求计数
       minerInfo: [
-        {
-          dev_name: "我的节点1",
-          dev_sn: "SNE4508276578",
-          node_level: 0,
-          power: 4358
-        },
-        {
-          dev_name: "我的节点2",
-          dev_sn: "SNE43697357",
-          node_level: 1,
-          power: 982
-        }
+        // {
+        //   dev_name: "我的节点1",
+        //   dev_sn: "SNE4508276578",
+        //   node_level: 0,
+        //   power: 4358
+        // },
+        // {
+        //   dev_name: "我的节点2",
+        //   dev_sn: "SNE43697357",
+        //   node_level: 1,
+        //   power: 982
+        // }
       ]
     };
   },
@@ -82,10 +89,10 @@ export default {
   }),
   mounted() {
     this.node_suanli = this.$route.query.suanli;
-     this.device(0, 0);
+    this.device(0, 0);
   },
   methods: {
-        ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
+    ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     //获取我的设备列表
     device(page, key) {
       this.topshow = false;
@@ -243,6 +250,9 @@ export default {
 }
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
+}
+/deep/.van-empty {
+  margin-top: 2rem;
 }
 .calculation {
   width: 100%;

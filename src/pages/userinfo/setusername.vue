@@ -1,10 +1,25 @@
 <template>
   <div class="container">
-    <navBar :title="title"></navBar>
+    <van-nav-bar
+      size="0.4rem"
+      left-arrow
+      fixed
+      title="昵称"
+      @click-left="onClickLeft()"
+      @click-right="onClickRight()"
+      :z-index="10"
+    >
+      <div slot="left" class="alltitleleft">
+        <van-icon name="arrow-left" color="#333333" />
+      </div>
+      <div slot="right" class="titrights" color="#333333">
+        <span>保存</span>
+      </div>
+    </van-nav-bar>
     <scroller>
       <div class="container_introduction">
         <div class="introduction_text">
-          <p>完善个人信息</p>
+          <!-- <p>完善个人信息</p> -->
           <div class="login_input">
             <input
               type="text"
@@ -15,14 +30,26 @@
               @blur="resetDiv"
               autofocus
             />
+            <van-icon
+              name="clear"
+              color="#CBCBCB"
+              size="20"
+              style="margin-left: 0.1rem;"
+              @click="clearusername"
+            />
             <div
               class="van-field__error-message"
               v-show="errors.has('user_name') && userNameFlag.touched"
-            >{{ errors.first('user_name') }}</div>
+            >
+              {{ errors.first("user_name") }}
+            </div>
           </div>
-          <div>
-            <van-button class="introduction_start" @click="getNext()">完成</van-button>
-          </div>
+
+          <!-- <div>
+            <van-button class="introduction_start" @click="getNext()"
+              >完成</van-button
+            >
+          </div> -->
         </div>
       </div>
     </scroller>
@@ -31,7 +58,6 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import navBar from "../../components/navBar";
 import { Toast, Dialog } from "vant";
 import { updateUserinfo, getUserinfo } from "../../common/js/api.js";
 import { log } from "util";
@@ -43,7 +69,6 @@ export default {
     return {
       repeats: 0, //防止重复点击
       rescount: 0, //请求计数
-      title: "个性昵称",
       userName: ""
     };
   },
@@ -68,11 +93,13 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
-    //设置昵称完成后跳转
-    goLink() {
-      this.$router.push({ path: "/binding" });
+    onClickLeft() {
+      this.$router.back(-1);
     },
-    getNext() {
+    clearusername() {
+      this.userName = "";
+    },
+    onClickRight() {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
@@ -158,7 +185,7 @@ export default {
                   this.$router.push({ path: "/login" });
                 } else if (res.status == -5) {
                   this.rescount++;
-                  this.getNext();
+                  this.onClickRight();
                 } else if (res.status == -17) {
                   this.rescount = 0;
                   Dialog.alert({
@@ -176,10 +203,11 @@ export default {
                 }
               })
               .catch(error => {
+                console.log(error);
                 Toast.clear();
                 this.repeats = 0;
                 this.rescount++;
-                this.getNext();
+                this.onClickRight();
                 // Toast("网络错误，请重新请求1");
               });
           }
@@ -194,15 +222,14 @@ export default {
         window.scrollTo(0, Math.max(scrollHeight - 1, 0));
       }, 100);
     }
-  },
-
-  components: {
-    navBar: navBar
   }
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
+/deep/.van-nav-bar__right {
+  color: #3b7bff;
+}
 .container {
   width: 100%;
   height: 100%;
@@ -212,7 +239,7 @@ export default {
   .container_introduction {
     width: 100%;
     margin: auto;
-    margin-top: 1.4rem;
+    margin-top: 0.92rem;
     overflow: hidden;
     background: #f8f8f8;
     display: flex;
@@ -221,8 +248,8 @@ export default {
     .introduction_text {
       font-size: 0.4rem;
       color: #cccccc;
-      width: 6.9rem;
-      height: 6.4rem;
+      width: 100%;
+      // height: 6.4rem;
       background: #f8f8f8;
       border-radius: 0.12rem;
       display: flex;
@@ -239,20 +266,27 @@ export default {
         margin-top: 1rem;
       }
       .login_input {
+        width: 100%;
+        background-color: #fff;
+        margin-top: 0.28rem;
+        display: flex;
+        align-items: center;
         input {
           border: none;
           color: #cccccc;
           background: none;
           text-align: left;
           outline: none;
-          padding-bottom: 0.1rem;
+          padding-right: 0.1rem;
           padding-left: 0.2rem;
-          width: 5.7rem;
+          width: 86%;
+          height: 0.8rem;
+          line-height: 0.8rem;
           color: #000000;
-          font-size: 0.35rem;
-          margin-top: 1.28rem;
+          font-size: 0.28rem;
           border-radius: 0;
-          border-bottom: #bebebe 1px solid;
+          // border-bottom: #bebebe 1px solid;
+          background-color: #fff;
         }
       }
       .introduction_start {

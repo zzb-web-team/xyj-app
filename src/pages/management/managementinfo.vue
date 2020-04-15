@@ -15,13 +15,13 @@
         <div
           class="device_info"
           v-show="!refresh"
-          v-for="(item,index) in minerInfoArr"
+          v-for="(item, index) in minerInfoArr"
           v-bind:key="index"
         >
           <div class="device_info_left">
             <div class="device_dot">
               <!-- <div class="dot" v-bind:style="{background:oldcolor}"></div> -->
-              <span>{{minnerstatus}}</span>
+              <span>{{ minnerstatus }}</span>
             </div>
             <div class="device_btn" @click="go_monitor()">监控</div>
           </div>
@@ -39,17 +39,21 @@
               size="3.72rem"
             />
 
-            <div
-              class="device_already"
-            >{{((item.total_cap-item.free_cap)/1024/1024/1024).toFixed(2)}}Gb/{{((item.total_cap)/1024/1024/1024).toFixed(2)}}Gb</div>
+            <div class="device_already">
+              {{
+                ((item.total_cap - item.free_cap) / 1024 / 1024 / 1024).toFixed(
+                  2
+                )
+              }}Gb/{{ (item.total_cap / 1024 / 1024 / 1024).toFixed(2) }}Gb
+            </div>
           </div>
           <div class="device_bandwidth">
             <span>
-              上行{{up_bandwidth}}
+              上行{{ up_bandwidth }}
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </span>
             <span>
-              下行{{down_bandwidth}}
+              下行{{ down_bandwidth }}
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </span>
           </div>
@@ -83,34 +87,43 @@
             <div class="user_con_item">
               <div class="con_item_l">设备名称</div>
               <div class="con_item_r" v-if="setActive" @click="openSetname()">
-                <span>{{device_name}}</span>
-                <img src="../../assets/images/evenmore.png" alt @click="openSetname()" />
+                <span>{{ device_name }}</span>
+                <img
+                  src="../../assets/images/evenmore.png"
+                  alt
+                  @click="openSetname()"
+                />
               </div>
               <div class="con_item_r" v-else>
-                <input type="text" v-model="device_name" @blur="resetDiv" maxlength="10" />
+                <input
+                  type="text"
+                  v-model="device_name"
+                  @blur="resetDiv"
+                  maxlength="10"
+                />
                 <div @click="closeSetname()">确定</div>
               </div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
-              <div class="con_item_r">{{item.rom_version}}</div>
+              <div class="con_item_r">{{ item.dev_type }}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
-              <div class="con_item_r">{{item.rom_version}}</div>
+              <div class="con_item_r">{{ item.rom_version }}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">SN</div>
-              <div class="con_item_r">{{item.dev_sn}}</div>
+              <div class="con_item_r">{{ item.dev_sn }}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">MAC地址</div>
-              <div class="con_item_r">{{item.dev_mac}}</div>
+              <div class="con_item_r">{{ item.dev_mac }}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">IP地址</div>
-              <div class="con_item_r">{{item.dev_ip}}</div>
+              <div class="con_item_r">{{ item.dev_ip }}</div>
             </div>
           </div>
         </div>
@@ -619,11 +632,8 @@ export default {
         Toast("无法连接网络，请检查网络状态");
       } else {
         this.$router.push({
-          path: "/mining",
-          query: {
-            minersn: item.dev_sn,
-            devname: this.device_name
-          }
+          path: "/income_list",
+          query: { allshou: item }
         });
       }
     },
@@ -642,7 +652,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 .container {
   width: 100%;
   height: 100%;

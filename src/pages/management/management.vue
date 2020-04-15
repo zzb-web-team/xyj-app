@@ -18,7 +18,7 @@
       </div>
       <!-- <van-icon name="comment" slot="right" size="0.46rem" color="#808080" /> -->
     </van-nav-bar>
-    <div class="xiala" :class="{isios:topshow,isandroid:!topshow}">
+    <div class="xiala" :class="{ isios: topshow, isandroid: !topshow }">
       <!-- <scroller
         style="background: #F8F8F8;margin-top: 1rem;height: 100%;"
         :on-refresh="refreshs"
@@ -30,9 +30,11 @@
         ref="myscroller"
         :autoUpdate="true"
         :listenScroll="true"
-        :pullDownConfig="{threshold: 90, // 触发 pullingDown 的距离
+        :pullDownConfig="{
+          threshold: 90, // 触发 pullingDown 的距离
           stop: 0, // pullingDown 正在刷新 hold 时的距离
-          txt: '松开刷新',}"
+          txt: '松开刷新'
+        }"
         @pullingDown="loadRefresh"
         @pullingUp="loadMore"
       >
@@ -68,36 +70,40 @@
               <span>{{offlineCnt}}</span>台
             </div>
           </div>-->
-          <div class="ranking_con" v-for="(item,index) in minerInfo" v-bind:key="index">
+          <div
+            class="ranking_con"
+            v-for="(item, index) in minerInfo"
+            v-bind:key="index"
+          >
             <div
               class="ranking_con_item"
               v-bind:sn="item.dev_sn"
               @click="goInfo(item)"
-              v-fb="{cls:'my_touchfeedback'}"
+              v-fb="{ cls: 'my_touchfeedback' }"
             >
               <div class="con_item_l">
                 <div class="item_l_top">
-                  <div class="item_l_name">{{item.dev_name}}</div>
+                  <div class="item_l_name">{{ item.dev_name }}</div>
                   <!-- <div class="dot" v-bind:style="{background:item.bgccolor}"></div>
                   <span v-bind:style="{color:item.spancolor}">{{item.equipment}}</span>-->
                 </div>
-                <div class="item_l_No">SN:{{item.dev_sn}}</div>
+                <div class="item_l_No">SN:{{ item.dev_sn }}</div>
               </div>
               <div class="con_item_r">
                 <div class="item_center">
-                  <p v-if="item.node_level==0">
+                  <p v-if="item.node_level == 0">
                     <img src="../../assets/images/putong.svg" alt />普通节点
                   </p>
-                  <p v-else-if="item.node_level==1">
+                  <p v-else-if="item.node_level == 1">
                     <img src="../../assets/images/huangjin.svg" alt />黄金节点
                   </p>
-                  <p v-else-if="item.node_level==2">
+                  <p v-else-if="item.node_level == 2">
                     <img src="../../assets/images/bojin.svg" alt />铂金节点
                   </p>
                   <p v-else>
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
-                  <p>算力：{{item.power}}</p>
+                  <p>算力：{{ item.power ? item.power : 0 }}</p>
                 </div>
                 <div class="item_r_img">
                   <img src="../../assets/images/per_icon_arrow.png" />
@@ -106,7 +112,8 @@
             </div>
           </div>
           <div class="bind_new" @click="goBind()">
-            <img src="../../assets/images/device_btn_icon_add.png" alt /> 绑定新西柚机
+            <img src="../../assets/images/device_btn_icon_add.png" alt />
+            绑定新西柚机
           </div>
         </div>
         <!-- </scroller> -->
@@ -428,7 +435,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 /deep/.van-nav-bar__text {
   color: #333333;
   font-size: 0.26rem;

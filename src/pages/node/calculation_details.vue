@@ -1,27 +1,46 @@
 <template>
   <div class="calculation">
-    <navBar title="算力明细" left-text="返回" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="算力明细"
+      left-text="返回"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <div class="content">
       <div class="calculation_top">
-        <p class="dev_num">{{dev_details.power}}</p>
-        <p>{{dev_details.dev_name}}</p>
+        <p class="dev_num">{{ dev_details.power }}</p>
+        <p>{{ dev_details.dev_name }}</p>
       </div>
-      <div class="calculation_bottom">
+      <div class="calculation_bottom" v-if="node_list.length > 0">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="value1" :options="option1" @change="get_status" />
-          <van-dropdown-item v-model="value2" :options="option2" @change="get_thmonth" />
+          <van-dropdown-item
+            v-model="value1"
+            :options="option1"
+            @change="get_status"
+          />
+          <van-dropdown-item
+            v-model="value2"
+            :options="option2"
+            @change="get_thmonth"
+          />
         </van-dropdown-menu>
-        <div class="calculation_content" v-for="(item,index) in node_list" :key="index">
+        <div
+          class="calculation_content"
+          v-for="(item, index) in node_list"
+          :key="index"
+        >
           <div class="content_left">
-            <p>{{item.setnum}}</p>
-            <p>{{item.dev_name}}</p>
+            <p>{{ item.setnum }}</p>
+            <p>{{ item.dev_name }}</p>
           </div>
           <div class="content_right">
-            <p>累计在线{{item.online}}</p>
-            <p>{{item.current_time |formatDate}}</p>
+            <p>累计在线{{ item.online }}</p>
+            <p>{{ item.current_time | formatDate }}</p>
           </div>
         </div>
       </div>
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -119,31 +138,31 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.login_token });
-          }else if (res.status == -17) {
-              this.rescount = 0;
-              Dialog.alert({
-                message: "账号在其它地方登录，请重新登录"
-              }).then(() => {
-                this.clearUser();
-                this.$router.push({ path: "/login" });
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
               });
-            } else if (res.status == -13) {
-              this.rescount = 0;
-              if (res.err_code == 424) {
-                Toast({
-                  message: "您的账户已被冻结，请联系相关工作人员",
-                  duration: 3000
-                });
-                setTimeout(() => {
-                  this.$router.push({ path: "/login" });
-                }, 3000);
-              }
-            }else {
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          } else {
             Toast(res.err_msg);
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     //筛选状态
@@ -175,6 +194,9 @@ export default {
 }
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
+}
+/deep/.van-empty {
+  margin-top: 2rem;
 }
 .calculation {
   width: 100%;

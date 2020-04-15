@@ -4,21 +4,21 @@
       <div class="bandwidth">
         <span class="bandwidth_left">
           <i></i>
-          上行带宽 {{up_bandwidth}}Mbps
+          上行带宽 {{ up_bandwidth }}Mbps
         </span>
         <div class="bandwidth_right" @click="go_mining_node">
           <img src="../../assets/images/jiedian_icon.svg" alt />
-          <span>挖矿节点 {{node_pic}}</span>
+          <span>挖矿节点 {{ node_pic }}</span>
         </div>
       </div>
       <div class="bandwidth">
         <span class="bandwidth_left">
           <i></i>
-          下行带宽{{down_bandwidth}}Mbps
+          下行带宽{{ down_bandwidth }}Mbps
         </span>
         <div class="bandwidth_right down_right" @click="go_calculation">
           <img src="../../assets/images/suanli_icon.svg" alt />
-          <span>平均算力{{node_suan}}</span>
+          <span>平均算力{{ node_suan }}</span>
         </div>
       </div>
     </div>
@@ -27,16 +27,25 @@
         <span>我的节点动态</span>
         <span class="view_all" @click="go_recird">查看全部</span>
       </div>
-      <div class="dynamic_scroll">
-        <div class="recird_content" v-for="(item,index) in datalist" :key="index">
+      <div class="dynamic_scroll" v-if="datalist.length > 0">
+        <div
+          class="recird_content"
+          v-for="(item, index) in datalist"
+          :key="index"
+        >
           <span class="recird_content_left">
             <img src="../../assets/images/jiedian_icon.png" alt />
-            {{item.node_name}}
+            {{ item.node_name }}
           </span>
-          <span class="recird_content_center">{{item.node_status==0?"节点网络启用":"节点网络断开"}}</span>
-          <span class="recird_content_right">{{item.update_time | formatDate}}</span>
+          <span class="recird_content_center">{{
+            item.node_status == 0 ? "节点网络启用" : "节点网络断开"
+          }}</span>
+          <span class="recird_content_right">{{
+            item.update_time | formatDate
+          }}</span>
         </div>
       </div>
+      <van-empty description="暂无数据" v-else />
     </div>
     <foot v-model="active"></foot>
   </div>
@@ -137,7 +146,7 @@ export default {
           }
         })
         .catch(error => {
-         // console.log(error);
+          // console.log(error);
         });
     },
     //获取我的节点动态
@@ -155,7 +164,7 @@ export default {
           }
         })
         .catch(error => {
-         // console.log(error);
+          // console.log(error);
         });
     },
     //获取用户平均算力
@@ -199,7 +208,7 @@ export default {
           }
         })
         .catch(error => {
-       //   console.log(error);
+          //   console.log(error);
         });
     },
     go_recird() {
@@ -222,6 +231,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.van-empty {
+  padding: 0;
+  margin: 0;
+}
+/deep/.van-empty__image {
+  width: 2rem;
+  height: 2rem;
+}
 .dynamic {
   width: 100%;
   height: 100%;

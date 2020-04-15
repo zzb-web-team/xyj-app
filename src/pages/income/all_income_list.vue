@@ -12,7 +12,7 @@
         <p>累计收益(gfm)</p>
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
-      <div class="income_con_btn">
+      <div class="income_con_btn" v-show="income_list.length > 0">
         <van-dropdown-menu>
           <van-dropdown-item
             v-model="value11"
@@ -26,18 +26,21 @@
           />
         </van-dropdown-menu>
       </div>
-      <div
-        class="income_con_body"
-        v-for="(item, index) in income_list"
-        :key="index"
-      >
-        <van-cell
-          is-link
-          :title="'+' + (item.user_total_profit / 100).toFixed(2) + 'gfm'"
-          @click="go_income_detail(item)"
-          >{{ item.date_stamp | formatDate }}</van-cell
+      <div v-if="income_list.length > 0">
+        <div
+          class="income_con_body"
+          v-for="(item, index) in income_list"
+          :key="index"
         >
+          <van-cell
+            is-link
+            :title="'+' + (item.user_total_profit / 100).toFixed(2) + 'gfm'"
+            @click="go_income_detail(item)"
+            >{{ item.date_stamp | formatDate }}</van-cell
+          >
+        </div>
       </div>
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -45,7 +48,12 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { getuserdevlist, isbindinglist, devrevenue } from "../../common/js/api";
+import {
+  getuserdevlist,
+  isbindinglist,
+  devrevenue,
+  query_node_total_profit_info
+} from "../../common/js/api";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {

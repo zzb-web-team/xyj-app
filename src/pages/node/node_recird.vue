@@ -4,14 +4,25 @@
       <!-- <van-icon name="question-o" slot="right" size="0.4rem" /> -->
     </navBar>
     <!-- 内容 -->
-    <div class="recird_content" v-for="(item,index) in datalist" :key="index">
-      <span class="recird_content_left">
-        <img src="../../assets/images/jiedian_icon.png" alt />
-        {{item.node_name}}
-      </span>
-      <span class="recird_content_center">{{item.node_status==0?"节点网络启用":"节点网络断开"}}</span>
-      <span class="recird_content_right">{{item.update_time | formatDate}}</span>
+    <div v-if="datalist.length > 0">
+      <div
+        class="recird_content"
+        v-for="(item, index) in datalist"
+        :key="index"
+      >
+        <span class="recird_content_left">
+          <img src="../../assets/images/jiedian_icon.png" alt />
+          {{ item.node_name }}
+        </span>
+        <span class="recird_content_center">{{
+          item.node_status == 0 ? "节点网络启用" : "节点网络断开"
+        }}</span>
+        <span class="recird_content_right">{{
+          item.update_time | formatDate
+        }}</span>
+      </div>
     </div>
+    <van-empty description="暂无数据" v-else />
   </div>
 </template>
 
@@ -19,7 +30,7 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import {query_node_dynamic_info} from "../../common/js/api"
+import { query_node_dynamic_info } from "../../common/js/api";
 export default {
   data() {
     return {
@@ -79,7 +90,7 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     onClickLeft() {
@@ -95,14 +106,18 @@ export default {
   color: #000000;
   background: #ffffff;
 }
-/deep/.van-nav-bar__title{
+/deep/.van-nav-bar__title {
   color: #333333;
 }
 /deep/.van-icon-arrow-left:before {
-    color: #333333;
+  color: #333333;
 }
-/deep/.income_overview{
-  color: #333333;}
+/deep/.income_overview {
+  color: #333333;
+}
+/deep/.van-empty{
+  margin-top: 3rem;
+}
 .recird {
   width: 100%;
   height: 100%;

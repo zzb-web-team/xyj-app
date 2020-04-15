@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div class="content_body">
+      <div class="content_body" v-if="dev_income_list.length > 0">
         <div
           class="content_con"
           v-for="(item, index) in dev_income_list"
@@ -74,6 +74,7 @@
           </div>
         </div>
       </div>
+      <van-empty description="暂无数据" v-else />
     </div>
     <!--  -->
     <tabbar v-model="active"></tabbar>
@@ -190,8 +191,7 @@ export default {
             }
           }
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
     //获取总收益
     get_all_income(num) {
@@ -235,8 +235,7 @@ export default {
             }
           }
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
 
     onClickRight() {
@@ -352,8 +351,8 @@ export default {
           margin-bottom: 0.2rem;
           font-size: 0.28rem;
           font-weight: 600;
-          span{
-            img{
+          span {
+            img {
               width: 50%;
             }
           }
@@ -373,7 +372,7 @@ export default {
             border: solid 0.01rem #eeeeee;
             border-radius: 0.1rem;
             img {
-              width:40%;
+              width: 40%;
             }
             .content_body_bottom_right_detail {
               width: 96%;

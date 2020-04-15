@@ -9,7 +9,7 @@
           <div class="user_con_item">
             <div class="con_item_l topnumber">
               <!-- <img src="../../assets/images/icon_bg_alteration.png" alt /> -->
-              <span>验证原手机号</span>
+              <span>绑定新手机号</span>
             </div>
           </div>
           <div class="user_con_item">
@@ -22,7 +22,6 @@
                 @blur="resetDiv"
                 oninput="this.value=this.value.length>4?this.value.substr(0,11):this.value;"
                 autofocus
-                disabled
               />
             </div>
           </div>
@@ -53,7 +52,7 @@
 
         <div>
           <van-button class="introduction_start" @click="goLink()"
-            >验证</van-button
+            >绑定</van-button
           >
         </div>
 
@@ -95,8 +94,8 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted: function() {
-    this.phoneNum = this.$route.params.usertel;
-    this.tel = this.$route.params.usertel;
+    // this.phoneNum = this.$route.params.usertel;
+    // this.tel = this.$route.params.usertel;
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
@@ -124,14 +123,13 @@ export default {
           return false;
         }
         let params = new Object();
-        let changetelnumflag = 0;
+        let changetelnumflag = 1;
         params.user_tel = this.tel;
         params.change_telnum_flag = changetelnumflag;
         params.login_token = this.log_token; //token;
         get_code(params)
           .then(res => {
             this.repeats = 0;
-
             if (res.status == 0) {
               if (res.err_code == 499) {
                 this.rescount = 0;
@@ -209,32 +207,31 @@ export default {
         settelnum(params)
           .then(res => {
             this.repeats = 0;
-             this.$router.push({ path: "/updatephone" });
             if (res.status == 0) {
               this.rescount = 0;
               // if (res.err_code == 0) {
               //退出登录
-              // let param = new Object();
-              // param.login_token = this.log_token;
-              // logout(param)
-              //   .then(res => {
-              //     this.repeats = 0;
-              //     if (res.status == 0) {
-              //       this.rescount = 0;
-              //       // if (res.err_code == 0) {
-              //       this.clearUser();
-              //       this.$router.push({ path: "/" });
-              //     } else if (res.status == -5) {
-              //       this.rescount++;
-              //       this.goLink();
-              //     }
-              //   })
-              //   .catch(error => {
-              //     this.repeats = 0;
-              //     this.rescount++;
-              //     this.goLink();
-              //     // Toast("网络错误，请重新请求");
-              //   });
+              let param = new Object();
+              param.login_token = this.log_token;
+              logout(param)
+                .then(res => {
+                  this.repeats = 0;
+                  if (res.status == 0) {
+                    this.rescount = 0;
+                    // if (res.err_code == 0) {
+                    this.clearUser();
+                    this.$router.push({ path: "/" });
+                  } else if (res.status == -5) {
+                    this.rescount++;
+                    this.goLink();
+                  }
+                })
+                .catch(error => {
+                  this.repeats = 0;
+                  this.rescount++;
+                  this.goLink();
+                  // Toast("网络错误，请重新请求");
+                });
             } else if (res.status == -5) {
               this.rescount++;
               this.goLink();

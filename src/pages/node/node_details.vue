@@ -21,15 +21,15 @@
     <!--  -->
     <div class="content">
       <div class="calculation_top">
-        <span class="recird_content_left" v-if="node_level==0">
+        <span class="recird_content_left" v-if="node_level == 0">
           <img src="../../assets/images/putong.svg" alt />
           普通节点
         </span>
-        <span class="recird_content_left" v-else-if="node_level==1">
+        <span class="recird_content_left" v-else-if="node_level == 1">
           <img src="../../assets/images/huangjin.svg" alt />
           黄金节点
         </span>
-        <span class="recird_content_left" v-else-if="node_level==2">
+        <span class="recird_content_left" v-else-if="node_level == 2">
           <img src="../../assets/images/bojin.svg" alt />
           铂金节点
         </span>
@@ -37,10 +37,15 @@
           <img src="../../assets/images/zuanshi.svg" alt />
           钻石节点
         </span>
-        <van-progress color="#316CFC" pivot-text="num" pivot-color="#ffffff" :percentage="num" />
+        <van-progress
+          color="#316CFC"
+          pivot-text="num"
+          pivot-color="#ffffff"
+          :percentage="num"
+        />
         <div class="progress_num">
           <span>0</span>
-          <span ref="progress_con">{{progress_num}}</span>
+          <span ref="progress_con">{{ progress_num }}</span>
           <span>2000</span>
         </div>
       </div>
@@ -66,25 +71,38 @@
           </div>
         </div>
         <!--  -->
-        <div class="calculation_bottom_con">
+        <div class="calculation_bottom_con" v-if="datalist.length > 0">
           <div class="calculation_bottom_con_title">
             <img src="../../assets/images/mingxi_icon.png" alt /> 贡献值明细
           </div>
 
           <div class="income_con_btn">
             <van-dropdown-menu>
-              <van-dropdown-item v-model="value11" :options="option1" @change="changedev()" />
-              <van-dropdown-item v-model="value22" :options="option2" @change="changetime()" />
+              <van-dropdown-item
+                v-model="value11"
+                :options="option1"
+                @change="changedev()"
+              />
+              <van-dropdown-item
+                v-model="value22"
+                :options="option2"
+                @change="changetime()"
+              />
             </van-dropdown-menu>
           </div>
-          <div class="calculation_bottom_con_body" v-for="(item,index) in datalist" :key="index">
+          <div
+            class="calculation_bottom_con_body"
+            v-for="(item, index) in datalist"
+            :key="index"
+          >
             <div class="calculation_bottom_con_body_item">
-              <span>{{item.grow}}</span>
-              <span>累计在线{{(item.online_time/3600).toFixed(2)}}h</span>
-              <span>{{item.date_time |formatDate}}</span>
+              <span>{{ item.grow }}</span>
+              <span>累计在线{{ (item.online_time / 3600).toFixed(2) }}h</span>
+              <span>{{ item.date_time | formatDate }}</span>
             </div>
           </div>
         </div>
+        <van-empty description="暂无数据" v-else />
       </div>
     </div>
   </div>
@@ -202,7 +220,7 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     changedev() {
@@ -281,6 +299,9 @@ export default {
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
 }
+/deep/.van-empty {
+  height: 9rem;
+}
 .calculation {
   width: 100%;
   height: 100%;
@@ -335,6 +356,8 @@ export default {
       width: 100%;
       position: relative;
       top: -2%;
+      display: flex;
+      flex-direction: column;
       .calculation_bottom_title {
         width: 80%;
         margin: auto;
@@ -369,11 +392,13 @@ export default {
         padding-right: 4%;
         margin-top: 0.2rem;
         background-color: #f9f9fb;
+        flex: 1;
         .calculation_bottom_con_title {
           display: flex;
           align-items: center;
           width: 100%;
           background-color: #f9f9fb;
+          margin-top: 0.2rem;
           img {
             width: 5%;
             margin-right: 0.1rem;

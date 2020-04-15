@@ -13,7 +13,7 @@
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
       <!--  -->
-      <div class="content_body">
+      <div class="content_body" v-if="dev_income_list.length > 0">
         <div
           class="content_con"
           v-for="(item, index) in dev_income_list"
@@ -63,7 +63,7 @@
           </div>
         </div>
       </div>
-
+      <van-empty description="暂无数据" v-else />
       <!--  -->
     </div>
   </div>
@@ -220,7 +220,7 @@ export default {
       this.$router.go(-1);
     },
     go_income_detail(data) {
-     // console.log(data);
+      // console.log(data);
     },
     show_dev() {
       this.showdev = true;
@@ -282,6 +282,9 @@ export default {
 }
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
+}
+/deep/.van-empty {
+  margin-top: 2rem;
 }
 .all_income {
   width: 100%;

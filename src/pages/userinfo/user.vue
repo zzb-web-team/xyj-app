@@ -35,7 +35,7 @@
           </div>
         </div>
         <p class="item_title">安全</p>
-        <div class="user_con_item" @click="goSetPhone()">
+        <div class="user_con_item" @click="goPassword()">
           <div class="con_item_l">交易密码</div>
           <div class="con_item_r">
             <p>设置密码</p>
@@ -227,6 +227,18 @@ export default {
           usertel: this.phone_number
         }
       });
+    },
+    goPassword() {
+      //根据交易密码状态选择去那个页面
+      if (this.charge_psd == 2) {
+        setTimeout(() => {
+          this.$router.push({ path: "/password" });
+        }, 200);
+      } else if (this.charge_psd == 1) {
+        setTimeout(() => {
+          this.$router.push({ name: "updatepassword" });
+        }, 200);
+      }
     }
   },
   components: {
@@ -292,9 +304,16 @@ export default {
       .con_item_l {
         font-size: 0.26rem;
       }
-    }
-    .con_item_r {
-      color: #333333;
+      .con_item_r {
+        display: flex;
+        justify-content: flex-start;
+        color: #616c8a;
+        align-items: center;
+        white-space: nowrap;
+        p {
+          margin-right: 0.22rem;
+        }
+      }
     }
     .user_active {
       img {
@@ -302,25 +321,6 @@ export default {
         height: 0.24rem;
       }
     }
-  }
-}
-.con_item_r {
-  display: flex;
-  justify-content: flex-start;
-  color: #616c8a;
-  align-items: center;
-  p {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-right: 0.22rem;
-  }
-  input {
-    width: 2rem;
-    border: none;
-    margin-right: 0.12rem;
-    border-bottom: 1px #616c8a solid;
-    background: none;
   }
 }
 .device_info_img {
