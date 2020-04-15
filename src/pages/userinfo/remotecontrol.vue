@@ -12,7 +12,7 @@
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#ffffff" />
-        <span>返回</span>
+        <!-- <span>返回</span> -->
       </div>
       <van-icon name="plus" slot="right" size="0.4rem" color="#ababab" />
     </van-nav-bar>
@@ -384,6 +384,9 @@ export default {
   color: #fff;
   background: #141414;
 }
+/deep/.van-icon-arrow-left:before {
+    color: #ffffff;
+}
 .container {
   width: 100%;
   height: 100%;
@@ -395,7 +398,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
-    margin-top: 1.2rem;
+    margin-top: 0.6rem;
     padding-top: 1rem;
     .content_item_top {
       width: 1.46rem;

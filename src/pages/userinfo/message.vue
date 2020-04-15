@@ -5,7 +5,7 @@
     </navBar> -->
     <van-nav-bar
       title="消息中心"
-      left-text="返回"
+      left-text=""
       right-text
       rrow
       left-arrow
@@ -14,7 +14,7 @@
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#ffffff" />
-        <span>返回</span>
+        <span></span>
       </div>
     </van-nav-bar>
     <div class="xiala">
@@ -29,11 +29,11 @@
             <van-tabs
               v-model="active_tab"
               animated
-              color="#FA9F47"
-              title-inactive-color="#BABCF3"
+              color="#5199FF"
+              title-inactive-color="#666666"
               @click="onClick"
             >
-              <van-tab title="最新资讯" style="padding-bottom:1rem;">
+              <van-tab title="消息通知" style="padding-bottom:1rem;">
                 <div class="notext" v-show="notext">
                   <img src="../../assets/images/device_ illustration6.png" />
                   <p>暂无消息</p>
@@ -46,30 +46,25 @@
                   v-bind:class="[item.isActive ? activeClass : errorClass]"
                   @click="goother(item, index)"
                 >
-                  <div class="message_item_img" v-show="item.imge">
-                    <img :src="item.imge" alt="图片加载失败" />
-                  </div>
-                  <div class="message_item_text">
-                    {{ item.conte }}
-                  </div>
-                  <div class="message_item_time">{{ item.time }}</div>
+                  <van-swipe-cell :before-close="beforeClose">
+                    <div class="message_item_img" v-show="item.imge">
+                      <img :src="item.imge" alt="图片加载失败" />
+                    </div>
+                    <div class="message_item_text">
+                      {{ item.conte }}
+                    </div>
+                    <div class="message_item_time">{{ item.time }}</div>
+                    <template #right>
+                      <van-button
+                        square
+                        text="删除"
+                        type="danger"
+                        class="delete-button"
+                      />
+                    </template>
+                  </van-swipe-cell>
                 </div>
               </van-tab>
-              <!-- <van-tab title="常见问题">
-                <div
-                  class="message_item"
-                  v-for="(item, index) in rankList"
-                  v-bind:key="index + '0'"
-                >
-                  <div class="message_item_img">
-                    <img :src="item.imge" alt="图片加载失败" />
-                  </div>
-                  <div class="message_item_text">
-                    {{ item.conte }}
-                  </div>
-                  <div class="message_item_time">{{ item.time }}</div>
-                </div>
-              </van-tab> -->
               <van-tab title="公告" style="padding-bottom:1rem;">
                 <div class="notext" v-show="noaccon">
                   <img src="../../assets/images/device_ illustration6.png" />
@@ -83,13 +78,23 @@
                   @click="goother(item, index)"
                   v-bind:class="[item.isActive ? activeClass : errorClass]"
                 >
-                  <div class="message_item_img" v-show="item.imge">
-                    <img :src="item.imge" alt="图片加载失败" />
-                  </div>
-                  <div class="message_item_text">
-                    {{ item.conte }}
-                  </div>
-                  <div class="message_item_time">{{ item.time }}</div>
+                  <van-swipe-cell :before-close="beforeClose">
+                    <div class="message_item_img" v-show="item.imge">
+                      <img :src="item.imge" alt="图片加载失败" />
+                    </div>
+                    <div class="message_item_text">
+                      {{ item.conte }}
+                    </div>
+                    <div class="message_item_time">{{ item.time }}</div>
+                    <template #right>
+                      <van-button
+                        square
+                        text="删除"
+                        type="danger"
+                        class="delete-button"
+                      />
+                    </template>
+                  </van-swipe-cell>
                 </div>
               </van-tab>
             </van-tabs>
@@ -310,7 +315,7 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
 
@@ -350,6 +355,27 @@ export default {
           this.$refs.vuuPull.closeLoadTop();
         }
       }, 500);
+    },
+
+    // position 为关闭时点击的位置
+    // instance 为对应的 SwipeCell 实例
+    beforeClose({ position, instance }) {
+      switch (position) {
+        case "left":
+        case "cell":
+        case "outside":
+          instance.close();
+          break;
+        case "right":
+          this.$dialog
+            .confirm({
+              message: "确定删除吗？"
+            })
+            .then(() => {
+              instance.close();
+            });
+          break;
+      }
     }
   }
 };
@@ -361,7 +387,7 @@ export default {
   height: 100%;
   margin: 0 auto;
   overflow: hidden;
-  background: url(../../assets/images/bgc33.png) #f2f2f2 no-repeat 0 0;
+  // background: url(../../assets/images/bgc33.png) #f2f2f2 no-repeat 0 0;
   background-size: 100% 40%;
   .xiala {
     height: 100%;
@@ -446,5 +472,8 @@ export default {
 .active {
   color: #888fa9;
   opacity: 0.6;
+}
+.delete-button {
+  height: 100%;
 }
 </style>

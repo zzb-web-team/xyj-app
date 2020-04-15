@@ -19,12 +19,12 @@
 }
 
 .van-tab--active {
-    color: #ffffff;
+    color: #999999;
 }
 
 .van-tabs__nav {
-    background: linear-gradient( 90deg, rgba(106, 81, 225, 1), rgba(79, 102, 231, 1));
-    color: #ffffff;
+    background: #ffffff;
+    color: #333333;
 }
 
 html {
@@ -223,4 +223,8 @@ body {
 .active_tab img:nth-child(2) {
     width: 1rem;
     height: 1rem;
+}
+
+.van-nav-bar .van-icon {
+    margin-top: 0.4rem;
 }
