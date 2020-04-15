@@ -205,6 +205,7 @@ export default {
       params.end_time = endtimes;
       params.query_type = 1;
       params.cur_page = 0;
+      params.dev_sn = "";
       getuserdevlist(params)
         .then(res => {
           if (res.status == 0) {

@@ -115,7 +115,7 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted() {
-    this.total_revenue = this.$route.query.allshou;
+    // this.total_revenue = this.$route.query.allshou;
     this.changetime();
     this.get_use_dev_list();
   },
@@ -245,9 +245,86 @@ export default {
           //console.log(error);
         });
     },
+    //获取单台设备收益
+    get_dev_income(page) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      params.cur_page = page;
+      params.start_time = this.starttime;
+      params.end_time = this.endtime;
+      params.dev_sn = this.value11;
+      query_node_total_profit_info(params)
+        .then(res => {
+          if (res.status == 0) {
+            // this.updateUser({
+            //   log_token: res.data.token_info.token
+            // });
+            this.total_revenue = (res.data.total_profit / 100).toFixed(2);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
+    },
+    //获取总收益
+    get_all_income(num) {
+      let params = new Object();
+      let token = this.log_token;
+      params.login_token = token;
+      params.start_time = this.starttime;
+      params.end_time = this.endtime;
+      params.query_type = 1;
+      params.cur_page = 0;
+      params.dev_sn = "";
+      getuserdevlist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            this.total_revenue = (res.data.user_total_profit / 100).toFixed(2);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
+    },
     changetime() {
       this.income_list = [];
-
       if (this.value22 == 0) {
         let querydate = 90;
         this.endtime = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
@@ -267,6 +344,7 @@ export default {
       } else {
         this.get_dev_income_day();
       }
+      this.get_all_income(0);
     },
     onClickLeft() {
       this.$router.go(-1);
@@ -281,8 +359,10 @@ export default {
     changedev(str) {
       this.income_list = [];
       if (this.value11 == 0) {
+        this.get_all_income();
         this.get_income_list();
       } else {
+        this.get_dev_income();
         this.get_dev_income_day();
       }
     },
