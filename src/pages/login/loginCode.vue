@@ -1,7 +1,7 @@
 <template>
   <div class="container" @touchmove.prevent>
     <van-nav-bar
-      left-text="返回"
+      left-text=""
       right-text
       rrow
       fixed

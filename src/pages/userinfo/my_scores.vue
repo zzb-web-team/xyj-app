@@ -22,6 +22,7 @@
         <p>积分()</p>
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
+
       <div class="income_con_btn">
         <van-dropdown-menu>
           <van-dropdown-item
@@ -37,28 +38,36 @@
         </van-dropdown-menu>
       </div>
       <!--  -->
-      <div class="incon_con_body">
-        <div
-          class="incon_con_body_item"
-          v-for="(item, index) in income_list"
-          :key="index"
-        >
-          <div class="incon_con_body_left">
-            <p>
-              {{ item.profit_type == 1 ? "+" : "-"
-              }}{{ (item.cur_profit / 100).toFixed(2) }}gfm
-            </p>
-            <p>{{ (item.total_profit / 100).toFixed(2) }}gfm</p>
-          </div>
-          <div class="incon_con_body_right">
-            <div>
-              <p>{{ item.profit_type == 2 ? "兑换" : "收益" }}</p>
-              <p>{{ item.time_stamp | formatDate }}</p>
+      <vuu-pull
+        ref="vuuPull"
+        :options="pullOptions"
+        v-on:loadTop="loadTop"
+        v-on:loadBottom="loadBottom"
+        :style="{ height: scrollerHeight }"
+      >
+        <div class="incon_con_body">
+          <div
+            class="incon_con_body_item"
+            v-for="(item, index) in income_list"
+            :key="index"
+          >
+            <div class="incon_con_body_left">
+              <p>
+                {{ item.profit_type == 1 ? "+" : "-"
+                }}{{ (item.cur_profit / 100).toFixed(2) }}gfm
+              </p>
+              <p>{{ (item.total_profit / 100).toFixed(2) }}gfm</p>
             </div>
-            <van-icon name="arrow" />
+            <div class="incon_con_body_right">
+              <div>
+                <p>{{ item.profit_type == 2 ? "兑换" : "收益" }}</p>
+                <p>{{ item.time_stamp | formatDate }}</p>
+              </div>
+              <van-icon name="arrow" />
+            </div>
           </div>
         </div>
-      </div>
+      </vuu-pull>
     </div>
     <van-empty image="search" description="暂无数据" v-else />
   </div>
@@ -74,6 +83,8 @@ import {
 } from "../../common/js/api";
 import { TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
 import { mapState, mapMutations } from "vuex";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 export default {
   data() {
     return {
@@ -86,6 +97,8 @@ export default {
       value22: 0,
       starttime: 0,
       endtime: 0,
+      pagenum: 0,
+      allpage: 1,
       option1: [
         { text: "全部", value: 0 },
         { text: "收益", value: 1 },
@@ -105,7 +118,20 @@ export default {
         { text: "10月", value: 10 },
         { text: "11月", value: 11 },
         { text: "12月", value: 12 }
-      ]
+      ],
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+         bottomPull: {
+          loadingIcon: loadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
+      }
     };
   },
   filters: {
@@ -120,13 +146,26 @@ export default {
       }
     }
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return (
+          window.innerHeight - 2.18 * 100 - window.innerHeight * 0.175 + "px"
+        );
+      } else {
+        return (
+          window.innerHeight - 2.18 * 50 - window.innerHeight * 0.175 + "px"
+        );
+      }
+    }
+  },
   mounted() {
     this.total_revenue = this.$route.query.income;
     let date = new Date();
@@ -139,13 +178,36 @@ export default {
     onClickLeft() {
       this.$router.go(-1);
     },
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        //  this.income_list = [];
+        this.redemptionrecord(0);
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          this.redemptionrecord(this.pagenum);
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
     //积分收支记录
     redemptionrecord(pages) {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
         let params = new Object();
-
         let token = this.log_token;
         params.start_time = this.starttime;
         params.end_time = this.endtime;
@@ -154,17 +216,17 @@ export default {
         params.profit_type = this.value11;
         query_user_node_exchange_list(params) //兑换记录
           .then(res => {
-            // if (res) {
-            //   this.$loading.hide();
-            // }
             if (res.status == 0) {
               this.updateUser({ log_token: res.data.token_info.token });
               if (res.err_code == 0) {
-                this.income_list = this.income_list.concat(
-                  res.data.total_profit_list
-                );
-                // this.allpage = res.data.total_page;
-                // this.pagenum = res.data.total_num;
+                if (params.cur_page == 0) {
+                  this.income_list = res.data.total_profit_list;
+                } else {
+                  this.income_list = this.income_list.concat(
+                    res.data.total_profit_list
+                  );
+                }
+                this.allpage = res.data.total_page;
               } else if (res.err_code == -5) {
               } else if (res.err_code == 500) {
                 this.noint = true;
@@ -364,6 +426,7 @@ export default {
   justify-content: space-between;
   background-color: #f8fafb;
   height: 1.26rem;
+  z-index: 11;
 }
 /deep/.van-dropdown-menu__item:nth-child(1) {
   flex: none;
@@ -407,18 +470,22 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  overflow: hidden;
   .titright {
     line-height: inherit;
     margin-right: 0.2rem;
   }
   .income_con {
     margin-top: 0.92rem;
+    height: 100%;
     .income_con_top {
       width: 100%;
-      height: 24.5%;
+      height: 17.5%;
       background: url(../../assets/images/jifen_bgc.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
+      position: relative;
+      z-index: 11;
       p {
         color: #fff;
         padding-top: 0.2rem;
@@ -434,6 +501,8 @@ export default {
       width: 100%;
     }
     .incon_con_body {
+      overflow-x: hidden;
+      overflow-y: scroll;
       .incon_con_body_item {
         display: flex;
         align-items: center;

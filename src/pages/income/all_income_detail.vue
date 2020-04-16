@@ -21,7 +21,7 @@
         >
           <div class="content_body_top" @click="go_income_list(item)">
             <span>
-              <img src="../../assets/images/income_name.png" alt />
+              <img src="../../assets/images/income_dev_name.png" alt />
               {{ item.dev_name }}
             </span>
             <span>
@@ -31,7 +31,7 @@
           </div>
           <div class="content_body_bottom" @click="go_income_list(item)">
             <div class="content_body_bottom_left">
-              <img src="../../assets/images/income_shouyi.png" alt />
+              <img src="../../assets/images/income_shouyi_new.png" alt />
               <div class="content_body_bottom_right_detail">
                 <p>累计收益</p>
                 <p>
@@ -328,7 +328,7 @@ export default {
         text-align: left;
 
         img {
-          width: 7%;
+          width: 18%;
         }
         .content_body_top {
           display: flex;
@@ -337,15 +337,22 @@ export default {
           margin-bottom: 0.2rem;
           font-size: 0.28rem;
           font-weight: 600;
+          span {
+            display: flex;
+            align-items: center;
+            img {
+              margin-right: 0.1rem;
+            }
+          }
           span:nth-child(2) {
             font-weight: 500;
             font-size: 0.24rem;
             color: #666666;
-            display: flex;
-            align-items: center;
+            justify-content: flex-end;
             img {
               width: 20%;
               margin-left: 0.1rem;
+              margin-right: 0;
             }
           }
         }

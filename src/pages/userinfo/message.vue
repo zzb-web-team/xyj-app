@@ -328,10 +328,6 @@ export default {
         } else {
           return false;
         }
-        // this.paneList.push({
-        //   user_total_profit: "这是上拉请求的一条数据",
-        //   date_stamp: 1575424593
-        // });
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
         }

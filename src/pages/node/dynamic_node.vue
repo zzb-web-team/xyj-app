@@ -1,52 +1,54 @@
 <template>
   <div class="dynamic">
-    <div class="dynamic_top">
-      <div class="bandwidth">
-        <span class="bandwidth_left">
-          <i></i>
-          上行带宽 {{ up_bandwidth }}Mbps
-        </span>
-        <div class="bandwidth_right" @click="go_mining_node">
-          <img src="../../assets/images/jiedian_icon.svg" alt />
-          <span>挖矿节点 {{ node_pic }}</span>
-        </div>
-      </div>
-      <div class="bandwidth">
-        <span class="bandwidth_left">
-          <i></i>
-          下行带宽{{ down_bandwidth }}Mbps
-        </span>
-        <div class="bandwidth_right down_right" @click="go_calculation">
-          <img src="../../assets/images/suanli_icon.svg" alt />
-          <span>平均算力{{ node_suan }}</span>
-        </div>
-      </div>
-    </div>
-    <div class="dynamic_bottom">
-      <div class="redic_title">
-        <span>我的节点动态</span>
-        <span class="view_all" @click="go_recird">查看全部</span>
-      </div>
-      <div class="dynamic_scroll" v-if="datalist.length > 0">
-        <div
-          class="recird_content"
-          v-for="(item, index) in datalist"
-          :key="index"
-        >
-          <span class="recird_content_left">
-            <img src="../../assets/images/jiedian_icon.png" alt />
-            {{ item.node_name }}
+    <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+      <div class="dynamic_top">
+        <div class="bandwidth">
+          <span class="bandwidth_left">
+            <i></i>
+            上行带宽 {{ up_bandwidth }}Mbps
           </span>
-          <span class="recird_content_center">{{
-            item.node_status == 0 ? "节点网络启用" : "节点网络断开"
-          }}</span>
-          <span class="recird_content_right">{{
-            item.update_time | formatDate
-          }}</span>
+          <div class="bandwidth_right" @click="go_mining_node">
+            <img src="../../assets/images/jiedian_icon.svg" alt />
+            <span>挖矿节点 {{ node_pic }}</span>
+          </div>
+        </div>
+        <div class="bandwidth">
+          <span class="bandwidth_left">
+            <i></i>
+            下行带宽{{ down_bandwidth }}Mbps
+          </span>
+          <div class="bandwidth_right down_right" @click="go_calculation">
+            <img src="../../assets/images/suanli_icon.svg" alt />
+            <span>平均算力{{ node_suan }}</span>
+          </div>
         </div>
       </div>
-      <van-empty description="暂无数据" v-else />
-    </div>
+      <div class="dynamic_bottom">
+        <div class="redic_title">
+          <span>我的节点动态</span>
+          <span class="view_all" @click="go_recird">查看全部</span>
+        </div>
+        <div class="dynamic_scroll" v-if="datalist.length > 0">
+          <div
+            class="recird_content"
+            v-for="(item, index) in datalist"
+            :key="index"
+          >
+            <span class="recird_content_left">
+              <img src="../../assets/images/jiedian_icon.png" alt />
+              {{ item.node_name }}
+            </span>
+            <span class="recird_content_center">{{
+              item.node_status == 0 ? "节点网络启用" : "节点网络断开"
+            }}</span>
+            <span class="recird_content_right">{{
+              item.update_time | formatDate
+            }}</span>
+          </div>
+        </div>
+        <van-empty description="暂无数据" v-else />
+      </div>
+    </vuu-pull>
     <foot v-model="active"></foot>
   </div>
 </template>
@@ -55,6 +57,8 @@
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
 import { formatDate, transformTime } from "../../common/js/date.js";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   query_node_dynamic_info,
   get_user_average_cp,
@@ -78,7 +82,17 @@ export default {
         // { node_name: "节点0004", node_status: 0, update_time: "两天前" },
         // { node_name: "节点0005", node_status: 0, update_time: 1578011665 },
         // { node_name: "节点0005", node_status: 0, update_time: "一分钟前" }
-      ]
+      ],
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomCloseElMove: true //关闭上拉加载
+      }
     };
   },
   filters: {
@@ -109,6 +123,17 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        this.get_my_dynace_info();
+        this.get_cp();
+        this.get_use_dev_list();
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
     //获取用户设备列表
     get_use_dev_list() {
       let params = new Object();

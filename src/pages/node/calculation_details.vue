@@ -12,6 +12,7 @@
         <p class="dev_num">{{ dev_details.power }}</p>
         <p>{{ dev_details.dev_name }}</p>
       </div>
+
       <div class="calculation_bottom" v-if="node_list.length > 0">
         <van-dropdown-menu>
           <van-dropdown-item
@@ -25,22 +26,34 @@
             @change="get_thmonth"
           />
         </van-dropdown-menu>
-        <div
-          class="calculation_content"
-          v-for="(item, index) in node_list"
-          :key="index"
+
+        <vuu-pull
+          ref="vuuPull"
+          :options="pullOptions"
+          v-on:loadTop="loadTop"
+          v-on:loadBottom="loadBottom"
+          :style="{ height: scrollerHeight }"
         >
-          <div class="content_left">
-            <p>{{ item.setnum }}</p>
-            <p>{{ item.dev_name }}</p>
+          <div class="pull_con">
+            <div
+              class="calculation_content"
+              v-for="(item, index) in node_list"
+              :key="index"
+            >
+              <div class="content_left">
+                <p>{{ item.setnum }}</p>
+                <p>{{ item.dev_name }}</p>
+              </div>
+              <div class="content_right">
+                <p>累计在线{{ item.online }}</p>
+                <p>{{ item.current_time | formatDate }}</p>
+              </div>
+            </div>
           </div>
-          <div class="content_right">
-            <p>累计在线{{ item.online }}</p>
-            <p>{{ item.current_time | formatDate }}</p>
-          </div>
-        </div>
+        </vuu-pull>
       </div>
-      <van-empty description="暂无数据" v-else />
+
+      <!-- <van-empty description="暂无数据" v-else /> -->
     </div>
   </div>
 </template>
@@ -50,6 +63,8 @@ import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import { get_app_dev_cp_list } from "../../common/js/api";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import { Toast } from "vant";
 export default {
   data() {
@@ -76,20 +91,72 @@ export default {
         { text: "11月", value: 11 },
         { text: "12月", value: 12 }
       ],
-      node_list: [
-        // {
-        //   setnum: "+1",
-        //   dev_name: "我的西柚机1",
-        //   online: "26h",
-        //   current_time: 1583308519
-        // },
-        // {
-        //   setnum: "-1",
-        //   dev_name: "我的西柚机2",
-        //   online: "94h",
-        //   current_time: 1583337600
-        // }
-      ]
+      node_list: [],
+      demo_node_list: [
+        {
+          setnum: "+1",
+          dev_name: "我的西柚机1",
+          online: "26h",
+          current_time: 1583308519
+        },
+        {
+          setnum: "-1",
+          dev_name: "我的西柚机2",
+          online: "94h",
+          current_time: 1583337600
+        },
+        {
+          setnum: "+1",
+          dev_name: "我的西柚机1",
+          online: "26h",
+          current_time: 1583308519
+        },
+        {
+          setnum: "-1",
+          dev_name: "我的西柚机2",
+          online: "94h",
+          current_time: 1583337600
+        },
+        {
+          setnum: "+1",
+          dev_name: "我的西柚机1",
+          online: "26h",
+          current_time: 1583308519
+        },
+        {
+          setnum: "-1",
+          dev_name: "我的西柚机2",
+          online: "94h",
+          current_time: 1583337600
+        },
+        {
+          setnum: "+1",
+          dev_name: "我的西柚机1",
+          online: "26h",
+          current_time: 1583308519
+        },
+        {
+          setnum: "-1",
+          dev_name: "我的西柚机2",
+          online: "94h",
+          current_time: 1583337600
+        }
+      ],
+      pagenum: 0,
+      allpage: 1,
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomPull: {
+          loadingIcon: loadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
+      }
     };
   },
   filters: {
@@ -107,15 +174,24 @@ export default {
   components: {
     navBar: navBar
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd,
-    minerstates: state => state.management.minerstates,
-    devsn: state => state.management.devsn
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd,
+      minerstates: state => state.management.minerstates,
+      devsn: state => state.management.devsn
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return window.innerHeight - 0.92 * 100 + "px";
+      } else {
+        return window.innerHeight - window.innerHeight * 0.245 - 50 + "px";
+      }
+    }
+  },
   mounted() {
     this.dev_details = this.$route.query.item_detail;
     var date = new Date();
@@ -127,17 +203,46 @@ export default {
     onClickLeft() {
       this.$router.go(-1);
     },
-    get_power_list() {
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        this.get_power_list(0);
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          this.get_power_list(this.pagenum);
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
+    get_power_list(page) {
       let parmas = new Object();
       parmas.logen_token = this.log_token;
       parmas.dev_sn = this.dev_details.dev_sn;
       parmas.month = this.value2;
       parmas.con_type = this.value1;
-      parmas.cur_page = 0;
+      parmas.cur_page = page;
       get_app_dev_cp_list(parmas)
         .then(res => {
+          this.node_list = this.demo_node_list;
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.login_token });
+            if (parmas.cur_page == 0) {
+              this.node_list = res.data.list;
+            } else {
+              this.node_list = this.node_list.concat(res.data.list);
+            }
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -184,7 +289,7 @@ export default {
   overflow-y: scroll;
 }
 /deep/.van-nav-bar {
-  z-index: 2 !important;
+  z-index: 2056 !important;
   color: #fff;
   background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
 }
@@ -198,10 +303,14 @@ export default {
 /deep/.van-empty {
   margin-top: 2rem;
 }
+/deep/.van-dropdown-menu {
+  z-index: 11;
+}
 .calculation {
   width: 100%;
   height: 100%;
   background: #f8fafb;
+  overflow: hidden;
   .content {
     width: 100%;
     height: 100%;
@@ -211,6 +320,8 @@ export default {
       background: url(../../assets/images/suanlimingxi.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
+      position: relative;
+      z-index: 11;
       p {
         color: #fff;
       }
@@ -221,13 +332,17 @@ export default {
       }
     }
     .calculation_bottom {
-      height: 77.5%;
+      // height: 77.5%;
       font-size: 0.24rem;
       border-radius: 0.2rem 0.2rem 0 0;
       background: #f8fafb;
       width: 100%;
       position: relative;
       top: -2%;
+      .pull_con {
+        overflow-x: hidden;
+        overflow-y: scroll;
+      }
       .calculation_content {
         display: flex;
         justify-content: space-between;

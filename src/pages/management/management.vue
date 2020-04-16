@@ -74,6 +74,7 @@
             class="ranking_con"
             v-for="(item, index) in minerInfo"
             v-bind:key="index"
+            v-if="item.dev_bind_state == 1"
           >
             <div
               class="ranking_con_item"

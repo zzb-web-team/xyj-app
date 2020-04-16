@@ -3,16 +3,9 @@
     <navBar class="navbar" :title="title" :right-text="title">
       <van-icon name="search" slot="right" />
     </navBar>
-    <div class="top"></div>
     <div class="xiala">
-      <Scroll
-        ref="myscroller"
-        :autoUpdate="true"
-        :listenScroll="true"
-        @pullingDown="onRefresh"
-      >
+      <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
         <div class="user">
-          <div style="width:100%;height:0.8rem; background:#ffffff;"></div>
           <div class="user_con">
             <div class="user_con_item" @click="gouser()">
               <div class="con_item_l">
@@ -159,7 +152,7 @@
             </van-button>
           </div>
         </div>
-      </Scroll>
+      </vuu-pull>
     </div>
     <van-overlay :show="show" @click="show = false">
       <div class="wrapper" @click.stop>
@@ -184,6 +177,8 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/barBarActive";
 import { Tabbar, TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   userInfoCenter,
   loginout,
@@ -211,7 +206,17 @@ export default {
       show: false,
       all_income: 0,
       system: "",
-      flag: false
+      flag: false,
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomCloseElMove: true //关闭上拉加载
+      }
     };
   },
   computed: mapState({
@@ -232,49 +237,19 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
-    onRefresh() {},
+    loadTop() {
+      setTimeout(() => {
+        this.get_all_income(90);
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
     //网络状态
     internetstatus() {
       if (this.$parent.onLine == true) {
       }
     },
-    //http://www.pianshen.com/article/3027137171/   下拉刷新的参考网址
-    // async _getOpenDetail() {
-    //   await getOpenDetail(this.lottery, this.pageIndex, 10).then(data => {
-    //     if (data.error === "0") {
-    //       //请求成功
-    //       if (this.dtWinNumberInfos.length) {
-    //         //当请求前有数据时 第n次请求
-    //         if (this.isUpLoading) {
-    //           // 上拉加载
-    //           this.dtWinNumberInfos = this.dtWinNumberInfos.concat(
-    //             data.dtWinNumberInfo
-    //           ); //上拉加载新数据添加到数组中
-    //           this.$nextTick(() => {
-    //             //在下次 DOM 更新循环结束之后执行延迟回调
-    //             this.isUpLoading = false; //关闭上拉加载中
-    //           });
-    //           if (data.dtWinNumberInfo.length < 10) {
-    //             //没有更多数据
-    //             this.upFinished = true; //上拉加载完毕
-    //           }
-    //         }
-    //         if (this.isDownLoading) {
-    //           //关闭下拉刷新
-    //           this.isDownLoading = false; //关闭下拉刷新中
-    //           this.dtWinNumberInfos = data.dtWinNumberInfo; //重新给数据赋值
-    //           if (this.upFinished) {
-    //             //如果上拉加载完毕为true则设为false。解决上拉加载完毕后再下拉刷新就不会执行上拉加载问题
-    //             this.upFinished = false;
-    //           }
-    //         }
-    //       } else {
-    //         //当请求没有数据时 第一次请求
-    //         this.dtWinNumberInfos = data.dtWinNumberInfo;
-    //       }
-    //     }
-    //   });
-    // },
     //退出登录
     loginOut() {
       if (this.$parent.onLine == false) {
@@ -308,27 +283,6 @@ export default {
                 setTimeout(() => {
                   this.$router.push({ path: "/login" });
                 }, 500);
-                // if (res.status == 0) {
-                // } else if (res.status == -13) {
-                //   this.rescount = 0;
-                //   if (res.err_code == 424) {
-                //     Toast({
-                //       message: "您的账户已被冻结，请联系相关工作人员",
-                //       duration: 3000
-                //     });
-                //     setTimeout(() => {
-                //       this.$router.push({ path: "/login" });
-                //     }, 3000);
-                //   }
-                // } else if (res.status == -17) {
-                //   this.$router.push({ path: "/login" });
-                // } else {
-                //   this.rescount = 0;
-                //   const tip =
-                //     this.$backStatusMap[res.status] || err[res.status];
-                //   const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
-                //   // this.$toast(str);
-                // }
               })
               .catch(error => {
                 this.repeats = 0;
@@ -643,6 +597,7 @@ export default {
   .xiala {
     height: 100%;
     background: #ffffff;
+    margin-top: 0.92rem;
   }
   .user {
     width: 100%;

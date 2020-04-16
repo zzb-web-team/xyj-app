@@ -1,6 +1,13 @@
 <template>
   <div class="monitor">
-    <van-nav-bar :title="title" left-a rrow left-arrow:true :z-index="2000">
+    <van-nav-bar
+      :title="title"
+      fixed
+      left-a
+      rrow
+      left-arrow:true
+      :z-index="2000"
+    >
       <!-- <div slot="left">排行榜</div> -->
       <!-- <div slot="right" class="titright">
         <img src="../../assets/images/equ_nav_icon_mess.png" class="titimg" alt />
@@ -8,118 +15,127 @@
       <!-- <van-icon name="comment" slot="right" size="0.46rem" color="#808080" /> -->
     </van-nav-bar>
     <div class="monitor_y">
-      <div class="monitor_top">
-        <div class="monitor_top_left" @click="go_management()">
-          <p>{{ storage.total }}</p>
-          <p>设备</p>
-          <div class="monitor_status">
-            <span>在线：{{ storage.online }}</span>
-            <span>离线：{{ storage.offline }}</span>
+      <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+        <div class="monitor_top">
+          <div class="monitor_top_left" @click="go_management()">
+            <p>{{ storage.total }}</p>
+            <p>设备</p>
+            <div class="monitor_status">
+              <span>在线：{{ storage.online }}</span>
+              <span>离线：{{ storage.offline }}</span>
+            </div>
+          </div>
+          <div class="monitor_top_right" @click="go_dev_calculation()">
+            <p>{{ storage.power }}</p>
+            <p>平均算力</p>
+            <div class="monitor_income">昨日收益：{{ storage.income }}</div>
           </div>
         </div>
-        <div class="monitor_top_right" @click="go_dev_calculation()">
-          <p>{{ storage.power }}</p>
-          <p>平均算力</p>
-          <div class="monitor_income">昨日收益：{{ storage.income }}</div>
+        <p class="monitor_title">检测图表</p>
+
+        <div class="monitor_btn">
+          <van-button type="default" @click="xiuxiuxiu1">
+            {{ value1 }}
+            <van-icon name="play" size="0.3rem" />
+          </van-button>
+          <van-button type="default" @click="xiuxiuxiu2">
+            {{ value2 }}
+            <van-icon name="play" size="0.3rem" />
+          </van-button>
         </div>
-      </div>
-      <p class="monitor_title">检测图表</p>
-
-      <div class="monitor_btn">
-        <van-button type="default" @click="xiuxiuxiu1">
-          {{ value1 }}
-          <van-icon name="play" size="0.3rem" />
-        </van-button>
-        <van-button type="default" @click="xiuxiuxiu2">
-          {{ value2 }}
-          <van-icon name="play" size="0.3rem" />
-        </van-button>
-      </div>
-      <div class="monitor_content">
-        <van-action-sheet
-          v-model="show1"
-          :actions="actions1"
-          cancel-text="取消"
-          @select="onSelect1"
-          @cancel="onCancel1"
-        />
-        <van-action-sheet
-          v-model="show2"
-          :actions="actions2"
-          cancel-text="取消"
-          @select="onSelect2"
-          @cancel="onCancel2"
-        />
-        <!--  -->
-        <van-tabs type="card" @click="switch_tabs">
+        <div class="monitor_content">
+          <van-action-sheet
+            v-model="show1"
+            :actions="actions1"
+            cancel-text="取消"
+            @select="onSelect1"
+            @cancel="onCancel1"
+          />
+          <van-action-sheet
+            v-model="show2"
+            :actions="actions2"
+            cancel-text="取消"
+            @select="onSelect2"
+            @cancel="onCancel2"
+          />
           <!--  -->
-          <van-tab title="存储" class="action_item">
-            <p>存储信息</p>
-            <div class="action_cunchu">
-              <span>总存储</span>
-              <span class="action_cunchu_con">{{ cap.total }}GB</span>
-            </div>
-            <div class="action_cunchu">
-              <span>占用空间</span>
-              <span class="action_cunchu_con">{{ cap.use }}GB</span>
-            </div>
-            <div class="action_cunchu">
-              <span>剩余存储</span>
-              <span class="action_cunchu_con">{{ cap.free }}GB</span>
-            </div>
-            <p>在线信息</p>
-            <div class="action_cunchu">
-              <span>累计在线时长</span>
-              <span class="action_cunchu_con">{{ cap.online_time }}h</span>
-            </div>
-            <div class="action_cunchu">
-              <span>离线次数</span>
-              <span class="action_cunchu_con">{{ cap.offline_times_num }}</span>
-            </div>
-          </van-tab>
+          <van-tabs type="card" @click="switch_tabs">
+            <!--  -->
+            <van-tab title="存储" class="action_item">
+              <p>存储信息</p>
+              <div class="action_cunchu">
+                <span>总存储</span>
+                <span class="action_cunchu_con">{{ cap.total }}GB</span>
+              </div>
+              <div class="action_cunchu">
+                <span>占用空间</span>
+                <span class="action_cunchu_con">{{ cap.use }}GB</span>
+              </div>
+              <div class="action_cunchu">
+                <span>剩余存储</span>
+                <span class="action_cunchu_con">{{ cap.free }}GB</span>
+              </div>
+              <p>在线信息</p>
+              <div class="action_cunchu">
+                <span>累计在线时长</span>
+                <span class="action_cunchu_con">{{ cap.online_time }}h</span>
+              </div>
+              <div class="action_cunchu">
+                <span>离线次数</span>
+                <span class="action_cunchu_con">{{
+                  cap.offline_times_num
+                }}</span>
+              </div>
+            </van-tab>
 
-          <!--  -->
-          <van-tab title="网络" class="action_item">
-            <p>上行带宽</p>
-            <van-tabs type="card" class="bandwidth" @click="up_down">
-              <van-tab title="上行">
-                <div id="myChart_shang" style="width:100%; height:5rem;"></div>
-              </van-tab>
-              <van-tab title="下行">
-                <div id="myChart_xia" style="width: 100%;height:5rem"></div>
-              </van-tab>
-            </van-tabs>
-            <p>网络信息</p>
-            <div class="action_cunchu">
-              <span>上行带宽</span>
-              <span class="action_cunchu_con">{{ band.up_bandwidth }}Mbps</span>
-            </div>
-            <div class="action_cunchu">
-              <span>下行带宽</span>
-              <span class="action_cunchu_con"
-                >{{ band.down_bandwidth }}Mbps</span
-              >
-            </div>
-            <div class="action_cunchu">
-              <span>占用带宽</span>
-              <span class="action_cunchu_con"
-                >{{ band.use_bandwidth }}Mbps</span
-              >
-            </div>
-            <p>在线信息</p>
-            <div class="action_cunchu">
-              <span>累计在线时长</span>
-              <span class="action_cunchu_con">{{ band.online_time }}h</span>
-            </div>
-            <div class="action_cunchu">
-              <span>离线次数</span>
-              <span class="action_cunchu_con">{{
-                band.offline_times_num
-              }}</span>
-            </div>
-          </van-tab>
-        </van-tabs>
-      </div>
+            <!--  -->
+            <van-tab title="网络" class="action_item">
+              <p>上行带宽</p>
+              <van-tabs type="card" class="bandwidth" @click="up_down">
+                <van-tab title="上行">
+                  <div
+                    id="myChart_shang"
+                    style="width:100%; height:5rem;"
+                  ></div>
+                </van-tab>
+                <van-tab title="下行">
+                  <div id="myChart_xia" style="width: 100%;height:5rem"></div>
+                </van-tab>
+              </van-tabs>
+              <p>网络信息</p>
+              <div class="action_cunchu">
+                <span>上行带宽</span>
+                <span class="action_cunchu_con"
+                  >{{ band.up_bandwidth }}Mbps</span
+                >
+              </div>
+              <div class="action_cunchu">
+                <span>下行带宽</span>
+                <span class="action_cunchu_con"
+                  >{{ band.down_bandwidth }}Mbps</span
+                >
+              </div>
+              <div class="action_cunchu">
+                <span>占用带宽</span>
+                <span class="action_cunchu_con"
+                  >{{ band.use_bandwidth }}Mbps</span
+                >
+              </div>
+              <p>在线信息</p>
+              <div class="action_cunchu">
+                <span>累计在线时长</span>
+                <span class="action_cunchu_con">{{ band.online_time }}h</span>
+              </div>
+              <div class="action_cunchu">
+                <span>离线次数</span>
+                <span class="action_cunchu_con">{{
+                  band.offline_times_num
+                }}</span>
+              </div>
+            </van-tab>
+          </van-tabs>
+        </div>
+      </vuu-pull>
     </div>
     <foot v-model="active"></foot>
   </div>
@@ -128,6 +144,8 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import echarts from "echarts";
 import {
   get_dev_cap_list,
@@ -184,7 +202,17 @@ export default {
       ydata: [],
       dev_sn: "",
       timetype: 1,
-      bandtype: 0
+      bandtype: 0,
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomCloseElMove: true //关闭上拉加载
+      }
     };
   },
   computed: mapState({
@@ -207,6 +235,21 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        this.get_cp();
+        this.get_use_dev_list();
+        if (this.tabname == 0) {
+          this.get_dev_cap();
+        } else {
+          this.get_dev_bangwidth();
+        }
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
     //获取用户设备列表
     get_use_dev_list() {
       let params = new Object();
@@ -214,7 +257,8 @@ export default {
       isbindinglist(params)
         .then(res => {
           if (res.status == 0) {
-            this.updateUser({ log_token: res.token_info.login_token });
+            (this.actions1 = [{ name: "全部", value: 0 }]),
+              this.updateUser({ log_token: res.token_info.login_token });
             this.storage.total =
               res.data.online_cnt * 1 + res.data.offline_cnt * 1;
             this.storage.online = res.data.online_cnt;
@@ -249,7 +293,7 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     //获取数据--监控（存储）
@@ -296,7 +340,7 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     //获取数据--监控（设备带宽）
@@ -338,12 +382,13 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     //存储和网络显示切换
     switch_tabs(name, title) {
       this.tabname = name;
+      console.log(this.tabname);
       if (name == 1) {
         this.get_dev_bangwidth();
         let linechartex1 = document.getElementById("myChart_shang");
@@ -426,7 +471,7 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
         });
     },
     //下拉折叠菜单显示
@@ -752,6 +797,7 @@ export default {
   height: 0.4rem;
   line-height: 0.4rem;
 }
+
 .monitor {
   width: 100%;
   height: 100%;
@@ -759,6 +805,7 @@ export default {
   .monitor_y {
     height: 667px;
     overflow-y: scroll;
+    margin-top: 0.92rem;
   }
   .monitor_top {
     background-color: #fff;
