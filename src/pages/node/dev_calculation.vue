@@ -12,14 +12,15 @@
         <p class="dev_num">{{ node_suanli }}</p>
         <p>平均算力</p>
       </div>
-      <vuu-pull
-        ref="vuuPull"
-        :options="pullOptions"
-        v-on:loadTop="loadTop"
-        v-on:loadBottom="loadBottom"
-        :style="{ height: scrollerHeight }"
-      >
-        <div class="calculation_bottom" v-if="minerInfo.length > 0">
+
+      <div class="calculation_bottom" v-if="minerInfo.length > 0">
+        <vuu-pull
+          ref="vuuPull"
+          :options="pullOptions"
+          v-on:loadTop="loadTop"
+          v-on:loadBottom="loadBottom"
+          :style="{ height: scrollerHeight }"
+        >
           <div
             class="calculation_item"
             v-for="(item, index) in minerInfo"
@@ -49,9 +50,9 @@
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </div>
           </div>
-        </div>
-        <van-empty description="暂无数据" v-else />
-      </vuu-pull>
+        </vuu-pull>
+      </div>
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -214,8 +215,8 @@ export default {
                 this.allpage = res.data.total_page; //总页码
                 this.pagenum = res.data.page_num;
                 if (params.page_num == 0) {
-                  //this.minerInfo = res.data.bind_devinfo_list;
-                  this.minerInfo = this.demo_minerInfo;
+                  this.minerInfo = res.data.bind_devinfo_list;
+                  // this.minerInfo = this.demo_minerInfo;
                 } else {
                   this.minerInfo.push(...res.data.bind_devinfo_list); //数组拼接
                 }

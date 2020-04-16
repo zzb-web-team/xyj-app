@@ -53,7 +53,7 @@
         </vuu-pull>
       </div>
 
-      <!-- <van-empty description="暂无数据" v-else /> -->
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -235,7 +235,7 @@ export default {
       parmas.cur_page = page;
       get_app_dev_cp_list(parmas)
         .then(res => {
-          this.node_list = this.demo_node_list;
+          // this.node_list = this.demo_node_list;
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.login_token });
             if (parmas.cur_page == 0) {
