@@ -50,6 +50,9 @@
         </div>
       </div>
       <div class="calculation_bottom">
+        <div>
+
+        </div>
         <div class="calculation_bottom_title">
           <div class="calculation_bottom_title_item">
             <div class="calculation_bottom_title_item_img">
@@ -90,17 +93,25 @@
               />
             </van-dropdown-menu>
           </div>
-          <div
-            class="calculation_bottom_con_body"
-            v-for="(item, index) in datalist"
-            :key="index"
+          <vuu-pull
+            ref="vuuPull"
+            :options="pullOptions"
+            v-on:loadTop="loadTop"
+            v-on:loadBottom="loadBottom"
+            :style="{ height: scrollerHeight }"
           >
-            <div class="calculation_bottom_con_body_item">
-              <span>{{ item.grow }}</span>
-              <span>累计在线{{ (item.online_time / 3600).toFixed(2) }}h</span>
-              <span>{{ item.date_time | formatDate }}</span>
+            <div
+              class="calculation_bottom_con_body"
+              v-for="(item, index) in datalist"
+              :key="index"
+            >
+              <div class="calculation_bottom_con_body_item">
+                <span>{{ item.grow }}</span>
+                <span>累计在线{{ (item.online_time / 3600).toFixed(2) }}h</span>
+                <span>{{ item.date_time | formatDate }}</span>
+              </div>
             </div>
-          </div>
+          </vuu-pull>
         </div>
         <van-empty description="暂无数据" v-else />
       </div>
@@ -113,6 +124,8 @@ import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import { get_app_dev_cp_list } from "../../common/js/api";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import { Toast } from "vant";
 export default {
   data() {
@@ -144,24 +157,54 @@ export default {
         { text: "11月", value: 11 },
         { text: "12月", value: 12 }
       ],
+      pagenum: 0,
+      allpage: 1,
       datalist: [
         { grow: "+1", online_time: 7492, date_time: 1585726943 },
         { grow: "+2", online_time: 243, date_time: 1585794943 }
-      ]
+      ],
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomPull: {
+          loadingIcon: loadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
+      }
     };
   },
   components: {
     navBar: navBar
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd,
-    minerstates: state => state.management.minerstates,
-    devsn: state => state.management.devsn
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd,
+      minerstates: state => state.management.minerstates,
+      devsn: state => state.management.devsn
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return window.innerHeight - 0.92 * 100 + "px";
+      } else {
+        return (
+          window.innerHeight -
+          window.innerHeight * 0.245 -
+          50 -
+          1.5734 * 50 +
+          "px"
+        );
+      }
+    }
+  },
   filters: {
     //时间戳转时间
     formatDate(time) {
@@ -185,6 +228,29 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser"]),
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        this.get_cp_list(0);
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          this.get_cp_list(this.pagenum);
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
     get_cp_list(page) {
       let parmas = new Object();
       parmas.login_token = this.log_token;
@@ -306,6 +372,7 @@ export default {
   width: 100%;
   height: 100%;
   background: #f8fafb;
+  overflow: hidden;
   .content {
     width: 100%;
     height: 100%;
@@ -358,12 +425,15 @@ export default {
       top: -2%;
       display: flex;
       flex-direction: column;
+      z-index: 1;
       .calculation_bottom_title {
         width: 80%;
         margin: auto;
         display: flex;
         justify-content: space-around;
         align-items: center;
+        position: relative;
+        z-index: 20;
         .calculation_bottom_title_item {
           margin-top: 0.4rem;
           font-size: 0.24rem;
@@ -393,12 +463,16 @@ export default {
         margin-top: 0.2rem;
         background-color: #f9f9fb;
         flex: 1;
+        position: relative;
+        z-index: 0;
         .calculation_bottom_con_title {
           display: flex;
           align-items: center;
           width: 100%;
           background-color: #f9f9fb;
           margin-top: 0.2rem;
+          position: relative;
+          z-index: 20;
           img {
             width: 5%;
             margin-right: 0.1rem;
@@ -407,6 +481,8 @@ export default {
         .income_con_btn {
           background-color: #f8fafb;
           width: 100%;
+          position: relative;
+          z-index: 11;
         }
         .calculation_bottom_con_body {
           width: 100%;
