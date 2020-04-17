@@ -96,13 +96,6 @@
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>-->
-            <!-- <div class="user_con_item" @click="goversioninformation()">
-              <div class="con_item_l">
-                <img src="../../assets/images/per_icon_version@3x.png" alt />
-                <span>版本信息</span>
-              </div>
-              <div class="con_item_r">1.3.1.126</div>
-            </div>-->
             <!-- <div class="user_con_item" @click="goAbout()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_about@3x.png" alt />

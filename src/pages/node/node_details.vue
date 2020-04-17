@@ -8,7 +8,7 @@
       :title="devtitle"
       @click-left="onClickLeft()"
       @click-right="onClickRight()"
-      :z-index="0"
+      :z-index="12"
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#ffffff" />
@@ -39,9 +39,9 @@
         </span>
         <van-progress
           color="#316CFC"
-          pivot-text="num"
+          pivot-text="percentage_num"
           pivot-color="#ffffff"
-          :percentage="num"
+          :percentage="percentage_num"
         />
         <div class="progress_num">
           <span>0</span>
@@ -50,9 +50,6 @@
         </div>
       </div>
       <div class="calculation_bottom">
-        <div>
-
-        </div>
         <div class="calculation_bottom_title">
           <div class="calculation_bottom_title_item">
             <div class="calculation_bottom_title_item_img">
@@ -73,6 +70,8 @@
             <p>钻石节点</p>
           </div>
         </div>
+        <!--  -->
+
         <!--  -->
         <div class="calculation_bottom_con" v-if="datalist.length > 0">
           <div class="calculation_bottom_con_title">
@@ -130,7 +129,7 @@ import { Toast } from "vant";
 export default {
   data() {
     return {
-      num: 38,
+      percentage_num: 0,
       devtitle: "",
       fullWidth: 0,
       node_level: 0,
@@ -174,7 +173,6 @@ export default {
         bottomPull: {
           loadingIcon: loadind
         },
-        bottomCloseElMove: false //关闭上拉加载
       }
     };
   },
@@ -220,10 +218,11 @@ export default {
   mounted() {
     this.devtitle = this.$route.query.dev.node_name;
     this.progress_num = this.$route.query.dev.contribution;
-    this.num = (this.$route.query.dev.contribution / 2000).toFixed(2) * 100;
+    this.percentage_num =
+      (this.$route.query.dev.contribution / 2000).toFixed(2) * 100;
     this.fullWidth = document.documentElement.clientWidth;
     this.$refs.progress_con.style.left =
-      this.fullWidth * 0.96 * (this.num / 100) - 13 + "px";
+      this.fullWidth * 0.96 * (this.percentage_num / 100) - 13 + "px";
     this.get_cp_list(0);
   },
   methods: {
@@ -354,7 +353,6 @@ export default {
   }
 }
 /deep/.van-nav-bar {
-  z-index: 2 !important;
   color: #fff;
   background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
 }
@@ -382,6 +380,8 @@ export default {
       background: url(../../assets/images/shebeisuanli.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
+      position: relative;
+      z-index: 11;
       .recird_content_left {
         width: 38%;
         display: flex;
@@ -428,12 +428,16 @@ export default {
       z-index: 1;
       .calculation_bottom_title {
         width: 80%;
+        padding-left: 10%;
+        padding-right: 10%;
+        padding-bottom: 0.2rem;
         margin: auto;
         display: flex;
         justify-content: space-around;
         align-items: center;
         position: relative;
         z-index: 20;
+        background: #ffffff;
         .calculation_bottom_title_item {
           margin-top: 0.4rem;
           font-size: 0.24rem;
@@ -455,12 +459,12 @@ export default {
           }
         }
       }
+
       .calculation_bottom_con {
         width: 92%;
         text-align: left;
         padding-left: 4%;
         padding-right: 4%;
-        margin-top: 0.2rem;
         background-color: #f9f9fb;
         flex: 1;
         position: relative;
@@ -468,9 +472,10 @@ export default {
         .calculation_bottom_con_title {
           display: flex;
           align-items: center;
+          height: 0.6rem;
+          padding-top: 0.1rem;
           width: 100%;
           background-color: #f9f9fb;
-          margin-top: 0.2rem;
           position: relative;
           z-index: 20;
           img {
