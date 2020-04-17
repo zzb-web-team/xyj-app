@@ -145,13 +145,13 @@ export default {
         return (
           window.innerHeight -
           window.innerHeight * 0.245 -
-          0.22 * 100 -
+          0.92 * 100 -
           50 +
           "px"
         );
       } else {
         return (
-          window.innerHeight - 0.72 * 50 - window.innerHeight * 0.245 + "px"
+          window.innerHeight - 0.92 * 50 - window.innerHeight * 0.245 -50+ "px"
         );
       }
     }

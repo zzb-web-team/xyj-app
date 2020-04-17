@@ -1,13 +1,6 @@
 <template>
   <div class="monitor">
-    <van-nav-bar
-      :title="title"
-      fixed
-      left-a
-      rrow
-      left-arrow:true
-      :z-index="2000"
-    >
+    <van-nav-bar :title="title" fixed left-a rrow left-arrow:true :z-index="2000">
       <!-- <div slot="left">排行榜</div> -->
       <!-- <div slot="right" class="titright">
         <img src="../../assets/images/equ_nav_icon_mess.png" class="titimg" alt />
@@ -15,7 +8,7 @@
       <!-- <van-icon name="comment" slot="right" size="0.46rem" color="#808080" /> -->
     </van-nav-bar>
     <div class="monitor_y">
-      <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+      <van-pull-refresh class="xiala" v-model="isLoading" @refresh="onRefresh">
         <div class="monitor_top">
           <div class="monitor_top_left" @click="go_management()">
             <p>{{ storage.total }}</p>
@@ -82,9 +75,11 @@
               </div>
               <div class="action_cunchu">
                 <span>离线次数</span>
-                <span class="action_cunchu_con">{{
+                <span class="action_cunchu_con">
+                  {{
                   cap.offline_times_num
-                }}</span>
+                  }}
+                </span>
               </div>
             </van-tab>
 
@@ -93,10 +88,7 @@
               <p>上行带宽</p>
               <van-tabs type="card" class="bandwidth" @click="up_down">
                 <van-tab title="上行">
-                  <div
-                    id="myChart_shang"
-                    style="width:100%; height:5rem;"
-                  ></div>
+                  <div id="myChart_shang" style="width:100%; height:5rem;"></div>
                 </van-tab>
                 <van-tab title="下行">
                   <div id="myChart_xia" style="width: 100%;height:5rem"></div>
@@ -105,21 +97,15 @@
               <p>网络信息</p>
               <div class="action_cunchu">
                 <span>上行带宽</span>
-                <span class="action_cunchu_con"
-                  >{{ band.up_bandwidth }}Mbps</span
-                >
+                <span class="action_cunchu_con">{{ band.up_bandwidth }}Mbps</span>
               </div>
               <div class="action_cunchu">
                 <span>下行带宽</span>
-                <span class="action_cunchu_con"
-                  >{{ band.down_bandwidth }}Mbps</span
-                >
+                <span class="action_cunchu_con">{{ band.down_bandwidth }}Mbps</span>
               </div>
               <div class="action_cunchu">
                 <span>占用带宽</span>
-                <span class="action_cunchu_con"
-                  >{{ band.use_bandwidth }}Mbps</span
-                >
+                <span class="action_cunchu_con">{{ band.use_bandwidth }}Mbps</span>
               </div>
               <p>在线信息</p>
               <div class="action_cunchu">
@@ -128,14 +114,16 @@
               </div>
               <div class="action_cunchu">
                 <span>离线次数</span>
-                <span class="action_cunchu_con">{{
+                <span class="action_cunchu_con">
+                  {{
                   band.offline_times_num
-                }}</span>
+                  }}
+                </span>
               </div>
             </van-tab>
           </van-tabs>
         </div>
-      </vuu-pull>
+      </van-pull-refresh>
     </div>
     <foot v-model="active"></foot>
   </div>
@@ -144,8 +132,6 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
-import loadind from "../../assets/images/spainpink.gif"; //动画
-import boadind from "../../assets/images/spinwhile.gif"; //动画
 import echarts from "echarts";
 import {
   get_dev_cap_list,
@@ -203,16 +189,7 @@ export default {
       dev_sn: "",
       timetype: 1,
       bandtype: 0,
-      pullOptions: {
-        isBottomRefresh: true,
-        isTopRefresh: true,
-        slideResistance: 5, //拉动阻力
-        topTriggerHeight: 40, //下拉触发刷新的有效距离
-        topPull: {
-          loadingIcon: boadind
-        },
-        bottomCloseElMove: true //关闭上拉加载
-      }
+      isLoading: false //控制上拉加载的加载动画
     };
   },
   computed: mapState({
@@ -236,7 +213,7 @@ export default {
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     //下拉刷新
-    loadTop() {
+    onRefresh() {
       setTimeout(() => {
         this.get_cp();
         this.get_use_dev_list();
@@ -245,11 +222,10 @@ export default {
         } else {
           this.get_dev_bangwidth();
         }
-        if (this.$refs.vuuPull.closeLoadTop) {
-          this.$refs.vuuPull.closeLoadTop();
-        }
+        this.isLoading = false;
       }, 500);
     },
+
     //获取用户设备列表
     get_use_dev_list() {
       let params = new Object();

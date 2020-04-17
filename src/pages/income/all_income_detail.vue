@@ -1,11 +1,6 @@
 <template>
   <div class="all_income">
-    <navBar
-      title="收益明细"
-      left-arrow
-      fixed
-      @click-left="onClickLeft"
-    ></navBar>
+    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -13,57 +8,63 @@
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
       <!--  -->
+
       <div class="content_body" v-if="dev_income_list.length > 0">
-        <div
-          class="content_con"
-          v-for="(item, index) in dev_income_list"
-          :key="index"
+        <vuu-pull
+          ref="vuuPull"
+          :options="pullOptions"
+          v-on:loadTop="loadTop"
+          v-on:loadBottom="loadBottom"
+          :style="{ height: scrollerHeight }"
         >
-          <div class="content_body_top" @click="go_income_list(item)">
-            <span>
-              <img src="../../assets/images/income_dev_name.png" alt />
-              {{ item.dev_name }}
-            </span>
-            <span>
-              算力：{{ item.dev_profit }}
-              <img src="../../assets/images/per_icon_arrow.png" alt />
-            </span>
-          </div>
-          <div class="content_body_bottom" @click="go_income_list(item)">
-            <div class="content_body_bottom_left">
-              <img src="../../assets/images/income_shouyi_new.png" alt />
-              <div class="content_body_bottom_right_detail">
-                <p>累计收益</p>
-                <p>
-                  {{ (item.dev_profit / 100).toFixed(2) }}
-                  <span>gfm</span>
-                </p>
-              </div>
+          <div class="content_con" v-for="(item, index) in dev_income_list" :key="index">
+            <div class="content_body_top" @click="go_income_list(item)">
+              <span>
+                <img src="../../assets/images/income_dev_name.png" alt />
+                {{ item.dev_name }}
+              </span>
+              <span>
+                算力：{{ item.dev_profit }}
+                <img src="../../assets/images/per_icon_arrow.png" alt />
+              </span>
             </div>
-            <div class="content_body_bottom_right item_right">
-              <div class="content_body_bottom_right_detail">
-                <p>
-                  占用空间：{{
+            <div class="content_body_bottom" @click="go_income_list(item)">
+              <div class="content_body_bottom_left">
+                <img src="../../assets/images/income_shouyi_new.png" alt />
+                <div class="content_body_bottom_right_detail">
+                  <p>累计收益</p>
+                  <p>
+                    {{ (item.dev_profit / 100).toFixed(2) }}
+                    <span>gfm</span>
+                  </p>
+                </div>
+              </div>
+              <div class="content_body_bottom_right item_right">
+                <div class="content_body_bottom_right_detail">
+                  <p>
+                    占用空间：{{
                     ((item.total_cap - item.free_cap) / 1024 / 1024).toFixed(2)
-                  }}GB
-                </p>
-                <p>
-                  上行带宽：{{
+                    }}GB
+                  </p>
+                  <p>
+                    上行带宽：{{
                     (item.up_bandwidth / 1024 / 1024).toFixed(2)
-                  }}Mbps
-                </p>
-                <p>
-                  下行带宽：{{
+                    }}Mbps
+                  </p>
+                  <p>
+                    下行带宽：{{
                     (item.down_bandwidth / 1024 / 1024).toFixed(2)
-                  }}Mbps
-                </p>
-                <p>在线时长：{{ (item.online_time / 3600).toFixed(2) }}h</p>
+                    }}Mbps
+                  </p>
+                  <p>在线时长：{{ (item.online_time / 3600).toFixed(2) }}h</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </vuu-pull>
       </div>
       <van-empty description="暂无数据" v-else />
+
       <!--  -->
     </div>
   </div>
@@ -73,6 +74,8 @@
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import { alldevinformation, alldevrevenue } from "../../common/js/api";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {
@@ -80,7 +83,22 @@ export default {
       total_revenue: 0,
       revenue_time: 0,
       dev_income_list: [],
-      income_detail: []
+      income_detail: [],
+      pagenum: 0,
+      allpage: 1,
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomPull: {
+          loadingIcon: loadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
+      }
     };
   },
   filters: {
@@ -95,13 +113,34 @@ export default {
       }
     }
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return (
+          window.innerHeight -
+          window.innerHeight * 0.245 -
+          0.92 * 100 -
+          50 +
+          "px"
+        );
+      } else {
+        return (
+          window.innerHeight -
+          0.92 * 50 -
+          window.innerHeight * 0.245 -
+          50 +
+          "px"
+        );
+      }
+    }
+  },
   mounted() {
     this.total_revenue = (
       this.$route.query.allshou.user_total_profit / 100
@@ -111,6 +150,29 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        this.get_income(0);
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          this.get_income(this.pagenum);
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
     //收益
     get_income(page) {
       let params = new Object();
@@ -123,8 +185,15 @@ export default {
       alldevrevenue(params)
         .then(res => {
           if (res.status == 0) {
-            this.income_detail = res.data.dev_profit_list;
-            this.get_dev_detail();
+            if (params.cur_page == 0) {
+              this.income_detail = res.data.dev_profit_list;
+            } else {
+              this.income_detail = this.income_detail.concat(
+                res.data.dev_profit_list
+              );
+            }
+            this.allpage = res.data.total_page;
+            this.get_dev_detail(params.cur_page);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -149,13 +218,14 @@ export default {
         .catch();
     },
     //详情
-    get_dev_detail() {
+    get_dev_detail(page) {
       let params = new Object();
       let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
       let endtime = statime + 86400;
       params.login_token = this.log_token;
       params.start_time = statime;
       params.end_time = endtime;
+      params.cur_page = page;
       alldevinformation(params)
         .then(res => {
           if (res.status == 0) {

@@ -1,13 +1,6 @@
 <template>
   <div class="content">
-    <navBar
-      title="挖矿节点"
-      left-text="返回"
-      left-arrow
-      fixed
-      @click-left="onClickLeft"
-    >
-    </navBar>
+    <navBar title="挖矿节点" left-text="返回" left-arrow fixed @click-left="onClickLeft"></navBar>
     <!-- <baidu-map class="map" :center="center" :zoom="zoom">
       <div v-for="(item, index) in dev_lists" :key="index">
         <bm-overlay
@@ -18,7 +11,7 @@
           <div><img src="../../assets/images/zuanshi.svg" alt />钻石节点</div>
         </bm-overlay>
       </div>
-    </baidu-map> -->
+    </baidu-map>-->
     <baidu-map class="map" :zoom="6" :center="{ lng: 114.2665, lat: 30.5856 }">
       <MyOverlay
         v-for="(item, index) in dev_lists"
@@ -27,8 +20,7 @@
         :text="item.node_grade_name"
         color="red"
         :dsc="item.node_grade"
-      >
-      </MyOverlay>
+      ></MyOverlay>
     </baidu-map>
 
     <div class="con_dop">
@@ -49,11 +41,7 @@
             :key="index"
             @click="go_node_setail(item)"
           >
-            <span
-              class="recird_content_left"
-              v-show="item.node_grade == 0"
-              style="color:#205AFF"
-            >
+            <span class="recird_content_left" v-show="item.node_grade == 0" style="color:#205AFF">
               <img src="../../assets/images/putong.svg" alt />
               普通节点
             </span>
@@ -75,9 +63,7 @@
             </span>
 
             <span class="recird_content_center">{{ item.dev_name }}</span>
-            <span class="recird_content_right"
-              >贡献值 {{ item.con_value }}</span
-            >
+            <span class="recird_content_right">贡献值 {{ item.con_value }}</span>
           </div>
         </vuu-pull>
       </div>
@@ -98,7 +84,7 @@ import {
 } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
-import { Toast } from "vant";
+import { Toast, Empty } from "vant";
 // import {meap} from "../../components/my_map"
 export default {
   data() {
@@ -144,7 +130,6 @@ export default {
     })
   },
   mounted() {
-    this.get_con();
     this.get_use_dev_list(0);
     this.get_coordinate();
   },
@@ -161,9 +146,9 @@ export default {
     //下拉刷新
     loadTop() {
       setTimeout(() => {
-        this.get_con();
         this.get_use_dev_list(0);
         this.get_coordinate();
+
         if (this.$refs.vuuPull.closeLoadTop) {
           this.$refs.vuuPull.closeLoadTop();
         }
@@ -240,6 +225,7 @@ export default {
             this.zan_dev_lists = [];
             this.updateUser({ log_token: res.token_info.login_token });
             this.zan_dev_lists = this.zan_dev_lists.concat(res.data.dev_list);
+            this.get_con();
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -274,28 +260,59 @@ export default {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
           }
+          let obje = {};
           res.data.dev_value_list.forEach((item, index) => {
-            this.zan_datalist.forEach(adme => {
-              if (adme.dev_sn == item.dev_sn) {
-                this.zan_datalist[index].con_value = item.con_value;
-                this.zan_datalist[index].node_grade = item.node_grade;
-                this.zan_dev_lists[index].node_grade = item.node_grade;
-                if (item.node_grade == 0) {
-                  this.zan_datalist[index].node_grade_name = "普通节点";
-                } else if (item.node_grade == 2000) {
-                  this.zan_datalist[index].node_grade_name = "黄金节点";
-                } else if (item.node_grade == 6000) {
-                  this.zan_datalist[index].node_grade_name = "铂金节点";
-                } else if (item.node_grade == 18000) {
-                  this.zan_datalist[index].node_grade_name = "钻石节点";
-                }
+            let key = item.dev_sn;
+            let value = item;
+            obje[key] = value;
+          });
+          this.zan_datalist.forEach((adme, indexs) => {
+            let sad = adme.dev_sn;
+            console.log(obje[sad]);
+            console.log(adme);
+            console.log(obje[sad].cp_value);
+            if (obje[sad]) {
+              let deas = new Object();
+              deas = adme;
+              deas.cp_value = obje[sad].cp_value;
+              deas.con_value = obje[sad].con_value;
+              deas.node_grade = obje[sad].node_grade;
+              if (obje[sad].node_grade == 0) {
+                deas.node_grade_name = "普通节点";
+              } else if (obje[sad].node_grade == 2000) {
+                deas.node_grade_name = "黄金节点";
+              } else if (obje[sad].node_grade == 6000) {
+                deas.node_grade_name = "铂金节点";
+              } else if (obje[sad].node_grade == 18000) {
+                deas.node_grade_name = "钻石节点";
               }
-            });
+              this.datalist.push(deas);
+            }
           });
-          this.$nextTick(() => {
-            this.datalist = this.zan_datalist;
-            this.dev_lists = this.zan_dev_lists;
+          console.log(this.zan_dev_lists);
+          this.zan_dev_lists.forEach((adme, indexs) => {
+            let sad = adme.dev_sn;
+            console.log(obje[sad]);
+            console.log(adme);
+            if (obje[sad]) {
+              let deas = new Object();
+              deas = adme;
+              deas.cp_value = obje[sad].cp_value;
+              deas.con_value = obje[sad].con_value;
+              deas.node_grade = obje[sad].node_grade;
+              if (obje[sad].node_grade == 0) {
+                deas.node_grade_name = "普通节点";
+              } else if (obje[sad].node_grade == 2000) {
+                deas.node_grade_name = "黄金节点";
+              } else if (obje[sad].node_grade == 6000) {
+                deas.node_grade_name = "铂金节点";
+              } else if (obje[sad].node_grade == 18000) {
+                deas.node_grade_name = "钻石节点";
+              }
+              this.dev_lists.push(deas);
+            }
           });
+          console.log(this.dev_lists);
         })
         .catch(error => {
           console.log(error);

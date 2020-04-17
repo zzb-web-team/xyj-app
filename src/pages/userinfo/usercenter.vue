@@ -4,7 +4,7 @@
       <van-icon name="search" slot="right" />
     </navBar>
     <div class="xiala">
-      <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+      <van-pull-refresh class="xiala" v-model="isLoading" @refresh="onRefresh">
         <div class="user">
           <div class="user_con">
             <div class="user_con_item" @click="gouser()">
@@ -14,16 +14,14 @@
               <div class="con_item_r">
                 <p>{{ user_name }}</p>
                 <p>
-                  <img src="../../assets/images/phone_img.png" alt="" />{{
-                    phone_number
+                  <img src="../../assets/images/phone_img.png" alt />
+                  {{
+                  phone_number
                   }}
                 </p>
               </div>
               <button @click.stop="goUserName()" :disabled="flag">
-                <img
-                  src="../../assets//images/per_pegister_icon.png.png"
-                  alt=""
-                />
+                <img src="../../assets//images/per_pegister_icon.png.png" alt />
                 {{ flag ? "已签到" : "签到" }}
               </button>
               <div class="con_item_img">
@@ -47,11 +45,7 @@
                 </div>
               </div>
             </div>
-            <div
-              class="user_con_item"
-              @click="gotool()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
+            <div class="user_con_item" @click="gotool()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_list_icon_toolbox.png" alt />
                 <span>工具箱</span>
@@ -133,19 +127,15 @@
                 <span>跳转测试</span>
               </div>
               <div class="con_item_r"></div>
-            </div> -->
+            </div>-->
           </div>
           <div>
-            <van-button
-              class="out_login"
-              @click="loginOut()"
-              v-fb="{ cls: 'my_touchfeedback' }"
-            >
+            <van-button class="out_login" @click="loginOut()" v-fb="{ cls: 'my_touchfeedback' }">
               <b>退出登录</b>
             </van-button>
           </div>
         </div>
-      </vuu-pull>
+      </van-pull-refresh>
     </div>
     <van-overlay :show="show" @click="show = false">
       <div class="wrapper" @click.stop>
@@ -170,8 +160,6 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/barBarActive";
 import { Tabbar, TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
-import loadind from "../../assets/images/spainpink.gif"; //动画
-import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   userInfoCenter,
   loginout,
@@ -199,17 +187,7 @@ export default {
       show: false,
       all_income: 0,
       system: "",
-      flag: false,
-      pullOptions: {
-        isBottomRefresh: true,
-        isTopRefresh: true,
-        slideResistance: 5, //拉动阻力
-        topTriggerHeight: 40, //下拉触发刷新的有效距离
-        topPull: {
-          loadingIcon: boadind
-        },
-        bottomCloseElMove: true //关闭上拉加载
-      }
+      flag: false
     };
   },
   computed: mapState({
@@ -230,12 +208,10 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
-    loadTop() {
+    onRefresh() {
       setTimeout(() => {
         this.get_all_income(90);
-        if (this.$refs.vuuPull.closeLoadTop) {
-          this.$refs.vuuPull.closeLoadTop();
-        }
+        this.isLoading = false;
       }, 500);
     },
     //网络状态

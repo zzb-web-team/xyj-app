@@ -1,6 +1,6 @@
 <template>
   <div class="dynamic">
-    <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+    <van-pull-refresh class="xiala" v-model="isLoading" @refresh="onRefresh">
       <div class="pull_con">
         <div class="dynamic_top">
           <div class="bandwidth">
@@ -30,27 +30,27 @@
             <span class="view_all" @click="go_recird">查看全部</span>
           </div>
           <div class="dynamic_scroll" v-if="datalist.length > 0">
-            <div
-              class="recird_content"
-              v-for="(item, index) in datalist"
-              :key="index"
-            >
+            <div class="recird_content" v-for="(item, index) in datalist" :key="index">
               <span class="recird_content_left">
                 <img src="../../assets/images/jiedian_icon.png" alt />
                 {{ item.node_name }}
               </span>
-              <span class="recird_content_center">{{
+              <span class="recird_content_center">
+                {{
                 item.node_status == 0 ? "节点网络启用" : "节点网络断开"
-              }}</span>
-              <span class="recird_content_right">{{
+                }}
+              </span>
+              <span class="recird_content_right">
+                {{
                 item.update_time | formatDate
-              }}</span>
+                }}
+              </span>
             </div>
           </div>
           <van-empty description="暂无数据" v-else />
         </div>
       </div>
-    </vuu-pull>
+    </van-pull-refresh>
     <foot v-model="active"></foot>
   </div>
 </template>
@@ -59,8 +59,7 @@
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import loadind from "../../assets/images/spainpink.gif"; //动画
-import boadind from "../../assets/images/spinwhile.gif"; //动画
+import { Empty } from "vant";
 import {
   query_node_dynamic_info,
   get_user_average_cp,
@@ -72,6 +71,7 @@ export default {
       active: 0,
       up_bandwidth: 0,
       down_bandwidth: 0,
+      isLoading: false, //控制上拉加载的加载动画
       node_pic: "xxxxxx",
       node_suan: 0,
       datalist: [
@@ -84,17 +84,7 @@ export default {
         // { node_name: "节点0004", node_status: 0, update_time: "两天前" },
         // { node_name: "节点0005", node_status: 0, update_time: 1578011665 },
         // { node_name: "节点0005", node_status: 0, update_time: "一分钟前" }
-      ],
-      pullOptions: {
-        isBottomRefresh: true,
-        isTopRefresh: true,
-        slideResistance: 5, //拉动阻力
-        topTriggerHeight: 40, //下拉触发刷新的有效距离
-        topPull: {
-          loadingIcon: boadind
-        },
-        bottomCloseElMove: true //关闭上拉加载
-      }
+      ]
     };
   },
   filters: {
@@ -126,14 +116,12 @@ export default {
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     //下拉刷新
-    loadTop() {
+    onRefresh() {
       setTimeout(() => {
         this.get_my_dynace_info();
         this.get_cp();
         this.get_use_dev_list();
-        if (this.$refs.vuuPull.closeLoadTop) {
-          this.$refs.vuuPull.closeLoadTop();
-        }
+        this.isLoading = false;
       }, 500);
     },
     //获取用户设备列表
@@ -381,5 +369,8 @@ export default {
       }
     }
   }
+}
+.xiala {
+  height: 100%;
 }
 </style>

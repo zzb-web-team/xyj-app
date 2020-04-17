@@ -74,7 +74,7 @@
             class="ranking_con"
             v-for="(item, index) in minerInfo"
             v-bind:key="index"
-            v-if="item.dev_bind_state == 1"
+            v-show="item.dev_bind_state == 1"
           >
             <div
               class="ranking_con_item"
@@ -85,23 +85,23 @@
               <div class="con_item_l">
                 <div class="item_l_top">
                   <div class="item_l_name">{{ item.dev_name }}</div>
-                  <!-- <div class="dot" v-bind:style="{background:item.bgccolor}"></div>
-                  <span v-bind:style="{color:item.spancolor}">{{item.equipment}}</span>-->
+                  <div class="dot" v-bind:style="{background:item.bgccolor}"></div>
+                  <span v-bind:style="{color:item.spancolor}">{{item.equipment}}</span>
                 </div>
                 <div class="item_l_No">SN:{{ item.dev_sn }}</div>
               </div>
               <div class="con_item_r">
                 <div class="item_center">
-                  <p v-if="item.node_level == 0">
+                  <p v-if="item.node_grade == 0">
                     <img src="../../assets/images/putong.svg" alt />普通节点
                   </p>
-                  <p v-else-if="item.node_level == 1">
+                  <p v-else-if="item.node_grade == 2000">
                     <img src="../../assets/images/huangjin.svg" alt />黄金节点
                   </p>
-                  <p v-else-if="item.node_level == 2">
+                  <p v-else-if="item.node_grade == 8000">
                     <img src="../../assets/images/bojin.svg" alt />铂金节点
                   </p>
-                  <p v-else>
+                  <p v-else-if="item.node_grade == 16000">
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
                   <p>算力：{{ item.power ? item.power : 0 }}</p>
@@ -133,7 +133,8 @@ import { formatDate, getdate } from "../../common/js/date.js";
 import {
   getMiner,
   setTing,
-  isbindinglist //获取我的设备列表
+  isbindinglist, //获取我的设备列表
+  get_app_dev_con_val
 } from "../../common/js/api.js";
 import { err } from "../../common/js/status";
 import tabbar from "../../components/foot";
@@ -181,7 +182,8 @@ export default {
         //   equipment: "离线",
         //   power: 7502407039673026326983
         // }
-      ]
+      ],
+      zan_minerInfo: []
     };
   },
   computed: mapState({
@@ -286,12 +288,12 @@ export default {
                     this.devlist.push(item);
                   });
                   if (res.data.page_num == 0) {
-                    this.minerInfo = this.devlist;
+                    this.zan_minerInfo = this.devlist;
                   } else {
-                    this.minerInfo.push(...this.devlist); //数组拼接
+                    this.zan_minerInfo.push(...this.devlist); //数组拼接
                   }
-                  // this.device(0);
-                  if (this.minerInfo.length <= 0) {
+                  this.get_con();
+                  if (this.zan_minerInfo.length <= 0) {
                     this.noint = true;
                   } else {
                     this.noint = false;
@@ -364,6 +366,49 @@ export default {
             // Toast("网络错误，请重新请求181");
           });
       }
+    },
+    //获取贡献值
+    get_con() {
+      let params = new Object();
+      params.login_token = this.log_token;
+      get_app_dev_con_val(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.token });
+          }
+          let obje = {};
+          res.data.dev_value_list.forEach((item, index) => {
+            let key = item.dev_sn;
+            let value = item;
+            obje[key] = value;
+          });
+          this.zan_minerInfo.forEach((adme, indexs) => {
+            let sad = adme.dev_sn;
+            console.log(obje[sad]);
+            console.log(adme);
+            console.log(obje[sad].cp_value);
+            if (obje[sad]) {
+              let deas = new Object();
+              deas = adme;
+              deas.cp_value = obje[sad].cp_value;
+              deas.con_value = obje[sad].con_value;
+              deas.node_grade = obje[sad].node_grade;
+              if (obje[sad].node_grade == 0) {
+                deas.node_grade_name = "普通节点";
+              } else if (obje[sad].node_grade == 2000) {
+                deas.node_grade_name = "黄金节点";
+              } else if (obje[sad].node_grade == 6000) {
+                deas.node_grade_name = "铂金节点";
+              } else if (obje[sad].node_grade == 18000) {
+                deas.node_grade_name = "钻石节点";
+              }
+              this.minerInfo.push(deas);
+            }
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     chenaecolor(arr) {
       for (let i = 0; i < 10; i++) {

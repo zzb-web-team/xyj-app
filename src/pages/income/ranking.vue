@@ -5,12 +5,7 @@
     </navBar>
 
     <div class="xiala">
-      <Scroll
-        ref="myscroller"
-        :autoUpdate="true"
-        :listenScroll="true"
-        @pullingDown="onRefresh"
-      >
+      <Scroll>
         <!-- 网络异常 -->
         <div class="refresh" v-show="refresh">
           <div
@@ -31,49 +26,46 @@
               <!-- <img src="../../assets/images/earnings_bg1_trophy.png" /> -->
             </div>
           </div>
-          <div class="nointerval" v-show="noint">
-            <img src="../../assets/images/earnings_illustration5.png" alt />
-            <p>排行榜暂未更新</p>
-          </div>
-          <div class="ranking_con" v-show="int">
-            <div class="ranking_con_title">
-              <div class="tltle_l">名次</div>
-              <div class="tltle_m">收益</div>
-              <div class="tltle_n">西柚机数量</div>
-              <div class="tltle_r">用户</div>
+
+          <van-pull-refresh class="xiala" v-model="isLoading" @refresh="onRefresh">
+            <div class="nointerval" v-show="noint">
+              <img src="../../assets/images/earnings_illustration5.png" alt />
+              <p>排行榜暂未更新</p>
             </div>
-            <div
-              class="ranking_item"
-              v-for="(item, index) in incomeArr"
-              v-bind:key="index"
-            >
-              <div
-                class="ranking_item_l"
-                :class="{
+            <div class="ranking_con" v-show="int">
+              <div class="ranking_con_title">
+                <div class="tltle_l">名次</div>
+                <div class="tltle_m">收益</div>
+                <div class="tltle_n">西柚机数量</div>
+                <div class="tltle_r">用户</div>
+              </div>
+              <div class="ranking_item" v-for="(item, index) in incomeArr" v-bind:key="index">
+                <div
+                  class="ranking_item_l"
+                  :class="{
                   ranking_item_l1: index == 0,
                   ranking_item_l2: index == 1,
                   ranking_item_l3: index == 2
                 }"
-              >
-                {{ (index + 1) | screen }}
-              </div>
-              <div
-                class="ranking_item_r"
-                :class="{
+                >{{ (index + 1) | screen }}</div>
+                <div
+                  class="ranking_item_r"
+                  :class="{
                   ranking_item_r1: index == 0,
                   ranking_item_r2: index == 1,
                   ranking_item_r3: index == 2
                 }"
-              >
-                <p class="item_p1">
-                  <b>{{ (item.profit_rank / 1000000).toFixed(6) }}</b>
-                </p>
-                <!-- <p>poc</p> -->
+                >
+                  <p class="item_p1">
+                    <b>{{ (item.profit_rank / 1000000).toFixed(6) }}</b>
+                  </p>
+                  <!-- <p>poc</p> -->
+                </div>
+                <div class="ranking_item_n">{{ item.bind_num }}</div>
+                <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
               </div>
-              <div class="ranking_item_n">{{ item.bind_num }}</div>
-              <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
             </div>
-          </div>
+          </van-pull-refresh>
         </div>
       </Scroll>
     </div>

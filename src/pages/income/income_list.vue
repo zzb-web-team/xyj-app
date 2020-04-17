@@ -1,11 +1,6 @@
 <template>
   <div class="all_income">
-    <navBar
-      title="收益明细"
-      left-arrow
-      fixed
-      @click-left="onClickLeft"
-    ></navBar>
+    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -14,69 +9,63 @@
       </div>
       <div class="income_con_btn" v-show="income_list.length > 0">
         <van-dropdown-menu>
-          <van-dropdown-item
-            v-model="value11"
-            :options="option1"
-            @change="changedev"
-          />
-          <van-dropdown-item
-            v-model="value22"
-            :options="option2"
-            @change="changetime"
-          />
+          <van-dropdown-item v-model="value11" :options="option1" @change="changedev" />
+          <van-dropdown-item v-model="value22" :options="option2" @change="changetime" />
         </van-dropdown-menu>
       </div>
       <div v-if="income_list.length > 0">
-        <van-collapse
-          v-model="activeNames"
-          v-for="(item, index) in income_list"
-          :key="index"
-          accordion
-          @change="item_open(item)"
+        <vuu-pull
+          ref="vuuPull"
+          :options="pullOptions"
+          v-on:loadTop="loadTop"
+          v-on:loadBottom="loadBottom"
+          :style="{ height: scrollerHeight }"
         >
-          <van-collapse-item
-            :title="'+' + (item.dev_profit / 100).toFixed(2) + 'gfm'"
-            :name="index"
-            :value="item.date_stamp | formatDate"
+          <van-collapse
+            v-model="activeNames"
+            v-for="(item, index) in income_list"
+            :key="index"
+            accordion
+            @change="item_open(item)"
           >
-            <div class="income_bottom_top">
-              <span></span>
-              <p>{{ item.devname }}</p>
-            </div>
-            <div class="income_bottom_con">
-              <div class="income_bottom_con_item con_item_left">
-                <p>占用空间</p>
-                <p>
-                  {{
+            <van-collapse-item
+              :title="'+' + (item.dev_profit / 100).toFixed(2) + 'gfm'"
+              :name="index"
+              :value="item.date_stamp | formatDate"
+            >
+              <div class="income_bottom_top">
+                <span></span>
+                <p>{{ item.devname }}</p>
+              </div>
+              <div class="income_bottom_con">
+                <div class="income_bottom_con_item con_item_left">
+                  <p>占用空间</p>
+                  <p>
+                    {{
                     (
-                      (devarrlist.total_cap - devarrlist.free_cap) /
-                      1024 /
-                      1024
+                    (devarrlist.total_cap - devarrlist.free_cap) /
+                    1024 /
+                    1024
                     ).toFixed(2)
-                  }}GB
-                </p>
+                    }}GB
+                  </p>
+                </div>
+                <div class="income_bottom_con_item con_item_center">
+                  <p>上行带宽</p>
+                  <p>{{ (devarrlist.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps</p>
+                </div>
+                <div class="income_bottom_con_item con_item_right">
+                  <p>下行带宽</p>
+                  <p>{{ (devarrlist.down_bandwidth / 1024 / 1024).toFixed(2) }}Mbps</p>
+                </div>
               </div>
-              <div class="income_bottom_con_item con_item_center">
-                <p>上行带宽</p>
-                <p>
-                  {{ (devarrlist.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
-                </p>
+              <div class="income_bottom_bot">
+                <div>算力：{{ item.com_power }}</div>
+                <div>在线时长：{{ (devarrlist.online_time / 3600).toFixed(2) }}h</div>
               </div>
-              <div class="income_bottom_con_item con_item_right">
-                <p>下行带宽</p>
-                <p>
-                  {{ (devarrlist.down_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
-                </p>
-              </div>
-            </div>
-            <div class="income_bottom_bot">
-              <div>算力：{{ item.com_power }}</div>
-              <div>
-                在线时长：{{ (devarrlist.online_time / 3600).toFixed(2) }}h
-              </div>
-            </div>
-          </van-collapse-item>
-        </van-collapse>
+            </van-collapse-item>
+          </van-collapse>
+        </vuu-pull>
       </div>
       <van-empty description="暂无数据" v-else />
     </div>
@@ -86,6 +75,8 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   devrevenue,
   isbindinglist,
@@ -131,12 +122,27 @@ export default {
       endtime: 0,
       page: 0,
       slcsi: {},
+      pagenum: 0,
+      allpage: 1,
       devarrlist: {
         total_cap: 0,
         free_cap: 0,
         up_bandwidth: 0,
         down_bandwidth: 0,
         online_time: 0
+      },
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomPull: {
+          loadingIcon: loadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
       }
     };
   },
@@ -152,13 +158,34 @@ export default {
       }
     }
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return (
+          window.innerHeight -
+          window.innerHeight * 0.245 -
+          0.92 * 100 -
+          50 +
+          "px"
+        );
+      } else {
+        return (
+          window.innerHeight -
+          0.92 * 50 -
+          window.innerHeight * 0.245 -
+          50 +
+          "px"
+        );
+      }
+    }
+  },
   mounted() {
     let date = new Date();
     this.value22 = date.getMonth() + 1;
@@ -168,6 +195,42 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        this.get_use_dev_list();
+        if (this.value11 == 0) {
+          this.get_all_income(0);
+          this.get_income_list(0);
+        } else {
+          this.get_dev_income(0);
+          this.get_dev_income_day(0);
+        }
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          if (this.value11 == 0) {
+            this.get_all_income(this.pagenum);
+            this.get_income_list(this.pagenum);
+          } else {
+            this.get_dev_income(this.pagenum);
+            this.get_dev_income_day(this.pagenum);
+          }
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
     //获取用户设备列表
     get_use_dev_list() {
       let params = new Object();
@@ -216,7 +279,13 @@ export default {
       devrevenue(params)
         .then(res => {
           if (res.status == 0) {
-            this.income_list = res.data.dev_profit_list;
+            if (params.cur_page == 0) {
+              this.income_list = res.data.dev_profit_list;
+            } else {
+              this.income_list = this.income_list.concat(
+                res.data.dev_profit_list
+              );
+            }
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -254,6 +323,9 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
+            if (params.cur_page == 0) {
+              this.income_list = [];
+            }
             res.data.user_profit_list.forEach((item, index) => {
               let dev_obj = new Object();
               dev_obj.dev_profit = item.user_total_profit;
@@ -329,7 +401,7 @@ export default {
       params.start_time = this.starttime;
       params.end_time = this.endtime;
       params.query_type = 1;
-      params.cur_page = 0;
+      params.cur_page = num;
       params.dev_sn = "";
       getuserdevlist(params)
         .then(res => {
@@ -367,11 +439,11 @@ export default {
     changedev() {
       this.income_list = [];
       if (this.value11 == 0) {
-        this.get_all_income();
-        this.get_income_list();
+        this.get_all_income(0);
+        this.get_income_list(0);
       } else {
-        this.get_dev_income();
-        this.get_dev_income_day();
+        this.get_dev_income(0);
+        this.get_dev_income_day(0);
       }
     },
     changetime() {
@@ -384,7 +456,13 @@ export default {
       }
       computeTime(y, this.value22);
       this.income_list = [];
-      this.get_dev_income_day(0);
+      if (this.value11 == 0) {
+        this.get_all_income(0);
+        this.get_income_list(0);
+      } else {
+        this.get_dev_income(0);
+        this.get_dev_income_day(0);
+      }
     },
     //取消按钮
     onCancel_dev() {
@@ -505,6 +583,8 @@ export default {
       background: url(../../assets/images/suanlimingxi.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
+      position: relative;
+      z-index: 11;
       p {
         color: #fff;
         padding-top: 0.2rem;
@@ -518,6 +598,8 @@ export default {
     .income_con_btn {
       background-color: #f8fafb;
       width: 100%;
+      position: relative;
+      z-index: 11;
     }
     .income_con_body {
       background-color: #fff;
