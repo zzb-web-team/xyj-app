@@ -172,7 +172,7 @@ export default {
         },
         bottomPull: {
           loadingIcon: loadind
-        },
+        }
       }
     };
   },
@@ -216,6 +216,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$route.query.dev);
     this.devtitle = this.$route.query.dev.node_name;
     this.progress_num = this.$route.query.dev.contribution;
     this.percentage_num =
@@ -253,7 +254,7 @@ export default {
     get_cp_list(page) {
       let parmas = new Object();
       parmas.login_token = this.log_token;
-      parmas.dev_sn = this.log_token;
+      parmas.dev_sn = this.$route.query.dev.dev_sn;
       parmas.month = this.value22;
       parmas.con_type = this.value11;
       parmas.cur_page = page;

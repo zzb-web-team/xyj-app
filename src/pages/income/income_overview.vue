@@ -4,10 +4,10 @@
     <van-nav-bar
       size="0.4rem"
       left-arrow
-      fixed
       title="收益"
+      fixed
       @click-right="onClickRight()"
-      :z-index="0"
+      :z-index="11"
     >
       <div slot="left" class="alltitleleft">
         <!-- <van-icon name="arrow-left" color="#ffffff" /> -->
@@ -18,63 +18,73 @@
     </van-nav-bar>
     <!--  -->
     <div class="content">
-      <div class="content_top">
-        <div class="content_top_all" @click="go_all_income_list">
-          <p>
-            累计收益(gfm)
-            <van-icon name="play" />
-          </p>
-          <div>{{ all_income }}</div>
-        </div>
-        <div class="content_top_detail">
-          <div class="content_top_detail_left">
-            <p>{{ last_income }}</p>
-            <p>昨日收益(gfm)</p>
+      <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+        <div class="content_top">
+          <div class="content_top_all" @click="go_all_income_list">
+            <p>
+              累计收益(gfm)
+              <van-icon name="play" />
+            </p>
+            <div>{{ all_income }}</div>
           </div>
-          <div class="content_top_detail_right">
-            <p>{{ weak_income }}</p>
-            <p>近一周收益(gfm)</p>
+          <div class="content_top_detail">
+            <div class="content_top_detail_left">
+              <p>{{ last_income }}</p>
+              <p>昨日收益(gfm)</p>
+            </div>
+            <div class="content_top_detail_right">
+              <p>{{ weak_income }}</p>
+              <p>近一周收益(gfm)</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="content_body" v-if="dev_income_list.length > 0">
+
         <div
-          class="content_con"
-          v-for="(item, index) in dev_income_list"
-          :key="index"
+          class="content_body"
+          v-if="dev_income_list.length > 0"
+          :style="{ height: scrollerHeight }"
         >
-          <div class="content_body_top" @click="go_income_list(item)">
-            <span>
-              <img src="../../assets/images/income_dev_name.png" alt />
-              {{ item.devname }}
-            </span>
-            <img src="../../assets/images/per_icon_arrow.png" alt />
-          </div>
-          <div class="content_body_bottom">
-            <div class="content_body_bottom_left" @click="go_income_list(item)">
-              <img src="../../assets/images/income_shouyi_new.png" alt />
-              <div class="content_body_bottom_right_detail">
-                <p>累计收益</p>
-                <p>
-                  {{ (item.total_profit / 100).toFixed(2) }}
-                  <span>gfm</span>
-                </p>
-              </div>
+          <div
+            class="content_con"
+            v-for="(item, index) in dev_income_list"
+            :key="index"
+          >
+            <div class="content_body_top" @click="go_income_list(item)">
+              <span>
+                <img src="../../assets/images/income_dev_name.png" alt />
+                {{ item.devname }}
+              </span>
+              <img src="../../assets/images/per_icon_arrow.png" alt />
             </div>
-            <div
-              class="content_body_bottom_right"
-              @click="go_calculation_details(item)"
-            >
-              <img src="../../assets/images/income_suanli_new.png" alt />
-              <div class="content_body_bottom_right_detail">
-                <p>算力</p>
-                <p>{{ item.total_com_power }}</p>
+            <div class="content_body_bottom">
+              <div
+                class="content_body_bottom_left"
+                @click="go_income_list(item)"
+              >
+                <img src="../../assets/images/income_shouyi_new.png" alt />
+                <div class="content_body_bottom_right_detail">
+                  <p>累计收益</p>
+                  <p>
+                    {{ (item.total_profit / 100).toFixed(2) }}
+                    <span>gfm</span>
+                  </p>
+                </div>
+              </div>
+              <div
+                class="content_body_bottom_right"
+                @click="go_calculation_details(item)"
+              >
+                <img src="../../assets/images/income_suanli_new.png" alt />
+                <div class="content_body_bottom_right_detail">
+                  <p>算力</p>
+                  <p>{{ item.total_com_power }}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <van-empty description="暂无数据" v-else />
+        <van-empty description="暂无数据" v-else />
+      </vuu-pull>
     </div>
     <!--  -->
     <tabbar v-model="active"></tabbar>
@@ -84,6 +94,8 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import tabbar from "../../components/foot";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   getuserdevlist,
   query_node_total_profit_info
@@ -95,67 +107,110 @@ export default {
       all_income: 0,
       last_income: 0,
       weak_income: 0,
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
+      },
       dev_income_list: [
-        // {
-        //   devname: "我的西柚机1",
-        //   total_profit: 6334,
-        //   total_com_power: 56,
-        //   dev_sn: 0
-        // },
-        // {
-        //   devname: "我的西柚机2",
-        //   total_profit: 546,
-        //   total_com_power: 34656,
-        //   dev_sn: 1
-        // },
-        // {
-        //   devname: "我的西柚机3",
-        //   total_profit: 2745,
-        //   total_com_power: 346,
-        //   dev_sn: 2
-        // },
-        // {
-        //   devname: "我的西柚机4",
-        //   total_profit: 547,
-        //   total_com_power: 2345,
-        //   dev_sn: 3
-        // },
-        // {
-        //   devname: "我的西柚机5",
-        //   total_profit: 6334,
-        //   total_com_power: 93684,
-        //   dev_sn: 4
-        // },
-        // {
-        //   devname: "我的西柚机6",
-        //   total_profit: 15073,
-        //   total_com_power: 46,
-        //   dev_sn: 5
-        // },
-        // {
-        //   devname: "我的西柚机7",
-        //   total_profit: 45,
-        //   total_com_power: 102375,
-        //   dev_sn: 6
-        // }
+        {
+          devname: "我的西柚机1",
+          total_profit: 6334,
+          total_com_power: 56,
+          dev_sn: 0
+        },
+        {
+          devname: "我的西柚机2",
+          total_profit: 546,
+          total_com_power: 34656,
+          dev_sn: 1
+        },
+        {
+          devname: "我的西柚机3",
+          total_profit: 2745,
+          total_com_power: 346,
+          dev_sn: 2
+        },
+        {
+          devname: "我的西柚机4",
+          total_profit: 547,
+          total_com_power: 2345,
+          dev_sn: 3
+        },
+        {
+          devname: "我的西柚机5",
+          total_profit: 6334,
+          total_com_power: 93684,
+          dev_sn: 4
+        },
+        {
+          devname: "我的西柚机6",
+          total_profit: 15073,
+          total_com_power: 46,
+          dev_sn: 5
+        },
+        {
+          devname: "我的西柚机7",
+          total_profit: 45,
+          total_com_power: 102375,
+          dev_sn: 6
+        }
       ]
     };
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd,
-    minerstates: state => state.management.minerstates,
-    devsn: state => state.management.devsn
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd,
+      minerstates: state => state.management.minerstates,
+      devsn: state => state.management.devsn
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return window.innerHeight - 5.5 * 100 + "px";
+      } else {
+        return window.innerHeight - 5.5 * 50 + "px";
+      }
+    }
+  },
   mounted() {
     this.get_all_income(90);
     this.get_all_dev_income(0);
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
+    //下拉
+    loadTop() {
+      setTimeout(() => {
+        this.get_all_income(90);
+        this.get_all_dev_income(0);
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          this.get_power_list(this.pagenum);
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
     //获取设备收益列表
     get_all_dev_income(page) {
       let params = new Object();
@@ -167,9 +222,13 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.dev_income_list = this.dev_income_list.concat(
-              res.data.dev_total_profit_list
-            );
+            if (params.cur_page == 0) {
+              // this.dev_income_list = res.data.dev_total_profit_list;
+            } else {
+              this.dev_income_list = this.dev_income_list.concat(
+                res.data.dev_total_profit_list
+              );
+            }
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -275,12 +334,17 @@ export default {
 
 <style lang="less" scoped>
 /deep/.van-nav-bar {
-  background: none !important;
+  background: #ffffff !important;
+}
+.pull-normal-top,
+.pull-normal-bottom {
+  color: #333333;
 }
 .income_overview {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  // overflow: hidden;
   .titrights {
     margin-right: 0.2rem;
     color: #666666;
@@ -289,6 +353,8 @@ export default {
     margin-top: 0.92rem;
     color: #ffffff;
     font-size: 0.24rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
     .content_top {
       width: 72%;
       padding: 0 10%;
@@ -298,6 +364,8 @@ export default {
       border-radius: 0.1rem;
       background: url(../../assets/images/all_income.png) no-repeat;
       background-size: 100% 100%;
+      position: relative;
+      z-index: 11;
       .content_top_all {
         padding-top: 10%;
         div {
@@ -331,7 +399,7 @@ export default {
     }
     .content_body {
       width: 100%;
-      height: 7.38rem;
+      overflow-x: hidden;
       overflow-y: scroll;
       .content_con {
         width: 84%;
@@ -354,7 +422,7 @@ export default {
           font-weight: 600;
           span {
             img {
-              width: 50%;
+              width: 16%;
             }
           }
         }

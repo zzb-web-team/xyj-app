@@ -27,18 +27,26 @@
         </van-dropdown-menu>
       </div>
       <div v-if="income_list.length > 0">
-        <div
-          class="income_con_body"
-          v-for="(item, index) in income_list"
-          :key="index"
+        <vuu-pull
+          ref="vuuPull"
+          :options="pullOptions"
+          v-on:loadTop="loadTop"
+          v-on:loadBottom="loadBottom"
+          :style="{ height: scrollerHeight }"
         >
-          <van-cell
-            is-link
-            :title="'+' + (item.user_total_profit / 100).toFixed(2) + 'gfm'"
-            @click="go_income_detail(item)"
-            >{{ item.date_stamp | formatDate }}</van-cell
+          <div
+            class="income_con_body"
+            v-for="(item, index) in income_list"
+            :key="index"
           >
-        </div>
+            <van-cell
+              is-link
+              :title="'+' + (item.user_total_profit / 100).toFixed(2) + 'gfm'"
+              @click="go_income_detail(item)"
+              >{{ item.date_stamp | formatDate }}</van-cell
+            >
+          </div>
+        </vuu-pull>
       </div>
       <van-empty description="暂无数据" v-else />
     </div>
@@ -48,6 +56,8 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
+import loadind from "../../assets/images/spainpink.gif"; //动画
+import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   getuserdevlist,
   isbindinglist,
@@ -92,7 +102,22 @@ export default {
         { text: "10月", value: 10 },
         { text: "11月", value: 11 },
         { text: "12月", value: 12 }
-      ]
+      ],
+      allpage: 1,
+      pagenum: 0,
+      pullOptions: {
+        isBottomRefresh: true,
+        isTopRefresh: true,
+        slideResistance: 5, //拉动阻力
+        topTriggerHeight: 40, //下拉触发刷新的有效距离
+        topPull: {
+          loadingIcon: boadind
+        },
+        bottomPull: {
+          loadingIcon: loadind
+        },
+        bottomCloseElMove: false //关闭上拉加载
+      }
     };
   },
   filters: {
@@ -107,13 +132,30 @@ export default {
       }
     }
   },
-  computed: mapState({
-    log_token: state => state.user.log_token,
-    phone_number: state => state.user.phone_number,
-    user_name: state => state.user.user_name,
-    user_sex: state => state.user.user_sex,
-    charge_psd: state => state.user.charge_psd
-  }),
+  computed: {
+    ...mapState({
+      log_token: state => state.user.log_token,
+      phone_number: state => state.user.phone_number,
+      user_name: state => state.user.user_name,
+      user_sex: state => state.user.user_sex,
+      charge_psd: state => state.user.charge_psd
+    }),
+    scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return (
+          window.innerHeight -
+          window.innerHeight * 0.245 -
+          0.22 * 100 -
+          50 +
+          "px"
+        );
+      } else {
+        return (
+          window.innerHeight - 0.72 * 50 - window.innerHeight * 0.245 + "px"
+        );
+      }
+    }
+  },
   mounted() {
     // this.total_revenue = this.$route.query.allshou;
     this.changetime();
@@ -121,6 +163,41 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
+    //下拉刷新
+    loadTop() {
+      setTimeout(() => {
+        if (this.value11 == 0) {
+          this.get_all_income(0);
+          this.get_income_list(0);
+        } else {
+          this.get_dev_income();
+          this.get_dev_income_day();
+        }
+        if (this.$refs.vuuPull.closeLoadTop) {
+          this.$refs.vuuPull.closeLoadTop();
+        }
+      }, 500);
+    },
+    //上拉加载
+    loadBottom() {
+      setTimeout(() => {
+        if (this.pagenum < this.allpage) {
+          this.pagenum++;
+          if (this.value11 == 0) {
+            this.get_all_income(this.pagenum);
+            this.get_income_list(this.pagenum);
+          } else {
+            this.get_dev_income();
+            this.get_dev_income_day();
+          }
+        } else {
+          return false;
+        }
+        if (this.$refs.vuuPull.closeLoadBottom) {
+          this.$refs.vuuPull.closeLoadBottom();
+        }
+      }, 500);
+    },
     //获取用户设备列表
     get_use_dev_list() {
       let params = new Object();
@@ -162,6 +239,7 @@ export default {
     },
     //获取收益列表
     get_income_list(page) {
+      console.log("4546646546");
       let params = new Object();
       params.start_time = this.starttime;
       params.end_time = this.endtime;
@@ -174,9 +252,14 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.income_list = this.income_list.concat(
-              res.data.user_profit_list
-            );
+            this.allpage = res.data.total_page;
+            if (params.cur_page == 0) {
+              this.income_list = res.data.user_profit_list;
+            } else {
+              this.income_list = this.income_list.concat(
+                res.data.user_profit_list
+              );
+            }
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -214,6 +297,9 @@ export default {
         .then(res => {
           if (res.status == 0) {
             //this.income_list=res.data.dev_profit_list;
+            if (params.cur_page == 0) {
+              this.income_list = [];
+            }
             res.data.dev_profit_list.forEach(item => {
               let dev_obj = new Object();
               dev_obj.user_total_profit = item.dev_profit;
@@ -291,7 +377,7 @@ export default {
       params.start_time = this.starttime;
       params.end_time = this.endtime;
       params.query_type = 1;
-      params.cur_page = 0;
+      params.cur_page = num;
       params.dev_sn = "";
       getuserdevlist(params)
         .then(res => {
@@ -437,6 +523,8 @@ export default {
       background: url(../../assets/images/shouyi_bgc.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
+      position: relative;
+      z-index: 11;
       p {
         color: #fff;
         padding-top: 0.2rem;
@@ -450,6 +538,8 @@ export default {
     .income_con_btn {
       background-color: #f8fafb;
       width: 100%;
+      position: relative;
+      z-index: 11;
     }
     .income_con_body {
       background-color: #fff;

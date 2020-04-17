@@ -338,7 +338,9 @@ export default {
           font-size: 0.28rem;
           font-weight: 600;
           span {
+            width: 2rem;
             display: flex;
+            overflow: hidden;
             align-items: center;
             img {
               margin-right: 0.1rem;

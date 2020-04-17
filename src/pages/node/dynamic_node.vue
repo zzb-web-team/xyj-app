@@ -1,52 +1,54 @@
 <template>
   <div class="dynamic">
     <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
-      <div class="dynamic_top">
-        <div class="bandwidth">
-          <span class="bandwidth_left">
-            <i></i>
-            上行带宽 {{ up_bandwidth }}Mbps
-          </span>
-          <div class="bandwidth_right" @click="go_mining_node">
-            <img src="../../assets/images/jiedian_icon.svg" alt />
-            <span>挖矿节点 {{ node_pic }}</span>
-          </div>
-        </div>
-        <div class="bandwidth">
-          <span class="bandwidth_left">
-            <i></i>
-            下行带宽{{ down_bandwidth }}Mbps
-          </span>
-          <div class="bandwidth_right down_right" @click="go_calculation">
-            <img src="../../assets/images/suanli_icon.svg" alt />
-            <span>平均算力{{ node_suan }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="dynamic_bottom">
-        <div class="redic_title">
-          <span>我的节点动态</span>
-          <span class="view_all" @click="go_recird">查看全部</span>
-        </div>
-        <div class="dynamic_scroll" v-if="datalist.length > 0">
-          <div
-            class="recird_content"
-            v-for="(item, index) in datalist"
-            :key="index"
-          >
-            <span class="recird_content_left">
-              <img src="../../assets/images/jiedian_icon.png" alt />
-              {{ item.node_name }}
+      <div class="pull_con">
+        <div class="dynamic_top">
+          <div class="bandwidth">
+            <span class="bandwidth_left">
+              <i></i>
+              上行带宽 {{ up_bandwidth }}Mbps
             </span>
-            <span class="recird_content_center">{{
-              item.node_status == 0 ? "节点网络启用" : "节点网络断开"
-            }}</span>
-            <span class="recird_content_right">{{
-              item.update_time | formatDate
-            }}</span>
+            <div class="bandwidth_right" @click="go_mining_node">
+              <img src="../../assets/images/jiedian_icon.svg" alt />
+              <span>挖矿节点 {{ node_pic }}</span>
+            </div>
+          </div>
+          <div class="bandwidth">
+            <span class="bandwidth_left">
+              <i></i>
+              下行带宽{{ down_bandwidth }}Mbps
+            </span>
+            <div class="bandwidth_right down_right" @click="go_calculation">
+              <img src="../../assets/images/suanli_icon.svg" alt />
+              <span>平均算力{{ node_suan }}</span>
+            </div>
           </div>
         </div>
-        <van-empty description="暂无数据" v-else />
+        <div class="dynamic_bottom">
+          <div class="redic_title">
+            <span>我的节点动态</span>
+            <span class="view_all" @click="go_recird">查看全部</span>
+          </div>
+          <div class="dynamic_scroll" v-if="datalist.length > 0">
+            <div
+              class="recird_content"
+              v-for="(item, index) in datalist"
+              :key="index"
+            >
+              <span class="recird_content_left">
+                <img src="../../assets/images/jiedian_icon.png" alt />
+                {{ item.node_name }}
+              </span>
+              <span class="recird_content_center">{{
+                item.node_status == 0 ? "节点网络启用" : "节点网络断开"
+              }}</span>
+              <span class="recird_content_right">{{
+                item.update_time | formatDate
+              }}</span>
+            </div>
+          </div>
+          <van-empty description="暂无数据" v-else />
+        </div>
       </div>
     </vuu-pull>
     <foot v-model="active"></foot>
@@ -268,6 +270,11 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  overflow: hidden;
+  .pull_con {
+    width: 100%;
+    height: 100%;
+  }
   .dynamic_top {
     width: 100%;
     height: 64%;

@@ -114,6 +114,8 @@ export const get_app_dev_cp_list = params => { return axios.post(`${serverUrl}/m
 export const query_node_dynamic_info = params => { return axios.post(`${serverUrl}/miner_ctrl/query_node_dynamic_info`, params).then(res => res.data) }
     /**查询节点位置信息 */
 export const query_node_address_info = params => { return axios.post(`${serverUrl}/miner_ctrl/query_node_address_info`, params).then(res => res.data) }
+    /**查询贡献值列表 */
+export const get_app_dev_con_val = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_con_val`, params).then(res => res.data) }
 
 //收益
 export const query_node_total_profit_info = params => { return axios.post(`${serverUrl}/miner_earn/query_node_total_profit_info`, params).then(res => res.data) }
