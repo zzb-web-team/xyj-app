@@ -127,7 +127,7 @@ export default {
         topPull: {
           loadingIcon: boadind
         },
-         bottomPull: {
+        bottomPull: {
           loadingIcon: loadind
         },
         bottomCloseElMove: false //关闭上拉加载
@@ -157,7 +157,10 @@ export default {
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
         return (
-          window.innerHeight - 2.18 * 100 - window.innerHeight * 0.175 + "px"
+          window.innerHeight -
+          2.18 * (window.deviceWidth / 7.5) -
+          window.innerHeight * 0.175 +
+          "px"
         );
       } else {
         return (

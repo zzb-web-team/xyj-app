@@ -175,9 +175,9 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight - 5.5 * 100 + "px";
+        return window.innerHeight - 4.52 * (window.deviceWidth / 7.5) + "px";
       } else {
-        return window.innerHeight - 5.5 * 50 + "px";
+        return window.innerHeight - 4.52 * 50 + "px";
       }
     }
   },
@@ -353,6 +353,7 @@ export default {
     margin-top: 0.92rem;
     color: #ffffff;
     font-size: 0.24rem;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
     .content_top {

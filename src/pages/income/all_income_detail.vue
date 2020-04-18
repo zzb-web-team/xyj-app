@@ -140,7 +140,7 @@ export default {
         return (
           window.innerHeight -
           window.innerHeight * 0.245 -
-          0.92 * 100 -
+          0.92 * (window.deviceWidth / 7.5) -
           50 +
           "px"
         );

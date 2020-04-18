@@ -191,7 +191,7 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight - 0.92 * 100 + "px";
+        return window.innerHeight - 0.92 * (window.deviceWidth / 7.5) + "px";
       } else {
         return (
           window.innerHeight -
