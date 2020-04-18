@@ -1,6 +1,12 @@
 <template>
   <div class="content">
-    <navBar title="挖矿节点" left-text="返回" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="挖矿节点"
+      left-text="返回"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!-- <baidu-map class="map" :center="center" :zoom="zoom">
       <div v-for="(item, index) in dev_lists" :key="index">
         <bm-overlay
@@ -41,7 +47,11 @@
             :key="index"
             @click="go_node_setail(item)"
           >
-            <span class="recird_content_left" v-show="item.node_grade == 0" style="color:#205AFF">
+            <span
+              class="recird_content_left"
+              v-show="item.node_grade == 0"
+              style="color:#205AFF"
+            >
               <img src="../../assets/images/putong.svg" alt />
               普通节点
             </span>
@@ -63,7 +73,9 @@
             </span>
 
             <span class="recird_content_center">{{ item.dev_name }}</span>
-            <span class="recird_content_right">贡献值 {{ item.con_value }}</span>
+            <span class="recird_content_right"
+              >贡献值 {{ item.con_value }}</span
+            >
           </div>
         </vuu-pull>
       </div>
@@ -268,9 +280,9 @@ export default {
           });
           this.zan_datalist.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
+            let deas = new Object();
+            deas = adme;
             if (obje[sad]) {
-              let deas = new Object();
-              deas = adme;
               deas.cp_value = obje[sad].cp_value;
               deas.con_value = obje[sad].con_value;
               deas.node_grade = obje[sad].node_grade;
@@ -288,9 +300,9 @@ export default {
           });
           this.zan_dev_lists.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
+            let deas = new Object();
+            deas = adme;
             if (obje[sad]) {
-              let deas = new Object();
-              deas = adme;
               deas.cp_value = obje[sad].cp_value;
               deas.con_value = obje[sad].con_value;
               deas.node_grade = obje[sad].node_grade;

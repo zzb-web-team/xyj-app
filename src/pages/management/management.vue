@@ -70,11 +70,16 @@
               <span>{{offlineCnt}}</span>台
             </div>
           </div>-->
-          <div
+          <!-- <div
             class="ranking_con"
             v-for="(item, index) in minerInfo"
             v-bind:key="index"
             v-show="item.dev_bind_state == 1"
+          > -->
+          <div
+            class="ranking_con"
+            v-for="(item, index) in minerInfo"
+            v-bind:key="index"
           >
             <div
               class="ranking_con_item"
@@ -162,6 +167,7 @@ export default {
       onlineCnt: "0", //在线
       offlineCnt: "0", //离线
       devlist: [],
+      das: [],
       localcache: [], //暂存
       allpage: 0, //总页码
       pagenum: 0, //当前页码
@@ -392,26 +398,17 @@ export default {
           });
           this.zan_minerInfo.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
-            console.log(obje[sad]);
-            console.log(adme);
+            let deas = new Object();
+            deas = adme;
             if (obje[sad]) {
-              let deas = new Object();
-              deas = adme;
               deas.cp_value = obje[sad].cp_value;
               deas.con_value = obje[sad].con_value;
               deas.node_grade = obje[sad].node_grade;
-              if (obje[sad].node_grade == 0) {
-                deas.node_grade_name = "普通节点";
-              } else if (obje[sad].node_grade == 2000) {
-                deas.node_grade_name = "黄金节点";
-              } else if (obje[sad].node_grade == 6000) {
-                deas.node_grade_name = "铂金节点";
-              } else if (obje[sad].node_grade == 18000) {
-                deas.node_grade_name = "钻石节点";
-              }
-              this.minerInfo.push(deas);
             }
+            this.das.push(deas);
           });
+          this.minerInfo = this.das;
+          console.log(this.minerInfo);
         })
         .catch(error => {
           console.log(error);

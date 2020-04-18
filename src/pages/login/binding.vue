@@ -1,4 +1,3 @@
-
 <template>
   <div class="container">
     <van-nav-bar
@@ -17,7 +16,7 @@
       </div>
       <div slot="right">
         <span>扫码绑定</span>
-         <van-icon name="scan" size="0.4rem" />
+        <van-icon name="scan" size="0.4rem" />
       </div>
     </van-nav-bar>
     <scroller>
@@ -25,7 +24,9 @@
         <div class="toptext">
           <span>搜索西柚机</span>
         </div>
-        <div class="protocol_text">将设备接通电源，插入网线，等待灯光闪烁，确认你的手机和设备在同一网络（同一WIFI）</div>
+        <div class="protocol_text">
+          将设备接通电源，插入网线，等待灯光闪烁，确认你的手机和设备在同一网络（同一WIFI）
+        </div>
         <div class="introduction_text">
           <!-- <div class="protocol_titie">
                     绑定西柚机
@@ -35,7 +36,9 @@
           </div>
         </div>
         <div class="next_btn">
-          <van-button class="introduction_start" @click="goLink()">搜索</van-button>
+          <van-button class="introduction_start" @click="goLink()"
+            >搜索</van-button
+          >
         </div>
       </div>
     </scroller>
@@ -276,7 +279,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 /deep/.van-nav-bar .van-icon {
   color: #333333;
   vertical-align: middle;
@@ -284,8 +287,11 @@ export default {
 /deep/.van-nav-bar__right {
   right: 0.2rem;
 }
-/deep/.van-icon-arrow-left:before{
+/deep/.van-icon-arrow-left:before {
   color: #333333;
+}
+/deep/.van-nav-bar .van-icon {
+  margin-top: 0 !important;
 }
 .van-nav-bar {
   color: #333333;

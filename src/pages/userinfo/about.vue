@@ -13,14 +13,16 @@
             </div>
             <div class="app_name">
               <span class="app_name_left">西柚APP</span>
-              <span class="app_name_right">V 1.3.1.128</span>
+              <span class="app_name_right">V 1.3.1.131</span>
             </div>
             <p>更新于 2019-12-20</p>
           </div>
 
           <hr />
           <div class="user_con_content">
-            <p>西柚机是一款西柚用户们通过贡献闲置网络带宽、存储空间提供给上游的需求企业，用户从中赚取积分奖励的智能硬件产品。西柚用户可以使用西柚积分在公司搭建的闲置共享经济体系中进行各种价值兑换。</p>
+            <p>
+              西柚机是一款西柚用户们通过贡献闲置网络带宽、存储空间提供给上游的需求企业，用户从中赚取积分奖励的智能硬件产品。西柚用户可以使用西柚积分在公司搭建的闲置共享经济体系中进行各种价值兑换。
+            </p>
           </div>
         </div>
       </div>
@@ -34,7 +36,7 @@ import navBar from "../../components/navBar";
 export default {
   data() {
     return {
-      title: "关于我们",
+      title: "关于我们"
     };
   },
   mounted() {},
@@ -45,7 +47,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 .container {
   width: 100%;
   margin: 0 auto;

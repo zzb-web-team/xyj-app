@@ -191,9 +191,9 @@ export default {
             });
             res.data.dynamic_list.forEach((adme, indexs) => {
               let sad = adme.dev_sn;
-              if (obje[sad]) {
-                let deas = new Object();
+              let deas = new Object();
                 deas = adme;
+              if (obje[sad]) {
                 obje[sad].event_type = deas.event_type;
                 obje[sad].event_val = deas.event_val;
                 obje[sad].event_tm = deas.event_tm;
