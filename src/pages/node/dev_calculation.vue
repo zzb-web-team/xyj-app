@@ -32,19 +32,19 @@
               <p>SN:{{ item.dev_sn }}</p>
             </div>
             <div class="item_center">
-              <p v-if="item.node_level == 0">
+              <p v-if="item.node_grade == 0">
                 <img src="../../assets/images/putong.svg" alt />普通节点
               </p>
-              <p v-else-if="item.node_level == 1">
+              <p v-else-if="item.node_grade == 2000">
                 <img src="../../assets/images/huangjin.svg" alt />黄金节点
               </p>
-              <p v-else-if="item.node_level == 2">
+              <p v-else-if="item.node_grade == 5000">
                 <img src="../../assets/images/bojin.svg" alt />铂金节点
               </p>
-              <p v-else>
+              <p v-else-if="item.node_grade == 18000">
                 <img src="../../assets/images/zuanshi.svg" alt />钻石节点
               </p>
-              <p>算力：{{ item.power }}</p>
+              <p>算力：{{ item.cp_value }}</p>
             </div>
             <div class="item_right">
               <img src="../../assets/images/per_icon_arrow.png" alt />
@@ -60,7 +60,7 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
-import { isbindinglist } from "../../common/js/api";
+import { isbindinglist, get_app_dev_con_val } from "../../common/js/api";
 import { TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
@@ -72,66 +72,12 @@ export default {
       pagenum: 0,
       minerInfo: [],
       demo_minerInfo: [
-        {
-          dev_name: "我的节点1",
-          dev_sn: "SNE4508276578",
-          node_level: 0,
-          power: 4358
-        },
-        {
-          dev_name: "我的节点2",
-          dev_sn: "SNE43697357",
-          node_level: 1,
-          power: 982
-        },
-        {
-          dev_name: "我的节点1",
-          dev_sn: "SNE4508276578",
-          node_level: 0,
-          power: 4358
-        },
-        {
-          dev_name: "我的节点2",
-          dev_sn: "SNE43697357",
-          node_level: 1,
-          power: 982
-        },
-        {
-          dev_name: "我的节点1",
-          dev_sn: "SNE4508276578",
-          node_level: 0,
-          power: 4358
-        },
-        {
-          dev_name: "我的节点2",
-          dev_sn: "SNE43697357",
-          node_level: 1,
-          power: 982
-        },
-        {
-          dev_name: "我的节点1",
-          dev_sn: "SNE4508276578",
-          node_level: 0,
-          power: 4358
-        },
-        {
-          dev_name: "我的节点2",
-          dev_sn: "SNE43697357",
-          node_level: 1,
-          power: 982
-        },
-        {
-          dev_name: "我的节点1",
-          dev_sn: "SNE4508276578",
-          node_level: 0,
-          power: 4358
-        },
-        {
-          dev_name: "我的节点2",
-          dev_sn: "SNE43697357",
-          node_level: 1,
-          power: 982
-        }
+        // {
+        //   dev_name: "我的节点1",
+        //   dev_sn: "SNE4508276578",
+        //   node_level: 0,
+        //   power: 4358
+        // },
       ],
       pullOptions: {
         isBottomRefresh: true,
@@ -215,11 +161,11 @@ export default {
                 this.allpage = res.data.total_page; //总页码
                 this.pagenum = res.data.page_num;
                 if (params.page_num == 0) {
-                  this.minerInfo = res.data.bind_devinfo_list;
-                  // this.minerInfo = this.demo_minerInfo;
+                  this.demo_minerInfo = res.data.bind_devinfo_list;
                 } else {
-                  this.minerInfo.push(...res.data.bind_devinfo_list); //数组拼接
+                  this.demo_minerInfo.push(...res.data.bind_devinfo_list); //数组拼接
                 }
+                this.get_con();
               } else if (res.err_code == 292) {
                 // Toast({
                 //   message: "您暂时没有设备，请先绑定设备",
@@ -273,6 +219,53 @@ export default {
             console.log(error);
           });
       }
+    },
+    //获取贡献值
+    get_con() {
+      let params = new Object();
+      params.login_token = this.log_token;
+      get_app_dev_con_val(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.token });
+          }
+          let obje = {};
+          res.data.dev_value_list.forEach((item, index) => {
+            let key = item.dev_sn;
+            let value = item;
+            obje[key] = value;
+            obje.cp_value = "";
+            obje.con_value = "";
+            obje.node_grade = "";
+          });
+          console.log(obje);
+          this.demo_minerInfo.forEach((adme, indexs) => {
+            let sad = adme.dev_sn;
+            console.log(obje[sad]);
+            console.log(adme);
+            if (obje[sad]) {
+              let deas = new Object();
+              deas = adme;
+              deas.cp_value = obje[sad].cp_value;
+              deas.con_value = obje[sad].con_value;
+              deas.node_grade = obje[sad].node_grade;
+              if (obje[sad].node_grade == 0) {
+                deas.node_grade_name = "普通节点";
+              } else if (obje[sad].node_grade == 2000) {
+                deas.node_grade_name = "黄金节点";
+              } else if (obje[sad].node_grade == 6000) {
+                deas.node_grade_name = "铂金节点";
+              } else if (obje[sad].node_grade == 18000) {
+                deas.node_grade_name = "钻石节点";
+              }
+              this.minerInfo.push(deas);
+            }
+          });
+          console.log(this.minerInfo);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     onClickLeft() {
       this.$router.go(-1);

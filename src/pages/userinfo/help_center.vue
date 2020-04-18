@@ -56,7 +56,7 @@
             <div>
               <img src="../../assets/images/help_shouyi.png" alt />
             </div>
-            <div>{{ item.title }}</div>
+            <div>{{ item.cat_name }}</div>
             <van-icon name="arrow-down" />
           </div>
           <div class="con_item_right">
@@ -64,9 +64,9 @@
               v-for="(items, indexs) in item.problem"
               :key="indexs + 'problem'"
               v-show="indexs < item.aoenbum"
-              @click="go_help_detail(items)"
+              @click="go_help_detail(items, indexs)"
             >
-              {{ items.problem_item }}
+              {{ items.item_title }}
             </p>
           </div>
         </div>
@@ -86,34 +86,8 @@ import {
 export default {
   data() {
     return {
-      datalist: [
-        {
-          title: "收益",
-          title_id: 0,
-          aoenbum: 2,
-          problem: [
-            { problem_item: "如何绑定设备", problem_id: 0 },
-            { problem_item: "搜索不到设备怎么办", problem_id: 1 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 2 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 3 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 4 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 5 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 6 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 7 },
-            { problem_item: "绑定设备多久才会产生收益", problem_id: 8 }
-          ]
-        },
-        {
-          title: "积分兑换",
-          title_id: 1,
-          aoenbum: 2,
-          problem: [
-            { problem_item: "积分有什么用", problem_id: 0 },
-            { problem_item: "积分兑换比例是多少", problem_id: 1 },
-            { problem_item: "积分能不直接交易吗", problem_id: 2 }
-          ]
-        }
-      ]
+      datalist: [],
+      zan_datalist: []
     };
   },
   components: {
@@ -135,12 +109,15 @@ export default {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     show_problem(sta, num) {
       if (sta.aoenbum == 2) {
-        this.datalist[num].aoenbum = 5e5;
+        this.datalist[num].aoenbum = 100;
       } else {
         this.datalist[num].aoenbum = 2;
       }
+      this.$forceUpdate();
+      console.log(this.datalist[num]);
     },
-    go_help_detail(datadetail) {
+    go_help_detail(datadetail, num) {
+      console.log(datadetail);
       this.$router.push({
         path: "help_detail",
         query: { problem: datadetail }
@@ -154,8 +131,18 @@ export default {
       app_query_help_cat_info(params)
         .then(res => {
           if (res.status == 0) {
-            this.updateUser({ log_token: res.token_info.token });
-            this.datalist = res.data.cat_list;
+            this.updateUser({ log_token: res.data.token_info.login_token });
+            if (params.page_no == 0) {
+              this.zan_datalist = res.data.cat_list;
+            } else {
+              this.zan_datalist = this.zan_datalist.concat(res.data.cat_list);
+            }
+            this.get_help_detail(0);
+            this.zan_datalist.forEach((item, index) => {
+              // this.get_help_detail(item.cat_id);
+            });
+
+            this.datalist = [];
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -180,7 +167,42 @@ export default {
           }
         })
         .catch(error => {
-        //  console.log(error);
+          //  console.log(error);
+        });
+    },
+    get_help_detail(id) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      params.page_no = 0;
+      params.page_size = 10;
+      params.cat_id = id;
+      app_query_help_item_info(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.login_token });
+            let obje = {};
+            this.zan_datalist.forEach((item, index) => {
+              let key = item.cat_id;
+              let value = item;
+              obje[key] = value;
+              obje[key].problem = [];
+              obje[key].aoenbum = 2;
+            });
+            res.data.item_list.forEach((adme, index) => {
+              let sad = adme.cat_id;
+              if (obje[sad]) {
+                obje[sad].problem.push(adme);
+              }
+            });
+            for (var key in obje) {
+              this.datalist.push(obje[key]);
+            }
+
+            console.log(this.datalist);
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
     }
   }

@@ -50,10 +50,10 @@
             :key="index"
           >
             <div class="content_body_top" @click="go_income_list(item)">
-              <span>
+              <div>
                 <img src="../../assets/images/income_dev_name.png" alt />
                 {{ item.devname }}
-              </span>
+              </div>
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </div>
             <div class="content_body_bottom">
@@ -118,48 +118,48 @@ export default {
         bottomCloseElMove: false //关闭上拉加载
       },
       dev_income_list: [
-        {
-          devname: "我的西柚机1",
-          total_profit: 6334,
-          total_com_power: 56,
-          dev_sn: 0
-        },
-        {
-          devname: "我的西柚机2",
-          total_profit: 546,
-          total_com_power: 34656,
-          dev_sn: 1
-        },
-        {
-          devname: "我的西柚机3",
-          total_profit: 2745,
-          total_com_power: 346,
-          dev_sn: 2
-        },
-        {
-          devname: "我的西柚机4",
-          total_profit: 547,
-          total_com_power: 2345,
-          dev_sn: 3
-        },
-        {
-          devname: "我的西柚机5",
-          total_profit: 6334,
-          total_com_power: 93684,
-          dev_sn: 4
-        },
-        {
-          devname: "我的西柚机6",
-          total_profit: 15073,
-          total_com_power: 46,
-          dev_sn: 5
-        },
-        {
-          devname: "我的西柚机7",
-          total_profit: 45,
-          total_com_power: 102375,
-          dev_sn: 6
-        }
+        // {
+        //   devname: "我的西柚机1",
+        //   total_profit: 6334,
+        //   total_com_power: 56,
+        //   dev_sn: 0
+        // },
+        // {
+        //   devname: "我的西柚机2",
+        //   total_profit: 546,
+        //   total_com_power: 34656,
+        //   dev_sn: 1
+        // },
+        // {
+        //   devname: "我的西柚机3",
+        //   total_profit: 2745,
+        //   total_com_power: 346,
+        //   dev_sn: 2
+        // },
+        // {
+        //   devname: "我的西柚机4",
+        //   total_profit: 547,
+        //   total_com_power: 2345,
+        //   dev_sn: 3
+        // },
+        // {
+        //   devname: "我的西柚机5",
+        //   total_profit: 6334,
+        //   total_com_power: 93684,
+        //   dev_sn: 4
+        // },
+        // {
+        //   devname: "我的西柚机6",
+        //   total_profit: 15073,
+        //   total_com_power: 46,
+        //   dev_sn: 5
+        // },
+        // {
+        //   devname: "我的西柚机7",
+        //   total_profit: 45,
+        //   total_com_power: 102375,
+        //   dev_sn: 6
+        // }
       ]
     };
   },
@@ -223,7 +223,7 @@ export default {
               log_token: res.data.token_info.token
             });
             if (params.cur_page == 0) {
-              // this.dev_income_list = res.data.dev_total_profit_list;
+              this.dev_income_list = res.data.dev_total_profit_list;
             } else {
               this.dev_income_list = this.dev_income_list.concat(
                 res.data.dev_total_profit_list
@@ -420,9 +420,11 @@ export default {
           margin-bottom: 0.2rem;
           font-size: 0.28rem;
           font-weight: 600;
-          span {
+          width: 100%;
+          div {
+            width: 3rem;
             img {
-              width: 16%;
+              width: 14%;
             }
           }
         }

@@ -85,8 +85,13 @@
               <div class="con_item_l">
                 <div class="item_l_top">
                   <div class="item_l_name">{{ item.dev_name }}</div>
-                  <div class="dot" v-bind:style="{background:item.bgccolor}"></div>
-                  <span v-bind:style="{color:item.spancolor}">{{item.equipment}}</span>
+                  <div
+                    class="dot"
+                    v-bind:style="{ background: item.bgccolor }"
+                  ></div>
+                  <span v-bind:style="{ color: item.spancolor }">{{
+                    item.equipment
+                  }}</span>
                 </div>
                 <div class="item_l_No">SN:{{ item.dev_sn }}</div>
               </div>
@@ -104,7 +109,7 @@
                   <p v-else-if="item.node_grade == 16000">
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
-                  <p>算力：{{ item.power ? item.power : 0 }}</p>
+                  <p>算力：{{ item.cp_value ? item.cp_value : 0 }}</p>
                 </div>
                 <div class="item_r_img">
                   <img src="../../assets/images/per_icon_arrow.png" />
@@ -381,12 +386,14 @@ export default {
             let key = item.dev_sn;
             let value = item;
             obje[key] = value;
+            obje.cp_value = "";
+            obje.con_value = "";
+            obje.node_grade = "";
           });
           this.zan_minerInfo.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
             console.log(obje[sad]);
             console.log(adme);
-            console.log(obje[sad].cp_value);
             if (obje[sad]) {
               let deas = new Object();
               deas = adme;

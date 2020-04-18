@@ -10,7 +10,7 @@
             </span>
             <div class="bandwidth_right" @click="go_mining_node">
               <img src="../../assets/images/jiedian_icon.svg" alt />
-              <span>挖矿节点 {{ node_pic }}</span>
+              <span>挖矿节点 {{ node_pic_name }}</span>
             </div>
           </div>
           <div class="bandwidth">
@@ -30,20 +30,21 @@
             <span class="view_all" @click="go_recird">查看全部</span>
           </div>
           <div class="dynamic_scroll" v-if="datalist.length > 0">
-            <div class="recird_content" v-for="(item, index) in datalist" :key="index">
+            <div
+              class="recird_content"
+              v-for="(item, index) in datalist"
+              :key="index"
+            >
               <span class="recird_content_left">
                 <img src="../../assets/images/jiedian_icon.png" alt />
-                {{ item.node_name }}
+                {{ item.dev_name }}
               </span>
               <span class="recird_content_center">
-                {{
-                item.node_status == 0 ? "节点网络启用" : "节点网络断开"
-                }}
+                {{ item.event_type == 1 ? "节点网络" : "磁盘"
+                }}{{ item.event_val == 0 ? "启用" : "停止" }}
               </span>
               <span class="recird_content_right">
-                {{
-                item.update_time | formatDate
-                }}
+                {{ item.event_tm | formatDate }}
               </span>
             </div>
           </div>
@@ -72,7 +73,8 @@ export default {
       up_bandwidth: 0,
       down_bandwidth: 0,
       isLoading: false, //控制上拉加载的加载动画
-      node_pic: "xxxxxx",
+      node_pic: [],
+      node_pic_name: "",
       node_suan: 0,
       datalist: [
         // {
@@ -95,7 +97,7 @@ export default {
       } else {
         time = time * 1000;
         let date = new Date(time);
-        return formatDate(date, "yyyy-MM-dd");
+        return formatDate(date, "yyyy-MM-dd\nhh:mm:ss");
       }
     }
   },
@@ -109,7 +111,6 @@ export default {
     devsn: state => state.management.devsn
   }),
   mounted() {
-    this.get_my_dynace_info();
     this.get_cp();
     this.get_use_dev_list();
   },
@@ -118,7 +119,6 @@ export default {
     //下拉刷新
     onRefresh() {
       setTimeout(() => {
-        this.get_my_dynace_info();
         this.get_cp();
         this.get_use_dev_list();
         this.isLoading = false;
@@ -132,13 +132,9 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.token_info.login_token });
-            this.node_pic = res.data.bind_devinfo_list[0].dev_name;
-            // res.data.bind_devinfo_list.forEach(item => {
-            //   let devobj = new Object();
-            //   devobj.text = item.dev_name;
-            //   devobj.value = item.dev_sn;
-            //   // this.option1.push(devobj);
-            // });
+            this.node_pic = res.data.bind_devinfo_list;
+            this.node_pic_name = res.data.bind_devinfo_list[0].dev_name;
+            this.get_my_dynace_info();
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -173,9 +169,31 @@ export default {
       query_node_dynamic_info(parmas)
         .then(res => {
           if (res.status == 0) {
-            // this.updateUser({ log_token: res.token_info.login_token });
-            if (res.err_code == 0) {
-            }
+            this.updateUser({ log_token: res.data.token_info.login_token });
+            let obje = {};
+            this.node_pic.forEach((item, index) => {
+              let key = item.dev_sn;
+              let value = item;
+              obje[key] = value;
+              obje.event_type = 0;
+              obje.event_val = 0;
+              obje.event_tm = 0;
+            });
+            console.log(res.data.dynamic_list);
+            res.data.dynamic_list.forEach((adme, indexs) => {
+              console.log(adme);
+              let sad = adme.dev_sn;
+              if (obje[sad]) {
+                let deas = new Object();
+                deas = adme;
+                obje[sad].event_type = deas.event_type;
+                obje[sad].event_val = deas.event_val;
+                obje[sad].event_tm = deas.event_tm;
+                console.log(obje[sad]);
+                this.datalist.push(obje[sad]);
+              }
+            });
+            console.log(this.datalist);
           }
         })
         .catch(error => {

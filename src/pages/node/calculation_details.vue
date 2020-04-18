@@ -196,7 +196,7 @@ export default {
     this.dev_details = this.$route.query.item_detail;
     var date = new Date();
     this.value2 = date.getMonth() + 1;
-    this.get_power_list();
+    this.get_power_list(0);
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),

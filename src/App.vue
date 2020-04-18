@@ -77,13 +77,12 @@ export default {
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
   }
-
 };
 </script>
 
 <style>
 @import url(./common/font/font.css);
-@import '../src/assets/iconfont/iconfont.css';
+@import "../src/assets/iconfont/iconfont.css";
 /* body{
  font-family: myself;
 } */
@@ -93,6 +92,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  width: 100%;
+  height: 100%;
   background-color: #f8f8f8;
   /* background: linear-gradient(
     45deg,
@@ -101,12 +102,11 @@ export default {
   );
   */
 }
-.Router {
+/* .Router {
   position: absolute;
   width: 100%;
-  /* transition: all 1s ease; */
   top: 0px;
-}
+} */
 
 /* .slide-left-enter,
 .slide-right-leave-active {

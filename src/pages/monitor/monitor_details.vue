@@ -1,6 +1,13 @@
 <template>
   <div class="monitor">
-    <van-nav-bar :title="title" fixed left-a rrow left-arrow:true :z-index="2000">
+    <van-nav-bar
+      :title="title"
+      fixed
+      left-a
+      rrow
+      left-arrow:true
+      :z-index="2000"
+    >
       <!-- <div slot="left">排行榜</div> -->
       <!-- <div slot="right" class="titright">
         <img src="../../assets/images/equ_nav_icon_mess.png" class="titimg" alt />
@@ -70,15 +77,19 @@
               </div>
               <p>在线信息</p>
               <div class="action_cunchu">
-                <span>累计在线时长</span>
+                <span>{{
+                  value1 == "全部" ? "日平均在线时长" : "累计在线时长"
+                }}</span>
+
                 <span class="action_cunchu_con">{{ cap.online_time }}h</span>
               </div>
               <div class="action_cunchu">
-                <span>离线次数</span>
+                <span>{{
+                  value1 == "全部" ? "累计离线次数" : "离线次数"
+                }}</span>
+
                 <span class="action_cunchu_con">
-                  {{
-                  cap.offline_times_num
-                  }}
+                  {{ cap.offline_times_num }}
                 </span>
               </div>
             </van-tab>
@@ -88,7 +99,10 @@
               <p>上行带宽</p>
               <van-tabs type="card" class="bandwidth" @click="up_down">
                 <van-tab title="上行">
-                  <div id="myChart_shang" style="width:100%; height:5rem;"></div>
+                  <div
+                    id="myChart_shang"
+                    style="width:100%; height:5rem;"
+                  ></div>
                 </van-tab>
                 <van-tab title="下行">
                   <div id="myChart_xia" style="width: 100%;height:5rem"></div>
@@ -97,27 +111,35 @@
               <p>网络信息</p>
               <div class="action_cunchu">
                 <span>上行带宽</span>
-                <span class="action_cunchu_con">{{ band.up_bandwidth }}Mbps</span>
+                <span class="action_cunchu_con"
+                  >{{ band.up_bandwidth }}Mbps</span
+                >
               </div>
               <div class="action_cunchu">
                 <span>下行带宽</span>
-                <span class="action_cunchu_con">{{ band.down_bandwidth }}Mbps</span>
+                <span class="action_cunchu_con"
+                  >{{ band.down_bandwidth }}Mbps</span
+                >
               </div>
               <div class="action_cunchu">
                 <span>占用带宽</span>
-                <span class="action_cunchu_con">{{ band.use_bandwidth }}Mbps</span>
+                <span class="action_cunchu_con"
+                  >{{ band.use_bandwidth }}Mbps</span
+                >
               </div>
               <p>在线信息</p>
               <div class="action_cunchu">
-                <span>累计在线时长</span>
+                <span>{{
+                  value1 == "全部" ? "日平均在线时长" : "累计在线时长"
+                }}</span>
                 <span class="action_cunchu_con">{{ band.online_time }}h</span>
               </div>
               <div class="action_cunchu">
-                <span>离线次数</span>
+                <span>{{
+                  value1 == "全部" ? "累计离线次数" : "离线次数"
+                }}</span>
                 <span class="action_cunchu_con">
-                  {{
-                  band.offline_times_num
-                  }}
+                  {{ band.offline_times_num }}
                 </span>
               </div>
             </van-tab>
@@ -184,8 +206,8 @@ export default {
         { name: "今天", value: 1 },
         { name: "近一周", value: 2 }
       ],
-      xdata: [],
-      ydata: [],
+      xdata: [1, 2, 3],
+      ydata: [3, 2, 1],
       dev_sn: "",
       timetype: 1,
       bandtype: 0,
@@ -283,11 +305,11 @@ export default {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
             if (res.err_code == 0) {
-              this.cap.total = (res.data.total_cap / 1048576).toFixed(2);
-              this.cap.free = (res.data.free_cap / 1048576).toFixed(2);
+              this.cap.total = (res.data.total_cap / 1073741824).toFixed(2);
+              this.cap.free = (res.data.free_cap / 1073741824).toFixed(2);
               this.cap.use = (
-                res.data.total_cap / 1048576 -
-                res.data.free_cap / 1048576
+                res.data.total_cap / 1073741824 -
+                res.data.free_cap / 1073741824
               ).toFixed(2);
               this.cap.online_time = (res.data.online_time / 3600).toFixed(2);
               this.cap.offline_times_num = res.data.offline_times;
@@ -333,6 +355,12 @@ export default {
             if (res.err_code == 0) {
               this.band.online_time = (res.data.online_time / 3600).toFixed(2);
               this.band.offline_times_num = res.data.offline_times;
+
+              if (params.bandwidth_type == 0) {
+                res.data.bd_list;
+              } else {
+                res.data.bd_list;
+              }
             } else {
               Toast(res.err_msg);
             }
@@ -480,7 +508,33 @@ export default {
       if (this.tabname == 0) {
         this.get_dev_cap();
       } else {
-        this.get_dev_bangwidth();
+        if (this.bandtype == 0) {
+          this.get_dev_bangwidth();
+          let linechartex1 = document.getElementById("myChart_shang");
+          if (linechartex1) {
+            linechartex1.style.width = window.innerWidth + "px";
+            echarts.init(linechartex1);
+            this.drawLine();
+          } else {
+            //Vue.nextTick()作用：在下次dom更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获得更新后的dom如果不使用this.$nextTick() 在切换tab的时候dom从无到有，该节点还没加载，不能获取，会报错
+            this.$nextTick(() => {
+              this.drawLine();
+            });
+          }
+        } else {
+          this.get_dev_bangwidth();
+          let linechartex2 = document.getElementById("myChart_xia");
+          if (linechartex2) {
+            linechartex2.style.width = window.innerWidth + "px";
+            echarts.init(linechartex2);
+            this.drawLine("down");
+          } else {
+            //Vue.nextTick()作用：在下次dom更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获得更新后的dom如果不使用this.$nextTick() 在切换tab的时候dom从无到有，该节点还没加载，不能获取，会报错
+            this.$nextTick(() => {
+              this.drawLine("down");
+            });
+          }
+        }
       }
     },
     //选择时间
@@ -493,7 +547,33 @@ export default {
       if (this.tabname == 0) {
         this.get_dev_cap();
       } else {
-        this.get_dev_bangwidth();
+        if (this.bandtype == 0) {
+          this.get_dev_bangwidth();
+          let linechartex1 = document.getElementById("myChart_shang");
+          if (linechartex1) {
+            linechartex1.style.width = window.innerWidth + "px";
+            echarts.init(linechartex1);
+            this.drawLine();
+          } else {
+            //Vue.nextTick()作用：在下次dom更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获得更新后的dom如果不使用this.$nextTick() 在切换tab的时候dom从无到有，该节点还没加载，不能获取，会报错
+            this.$nextTick(() => {
+              this.drawLine();
+            });
+          }
+        } else {
+          this.get_dev_bangwidth();
+          let linechartex2 = document.getElementById("myChart_xia");
+          if (linechartex2) {
+            linechartex2.style.width = window.innerWidth + "px";
+            echarts.init(linechartex2);
+            this.drawLine("down");
+          } else {
+            //Vue.nextTick()作用：在下次dom更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获得更新后的dom如果不使用this.$nextTick() 在切换tab的时候dom从无到有，该节点还没加载，不能获取，会报错
+            this.$nextTick(() => {
+              this.drawLine("down");
+            });
+          }
+        }
       }
     },
     //跳转页面
@@ -550,7 +630,13 @@ export default {
       //     }
       //   ]
       // };
-      var dataCount = 744;
+      let _this = this;
+      if (_this.timetype == 2) {
+        var dataCount = 744;
+      } else {
+        var dataCount = 288;
+      }
+
       var data = generateData(dataCount);
       var option = {
         // title: {//头部的下载按钮
@@ -646,7 +732,7 @@ export default {
         );
         //防止越界，重绘canvas
         window.onresize = myChart_xia.resize;
-        myChart_xia.setOption(option); //设置option
+        myChart_xia.setOption(option, true); //设置option
       } else {
         // 初始化echarts实例
         let myChart_shang = this.$echarts.init(
@@ -654,14 +740,27 @@ export default {
         );
         //防止越界，重绘canvas
         window.onresize = myChart_shang.resize;
-        myChart_shang.setOption(option); //设置option
+        myChart_shang.setOption(option, true); //设置option
       }
 
       function generateData(count) {
         var baseValue = Math.random() * 1000;
-        var time = +new Date(2011, 0, 1);
-        var smallBaseValue;
 
+        var date = new Date();
+        var y = date.getFullYear(); //获取完整的年份(4位)
+        var m = date.getMonth(); //获取当前月份(0-11,0代表1月)
+        if (_this.timetype == 0) {
+          var d = date.getDate() - 1; //获取当前月份(0-11,0代表1月)
+        } else if (_this.timetype == 1) {
+          var d = date.getDate(); //获取当前日(1-31)
+        } else {
+          var d = date.getDate() - 7; //获取当前月份(0-11,0代表1月)
+        }
+
+        var time = +new Date(y, m, d);
+        console.log(time);
+        var smallBaseValue;
+        //生成随机数
         function next(idx) {
           smallBaseValue =
             idx % 30 === 0
@@ -679,7 +778,11 @@ export default {
             echarts.format.formatTime("yyyy-MM-dd\nhh:mm:ss", time)
           );
           valueData.push(next(i).toFixed(2));
-          time += 1000;
+          if (_this.timetype == 2) {
+            time += 10800000;
+          } else {
+            time += 300000;
+          }
         }
 
         return {

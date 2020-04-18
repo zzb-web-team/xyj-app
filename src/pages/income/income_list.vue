@@ -1,6 +1,11 @@
 <template>
   <div class="all_income">
-    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="收益明细"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -9,8 +14,16 @@
       </div>
       <div class="income_con_btn" v-show="income_list.length > 0">
         <van-dropdown-menu>
-          <van-dropdown-item v-model="value11" :options="option1" @change="changedev" />
-          <van-dropdown-item v-model="value22" :options="option2" @change="changetime" />
+          <van-dropdown-item
+            v-model="value11"
+            :options="option1"
+            @change="changedev"
+          />
+          <van-dropdown-item
+            v-model="value22"
+            :options="option2"
+            @change="changetime"
+          />
         </van-dropdown-menu>
       </div>
       <div v-if="income_list.length > 0">
@@ -42,26 +55,35 @@
                   <p>占用空间</p>
                   <p>
                     {{
-                    (
-                    (devarrlist.total_cap - devarrlist.free_cap) /
-                    1024 /
-                    1024
-                    ).toFixed(2)
+                      (
+                        (devarrlist.total_cap - devarrlist.free_cap) /
+                        1024 /
+                        1024 /
+                        1024
+                      ).toFixed(2)
                     }}GB
                   </p>
                 </div>
                 <div class="income_bottom_con_item con_item_center">
                   <p>上行带宽</p>
-                  <p>{{ (devarrlist.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps</p>
+                  <p>
+                    {{ (devarrlist.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
+                  </p>
                 </div>
                 <div class="income_bottom_con_item con_item_right">
                   <p>下行带宽</p>
-                  <p>{{ (devarrlist.down_bandwidth / 1024 / 1024).toFixed(2) }}Mbps</p>
+                  <p>
+                    {{
+                      (devarrlist.down_bandwidth / 1024 / 1024).toFixed(2)
+                    }}Mbps
+                  </p>
                 </div>
               </div>
               <div class="income_bottom_bot">
                 <div>算力：{{ item.com_power }}</div>
-                <div>在线时长：{{ (devarrlist.online_time / 3600).toFixed(2) }}h</div>
+                <div>
+                  在线时长：{{ (devarrlist.online_time / 3600).toFixed(2) }}h
+                </div>
               </div>
             </van-collapse-item>
           </van-collapse>
@@ -178,7 +200,7 @@ export default {
       } else {
         return (
           window.innerHeight -
-          0.92 * 50 -
+          1.92 * 50 -
           window.innerHeight * 0.245 -
           50 +
           "px"

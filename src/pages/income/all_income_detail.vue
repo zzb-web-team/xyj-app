@@ -1,6 +1,11 @@
 <template>
   <div class="all_income">
-    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="收益明细"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -17,7 +22,11 @@
           v-on:loadBottom="loadBottom"
           :style="{ height: scrollerHeight }"
         >
-          <div class="content_con" v-for="(item, index) in dev_income_list" :key="index">
+          <div
+            class="content_con"
+            v-for="(item, index) in dev_income_list"
+            :key="index"
+          >
             <div class="content_body_top" @click="go_income_list(item)">
               <span>
                 <img src="../../assets/images/income_dev_name.png" alt />
@@ -43,17 +52,22 @@
                 <div class="content_body_bottom_right_detail">
                   <p>
                     占用空间：{{
-                    ((item.total_cap - item.free_cap) / 1024 / 1024).toFixed(2)
+                      (
+                        (item.total_cap - item.free_cap) /
+                        1024 /
+                        1024 /
+                        1024
+                      ).toFixed(2)
                     }}GB
                   </p>
                   <p>
                     上行带宽：{{
-                    (item.up_bandwidth / 1024 / 1024).toFixed(2)
+                      (item.up_bandwidth / 1024 / 1024).toFixed(2)
                     }}Mbps
                   </p>
                   <p>
                     下行带宽：{{
-                    (item.down_bandwidth / 1024 / 1024).toFixed(2)
+                      (item.down_bandwidth / 1024 / 1024).toFixed(2)
                     }}Mbps
                   </p>
                   <p>在线时长：{{ (item.online_time / 3600).toFixed(2) }}h</p>

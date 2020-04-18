@@ -19,13 +19,14 @@
         >
           <span class="recird_content_left">
             <img src="../../assets/images/jiedian_icon.png" alt />
-            {{ item.node_name }}
+            {{ item.dev_name }}
           </span>
-          <span class="recird_content_center">{{
-            item.node_status == 0 ? "节点网络启用" : "节点网络断开"
-          }}</span>
+          <span class="recird_content_center"
+            >{{ item.event_type == 1 ? "节点网络" : "磁盘"
+            }}{{ item.event_val == 0 ? "启用" : "停止" }}</span
+          >
           <span class="recird_content_right">{{
-            item.update_time | formatDate
+            item.event_tm | formatDate
           }}</span>
         </div>
       </vuu-pull>
@@ -38,7 +39,7 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { query_node_dynamic_info } from "../../common/js/api";
+import { query_node_dynamic_info, isbindinglist } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
 export default {
@@ -54,6 +55,7 @@ export default {
         // { node_name: "节点0004", node_status: 0, update_time: "两天前" },
         // { node_name: "节点0005", node_status: 0, update_time: 1578011665 }
       ],
+      node_pic: [],
       pagenum: 0,
       allpage: 1,
       pullOptions: {
@@ -102,15 +104,15 @@ export default {
     }
   },
   mounted() {
-    this.get_my_dynace_info();
+    this.get_use_dev_list(0);
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     //下拉刷新
     loadTop() {
       setTimeout(() => {
-        //  this.income_list = [];
-        this.get_my_dynace_info(0);
+        this.get_use_dev_list(0);
+
         if (this.$refs.vuuPull.closeLoadTop) {
           this.$refs.vuuPull.closeLoadTop();
         }
@@ -130,28 +132,82 @@ export default {
         }
       }, 500);
     },
-    //获取我的节点动态
-    get_my_dynace_info(page) {
-      let parmas = new Object();
-      parmas.login_token = this.log_token;
-      parmas.page_no = page;
-      parmas.page_size = 10;
-      query_node_dynamic_info(parmas)
+    //获取用户设备列表
+    get_use_dev_list(page) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      isbindinglist(params)
         .then(res => {
           if (res.status == 0) {
-            // this.updateUser({ log_token: res.token_info.login_token });
-            if (res.err_code == 0) {
-              if (parmas.page_no == 0) {
-                this.datalist = res.data.list;
-                this.get_my_dynace_info(1);
-              } else {
-                this.datalist = this.datalist.concat(res.data.list);
-              }
+            this.updateUser({ log_token: res.token_info.login_token });
+            this.node_pic = res.data.bind_devinfo_list;
+            this.get_my_dynace_info(page);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
             }
           }
         })
         .catch(error => {
-          //  console.log(error);
+          // console.log(error);
+        });
+    },
+    //获取我的节点动态
+    get_my_dynace_info(num) {
+      let parmas = new Object();
+      parmas.login_token = this.log_token;
+      parmas.page_no = num;
+      parmas.page_size = 10;
+      query_node_dynamic_info(parmas)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.login_token });
+            if (parmas.page_no == 0) {
+              this.datalist = [];
+            }
+            let obje = {};
+            this.node_pic.forEach((item, index) => {
+              let key = item.dev_sn;
+              let value = item;
+              obje[key] = value;
+              obje.event_type = 0;
+              obje.event_val = 0;
+              obje.event_tm = 0;
+            });
+            console.log(res.data.dynamic_list);
+            res.data.dynamic_list.forEach((adme, indexs) => {
+              console.log(adme);
+              let sad = adme.dev_sn;
+              if (obje[sad]) {
+                let deas = new Object();
+                deas = adme;
+                obje[sad].event_type = deas.event_type;
+                obje[sad].event_val = deas.event_val;
+                obje[sad].event_tm = deas.event_tm;
+                console.log(obje[sad]);
+                this.datalist.push(obje[sad]);
+              }
+            });
+            console.log(this.datalist);
+          }
+        })
+        .catch(error => {
+          // console.log(error);
         });
     },
     onClickLeft() {
