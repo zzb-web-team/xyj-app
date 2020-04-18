@@ -108,10 +108,6 @@ export default {
       devsn: state => state.management.devsn
     }),
     scrollerHeight: function() {
-      console.log(
-        window.innerHeight,
-        window.innerHeight - window.innerHeight * 0.245 + "px"
-      );
       return window.innerHeight - window.innerHeight * 0.245 + "px";
     }
   },
@@ -238,11 +234,8 @@ export default {
             obje.con_value = "";
             obje.node_grade = "";
           });
-          console.log(obje);
           this.demo_minerInfo.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
-            console.log(obje[sad]);
-            console.log(adme);
             if (obje[sad]) {
               let deas = new Object();
               deas = adme;
@@ -261,7 +254,6 @@ export default {
               this.minerInfo.push(deas);
             }
           });
-          console.log(this.minerInfo);
         })
         .catch(error => {
           console.log(error);

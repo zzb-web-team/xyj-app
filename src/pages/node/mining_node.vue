@@ -268,9 +268,6 @@ export default {
           });
           this.zan_datalist.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
-            console.log(obje[sad]);
-            console.log(adme);
-            console.log(obje[sad].cp_value);
             if (obje[sad]) {
               let deas = new Object();
               deas = adme;
@@ -289,11 +286,8 @@ export default {
               this.datalist.push(deas);
             }
           });
-          console.log(this.zan_dev_lists);
           this.zan_dev_lists.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
-            console.log(obje[sad]);
-            console.log(adme);
             if (obje[sad]) {
               let deas = new Object();
               deas = adme;
@@ -312,7 +306,6 @@ export default {
               this.dev_lists.push(deas);
             }
           });
-          console.log(this.dev_lists);
         })
         .catch(error => {
           console.log(error);

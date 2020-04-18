@@ -189,9 +189,7 @@ export default {
               obje.event_val = 0;
               obje.event_tm = 0;
             });
-            console.log(res.data.dynamic_list);
             res.data.dynamic_list.forEach((adme, indexs) => {
-              console.log(adme);
               let sad = adme.dev_sn;
               if (obje[sad]) {
                 let deas = new Object();
@@ -199,7 +197,6 @@ export default {
                 obje[sad].event_type = deas.event_type;
                 obje[sad].event_val = deas.event_val;
                 obje[sad].event_tm = deas.event_tm;
-                console.log(obje[sad]);
                 this.datalist.push(obje[sad]);
               }
             });
