@@ -46,7 +46,7 @@
               </div>
               <div class="content_right">
                 <p v-if="item.type == 201">等级提升</p>
-                <p v-else-if="item.type == 202">绑定</p>
+                <p v-else-if="item.type == 202">绑定设备</p>
                 <p v-else-if="item.type == 203">解绑</p>
                 <p v-else-if="item.type == 204">签到</p>
                 <p v-else-if="item.type == 205">累计在线</p>
@@ -250,7 +250,6 @@ export default {
             } else {
               this.node_list = this.node_list.concat(res.data.cp_list);
             }
-            console.log(this.node_list);
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"

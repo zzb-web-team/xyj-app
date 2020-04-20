@@ -5,7 +5,7 @@
     </navBar>
 
     <div class="xiala">
-      <Scroll>
+      <!-- <Scroll> -->
         <!-- 网络异常 -->
         <div class="refresh" v-show="refresh">
           <div
@@ -67,7 +67,7 @@
             </div>
           </van-pull-refresh>
         </div>
-      </Scroll>
+      <!-- </Scroll> -->
     </div>
   </div>
 </template>

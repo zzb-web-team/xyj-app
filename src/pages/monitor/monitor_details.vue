@@ -208,6 +208,7 @@ export default {
       ],
       xdata: [1, 2, 3],
       ydata: [3, 2, 1],
+      echart_data_list: [],
       dev_sn: "",
       timetype: 1,
       bandtype: 0,
@@ -355,11 +356,12 @@ export default {
             if (res.err_code == 0) {
               this.band.online_time = (res.data.online_time / 3600).toFixed(2);
               this.band.offline_times_num = res.data.offline_times;
-
+              this.echart_data_list = res.data.bd_list;
+              console.log(this.echart_data_list);
               if (params.bandwidth_type == 0) {
-                res.data.bd_list;
+                this.drawLine();
               } else {
-                res.data.bd_list;
+                this.drawLine("down");
               }
             } else {
               Toast(res.err_msg);
@@ -636,8 +638,8 @@ export default {
       } else {
         var dataCount = 288;
       }
-
-      var data = generateData(dataCount);
+      console.log(_this.echart_data_list);
+      // var data = generateData(dataCount);
       var option = {
         // title: {//头部的下载按钮
         //     text: echarts.format.addCommas(dataCount) + ' Data',
@@ -675,7 +677,9 @@ export default {
           }
         ],
         xAxis: {
-          data: data.categoryData,
+          data: _this.echart_data_list.map(function(item) {
+            return formatTime("yyyy-MM-dd\nhh:mm:ss", item[1]);
+          }),
           silent: false,
           splitLine: {
             show: false
@@ -708,7 +712,9 @@ export default {
         series: [
           {
             type: "bar",
-            data: data.valueData,
+            data: _this.echart_data_list.map(function(item) {
+              return item[0];
+            }),
             // Set `large` for large data amount
             large: true,
             markLine: {

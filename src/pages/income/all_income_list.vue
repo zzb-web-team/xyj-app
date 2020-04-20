@@ -152,7 +152,11 @@ export default {
         );
       } else {
         return (
-          window.innerHeight - 0.92 * 50 - window.innerHeight * 0.245 -50+ "px"
+          window.innerHeight -
+          0.92 * 50 -
+          window.innerHeight * 0.245 -
+          50 +
+          "px"
         );
       }
     }
@@ -386,7 +390,9 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.total_revenue = (res.data.user_total_profit / 10000).toFixed(2);
+            this.total_revenue = (res.data.user_total_profit / 10000).toFixed(
+              2
+            );
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -518,6 +524,7 @@ export default {
   background-color: #fff;
   .income_con {
     margin-top: 0.92rem;
+    height: 100%;
     .income_con_top {
       width: 100%;
       height: 24.5%;

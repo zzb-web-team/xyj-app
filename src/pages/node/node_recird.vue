@@ -201,7 +201,6 @@ export default {
                 this.datalist.push(obje[sad]);
               }
             });
-            console.log(this.datalist);
           }
         })
         .catch(error => {

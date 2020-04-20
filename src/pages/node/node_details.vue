@@ -92,35 +92,41 @@
               />
             </van-dropdown-menu>
           </div>
-          <vuu-pull
-            ref="vuuPull"
-            :options="pullOptions"
-            v-on:loadTop="loadTop"
-            v-on:loadBottom="loadBottom"
-            :style="{ height: scrollerHeight }"
-          >
-            <div
-              v-if="datalist.length > 0"
-              class="calculation_bottom_con_body"
-              v-for="(item, index) in datalist"
-              :key="index"
+          <div>
+            <vuu-pull
+              ref="vuuPull"
+              :options="pullOptions"
+              v-on:loadTop="loadTop"
+              v-on:loadBottom="loadBottom"
+              :style="{ height: scrollerHeight }"
             >
-              <div class="calculation_bottom_con_body_item">
-                <span
-                  >{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</span
-                >
-                <span v-if="item.type == 101">绑定设备</span>
-                <span v-else-if="item.type == 102">解绑设备</span>
-                <span v-else-if="item.type == 103">累计在线</span>
-                <span v-else-if="item.type == 104">离线</span>
-                <span v-else-if="item.type == 105">带宽利用</span>
-                <span v-else-if="item.type == 106">磁盘利用</span>
-                <span>{{ item.time_stamp | formatDate }}</span>
-              </div>
-            </div>
+              <div class="pull_con">
 
-            <van-empty description="暂无数据" v-else />
-          </vuu-pull>
+                <div
+                  v-if="datalist.length > 0"
+                  class="calculation_bottom_con_body"
+                  v-for="(item, index) in datalist"
+                  :key="index"
+                >
+                  <div class="calculation_bottom_con_body_item">
+                    <span
+                      >{{ item.opt_value > 0 ? "+" : ""
+                      }}{{ item.opt_value }}</span
+                    >
+                    <span v-if="item.type == 101">绑定设备</span>
+                    <span v-else-if="item.type == 102">解绑设备</span>
+                    <span v-else-if="item.type == 103">累计在线</span>
+                    <span v-else-if="item.type == 104">离线</span>
+                    <span v-else-if="item.type == 105">带宽利用</span>
+                    <span v-else-if="item.type == 106">磁盘利用</span>
+                    <span>{{ item.time_stamp | formatDate }}</span>
+                  </div>
+                </div>
+
+                <van-empty description="暂无数据" v-else />
+              </div>
+            </vuu-pull>
+          </div>
         </div>
       </div>
     </div>
@@ -171,6 +177,7 @@ export default {
         { grow: "+1", online_time: 7492, date_time: 1585726943 },
         { grow: "+2", online_time: 243, date_time: 1585794943 }
       ],
+
       pullOptions: {
         isBottomRefresh: true,
         isTopRefresh: true,
@@ -181,7 +188,8 @@ export default {
         },
         bottomPull: {
           loadingIcon: loadind
-        }
+        },
+        bottomCloseElMove: false //关闭上拉加载
       }
     };
   },
@@ -225,7 +233,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$route.query.dev);
     this.devtitle = this.$route.query.dev.node_name;
     this.progress_num = this.$route.query.dev.con_value;
     this.percentage_num =
@@ -233,6 +240,8 @@ export default {
     this.fullWidth = document.documentElement.clientWidth;
     this.$refs.progress_con.style.left =
       this.fullWidth * 0.96 * (this.percentage_num / 100) - 13 + "px";
+    var date = new Date();
+    this.value22 = date.getMonth() + 1;
     this.get_cp_list(0);
   },
   methods: {
@@ -436,8 +445,8 @@ export default {
       width: 100%;
       position: relative;
       top: -2%;
-      display: flex;
-      flex-direction: column;
+      // display: flex;
+      // flex-direction: column;
       z-index: 1;
       .calculation_bottom_title {
         width: 80%;
@@ -479,9 +488,9 @@ export default {
         padding-left: 4%;
         padding-right: 4%;
         background-color: #f9f9fb;
-        flex: 1;
-        position: relative;
-        z-index: 0;
+        // flex: 1;
+        // position: relative;
+        // z-index: 0;
         .calculation_bottom_con_title {
           display: flex;
           align-items: center;
@@ -501,6 +510,10 @@ export default {
           width: 100%;
           position: relative;
           z-index: 11;
+        }
+        .pull_con {
+          overflow-x: hidden;
+          overflow-y: scroll;
         }
         .calculation_bottom_con_body {
           width: 100%;

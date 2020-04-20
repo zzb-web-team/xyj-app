@@ -161,7 +161,7 @@ export default {
                 } else {
                   this.demo_minerInfo.push(...res.data.bind_devinfo_list); //数组拼接
                 }
-                this.get_con();
+                this.get_con(page);
               } else if (res.err_code == 292) {
                 // Toast({
                 //   message: "您暂时没有设备，请先绑定设备",
@@ -217,13 +217,16 @@ export default {
       }
     },
     //获取贡献值
-    get_con() {
+    get_con(num) {
       let params = new Object();
       params.login_token = this.log_token;
       get_app_dev_con_val(params)
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
+          }
+          if (num == 0) {
+            this.minerInfo = [];
           }
           let obje = {};
           res.data.dev_value_list.forEach((item, index) => {
