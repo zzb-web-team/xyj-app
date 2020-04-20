@@ -96,7 +96,7 @@ import {
 } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
-import { Toast, Empty } from "vant";
+import { Toast, Empty,Dialog } from "vant";
 // import {meap} from "../../components/my_map"
 export default {
   data() {

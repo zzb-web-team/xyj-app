@@ -65,7 +65,7 @@
                 <div class="content_body_bottom_right_detail">
                   <p>累计收益</p>
                   <p>
-                    {{ (item.total_profit / 10000).toFixed(2) }}
+                    {{ (item.total_profit / 100).toFixed(2) }}
                     <span>gfm</span>
                   </p>
                 </div>
@@ -100,6 +100,7 @@ import {
   getuserdevlist,
   query_node_total_profit_info
 } from "../../common/js/api";
+import { Toast, Dialog } from "vant";
 export default {
   data() {
     return {
@@ -230,7 +231,6 @@ export default {
               );
             }
           } else if (res.status == -17) {
-            this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -238,7 +238,6 @@ export default {
               this.$router.push({ path: "/login" });
             });
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",
@@ -271,11 +270,10 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.all_income = (res.data.user_total_profit / 10000).toFixed(2);
-            this.last_income = (res.data.yes_profit / 10000).toFixed(2);
-            this.weak_income = (res.data.one_week_profit / 10000).toFixed(2);
+            this.all_income = (res.data.user_total_profit / 100).toFixed(2);
+            this.last_income = (res.data.yes_profit / 100).toFixed(2);
+            this.weak_income = (res.data.one_week_profit / 100).toFixed(2);
           } else if (res.status == -17) {
-            this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -283,7 +281,6 @@ export default {
               this.$router.push({ path: "/login" });
             });
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",

@@ -38,6 +38,7 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
+import { Toast, Dialog } from "vant";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import { query_node_dynamic_info, isbindinglist } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画

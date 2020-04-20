@@ -54,9 +54,9 @@
             <div class="incon_con_body_left">
               <p>
                 {{ item.profit_type == 1 ? "+" : "-"
-                }}{{ (item.cur_profit / 10000).toFixed(2) }}gfm
+                }}{{ (item.cur_profit / 100).toFixed(2) }}gfm
               </p>
-              <p>{{ (item.total_profit / 10000).toFixed(2) }}gfm</p>
+              <p>{{ (item.total_profit / 100).toFixed(2) }}gfm</p>
             </div>
             <div class="incon_con_body_right">
               <div>

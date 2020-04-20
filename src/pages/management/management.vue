@@ -386,29 +386,48 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
+            let obje = {};
+            res.data.dev_value_list.forEach((item, index) => {
+              let key = item.dev_sn;
+              let value = item;
+              obje[key] = value;
+              obje.cp_value = "";
+              obje.con_value = "";
+              obje.node_grade = "";
+            });
+            this.zan_minerInfo.forEach((adme, indexs) => {
+              let sad = adme.dev_sn;
+              let deas = new Object();
+              deas = adme;
+              if (obje[sad]) {
+                deas.cp_value = obje[sad].cp_value;
+                deas.con_value = obje[sad].con_value;
+                deas.node_grade = obje[sad].node_grade;
+              }
+              this.das.push(deas);
+            });
+            this.minerInfo = this.das;
+            console.log(this.minerInfo);
+          } else if (res.status == -999) {
+            this.$toast({
+              message: "登录已过期，请重新登录",
+              onClose: () => {
+                this.clearUser();
+                this.$router.push({ path: "/login" });
+              }
+            });
+          } else if (res.status == -17) {
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else {
+            // const tip = this.$backStatusMap[res.status] || err[res.status];
+            // const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
+            Toast(res.err_msg);
           }
-          let obje = {};
-          res.data.dev_value_list.forEach((item, index) => {
-            let key = item.dev_sn;
-            let value = item;
-            obje[key] = value;
-            obje.cp_value = "";
-            obje.con_value = "";
-            obje.node_grade = "";
-          });
-          this.zan_minerInfo.forEach((adme, indexs) => {
-            let sad = adme.dev_sn;
-            let deas = new Object();
-            deas = adme;
-            if (obje[sad]) {
-              deas.cp_value = obje[sad].cp_value;
-              deas.con_value = obje[sad].con_value;
-              deas.node_grade = obje[sad].node_grade;
-            }
-            this.das.push(deas);
-          });
-          this.minerInfo = this.das;
-          console.log(this.minerInfo);
         })
         .catch(error => {
           console.log(error);

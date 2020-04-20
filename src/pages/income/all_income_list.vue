@@ -64,6 +64,7 @@ import {
   devrevenue,
   query_node_total_profit_info
 } from "../../common/js/api";
+import { Toast, Dialog } from "vant";
 import { mapState, mapMutations } from "vuex";
 export default {
   data() {

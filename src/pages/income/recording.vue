@@ -28,7 +28,7 @@
           <div class="ranking_con_item" v-for="(item,index) in moneyArr" v-bind:key="index">
             <div class="con_item_l">
               <div class="item_l_name">
-                <p>{{((item.xb_amount)/10000).toFixed(4)}}</p>
+                <p>{{((item.xb_amount)/100).toFixed(4)}}</p>
                 <span>{{item.xb_wallet_type}}</span>
                 <!-- <p class="item_p">POC</p> -->
               </div>

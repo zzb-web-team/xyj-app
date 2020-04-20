@@ -283,7 +283,7 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.all_income = (res.data.user_total_profit / 10000).toFixed(2);
+            this.all_income = (res.data.user_total_profit / 100).toFixed(2);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({

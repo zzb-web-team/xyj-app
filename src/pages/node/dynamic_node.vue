@@ -60,7 +60,7 @@
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { Empty } from "vant";
+import { Empty,Dialog } from "vant";
 import {
   query_node_dynamic_info,
   get_user_average_cp,
@@ -136,7 +136,6 @@ export default {
             this.node_pic_name = res.data.bind_devinfo_list[0].dev_name;
             this.get_my_dynace_info();
           } else if (res.status == -17) {
-            this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -144,7 +143,6 @@ export default {
               this.$router.push({ path: "/login" });
             });
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",
@@ -190,7 +188,7 @@ export default {
                 this.datalist.push(obje[sad]);
               }
             });
-          }else if (res.status == -17) {
+          } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -233,7 +231,6 @@ export default {
               ).toFixed(2);
             }
           } else if (res.status == -17) {
-            this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -241,7 +238,6 @@ export default {
               this.$router.push({ path: "/login" });
             });
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",
@@ -254,7 +250,7 @@ export default {
           }
         })
         .catch(error => {
-          //   console.log(error);
+            console.log(error);
         });
     },
     go_recird() {

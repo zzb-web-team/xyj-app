@@ -125,7 +125,7 @@ import { formatDate, transformTime } from "../../common/js/date.js";
 import { get_app_dev_cp_list,get_app_dev_con_list } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
-import { Toast } from "vant";
+import { Toast, Dialog } from "vant";
 export default {
   data() {
     return {
