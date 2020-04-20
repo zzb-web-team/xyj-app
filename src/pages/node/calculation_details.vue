@@ -9,7 +9,7 @@
     ></navBar>
     <div class="content">
       <div class="calculation_top">
-        <p class="dev_num">{{ dev_details.power }}</p>
+        <p class="dev_num">{{ dev_details.cp_value }}</p>
         <p>{{ dev_details.dev_name }}</p>
       </div>
 
@@ -228,7 +228,7 @@ export default {
     },
     get_power_list(page) {
       let parmas = new Object();
-      parmas.logen_token = this.log_token;
+      parmas.login_token = this.log_token;
       parmas.dev_sn = this.dev_details.dev_sn;
       parmas.month = this.value2;
       parmas.con_type = this.value1;
@@ -237,11 +237,11 @@ export default {
         .then(res => {
           // this.node_list = this.demo_node_list;
           if (res.status == 0) {
-            this.updateUser({ log_token: res.data.token_info.login_token });
+            this.updateUser({ log_token: res.data.token_info.token });
             if (parmas.cur_page == 0) {
-              this.node_list = res.data.list;
+              this.node_list = res.data.cp_list;
             } else {
-              this.node_list = this.node_list.concat(res.data.list);
+              this.node_list = this.node_list.concat(res.data.cp_list);
             }
           } else if (res.status == -17) {
             this.rescount = 0;

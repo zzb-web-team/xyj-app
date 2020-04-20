@@ -110,6 +110,8 @@ export const get_dev_bandwidth_list = params => { return axios.post(`${serverUrl
 export const get_app_dev_cp_val = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_cp_val`, params).then(res => res.data) }
     /**算力值列表 */
 export const get_app_dev_cp_list = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_cp_list`, params).then(res => res.data) }
+    /**贡献值列表 */
+export const get_app_dev_con_list = params => { return axios.post(`${serverUrl}/miner_earn/get_app_dev_con_list`, params).then(res => res.data) }
     /**节点动态列表 */
 export const query_node_dynamic_info = params => { return axios.post(`${serverUrl}/miner_ctrl/query_node_dynamic_info`, params).then(res => res.data) }
     /**查询节点位置信息 */

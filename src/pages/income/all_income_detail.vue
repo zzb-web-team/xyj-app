@@ -43,7 +43,7 @@
                 <div class="content_body_bottom_right_detail">
                   <p>累计收益</p>
                   <p>
-                    {{ (item.dev_profit / 100).toFixed(2) }}
+                    {{ (item.dev_profit / 10000).toFixed(2) }}
                     <span>gfm</span>
                   </p>
                 </div>
@@ -157,7 +157,7 @@ export default {
   },
   mounted() {
     this.total_revenue = (
-      this.$route.query.allshou.user_total_profit / 100
+      this.$route.query.allshou.user_total_profit / 10000
     ).toFixed(2);
     this.revenue_time = this.$route.query.allshou.date_stamp;
     this.get_income(0);

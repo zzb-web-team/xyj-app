@@ -122,7 +122,7 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { get_app_dev_cp_list } from "../../common/js/api";
+import { get_app_dev_cp_list,get_app_dev_con_list } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
 import { Toast } from "vant";
@@ -258,7 +258,7 @@ export default {
       parmas.month = this.value22;
       parmas.con_type = this.value11;
       parmas.cur_page = page;
-      get_app_dev_cp_list(parmas)
+      get_app_dev_con_list(parmas)
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.login_token });

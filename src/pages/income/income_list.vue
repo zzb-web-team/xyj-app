@@ -42,7 +42,7 @@
             @change="item_open(item)"
           >
             <van-collapse-item
-              :title="'+' + (item.dev_profit / 100).toFixed(2) + 'gfm'"
+              :title="'+' + (item.dev_profit / 10000).toFixed(2) + 'gfm'"
               :name="index"
               :value="item.date_stamp | formatDate"
             >
