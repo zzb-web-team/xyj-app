@@ -236,7 +236,7 @@ export default {
     this.get_cp_list(0);
   },
   methods: {
-    ...mapMutations(["updateUser"]),
+    ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     //下拉刷新
     loadTop() {
       setTimeout(() => {
@@ -277,7 +277,6 @@ export default {
               this.datalist = this.datalist.concat(res.data.con_list);
             }
           } else if (res.status == -17) {
-            this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -285,7 +284,6 @@ export default {
               this.$router.push({ path: "/login" });
             });
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",
@@ -305,11 +303,11 @@ export default {
     },
     changedev() {
       this.datalist = [];
-      this.get_cp_list();
+      this.get_cp_list(0);
     },
     changetime() {
       this.datalist = [];
-      this.get_cp_list();
+      this.get_cp_list(0);
     },
     onClickLeft() {
       this.$router.go(-1);

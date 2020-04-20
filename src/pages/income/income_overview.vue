@@ -187,7 +187,7 @@ export default {
     this.get_all_dev_income(0);
   },
   methods: {
-    ...mapMutations(["updateUser", "clearUser"]),
+    ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
     //下拉
     loadTop() {
       setTimeout(() => {

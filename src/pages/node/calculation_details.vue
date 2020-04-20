@@ -252,7 +252,6 @@ export default {
             }
             console.log(this.node_list);
           } else if (res.status == -17) {
-            this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
             }).then(() => {
@@ -260,7 +259,6 @@ export default {
               this.$router.push({ path: "/login" });
             });
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",
@@ -281,12 +279,12 @@ export default {
     //筛选状态
     get_status() {
       this.node_list = [];
-      this.get_power_list();
+      this.get_power_list(0);
     },
     //筛选月份
     get_thmonth() {
       this.node_list = [];
-      this.get_power_list();
+      this.get_power_list(0);
     }
   }
 };
