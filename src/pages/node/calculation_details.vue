@@ -41,15 +41,21 @@
               :key="index"
             >
               <div class="content_left">
-                <p>{{ item.setnum }}</p>
-                <p>{{ item.dev_name }}</p>
+                <p>{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</p>
+                <p>{{ item.total_value }}</p>
               </div>
               <div class="content_right">
-                <p>累计在线{{ item.online }}</p>
-                <p>{{ item.current_time | formatDate }}</p>
+                <p v-if="item.type == 201">等级提升</p>
+                <p v-else-if="item.type == 202">绑定</p>
+                <p v-else-if="item.type == 203">解绑</p>
+                <p v-else-if="item.type == 204">签到</p>
+                <p v-else-if="item.type == 205">累计在线</p>
+                <p v-else-if="item.type == 206">离线</p>
+                <p>{{ item.time_stamp | formatDate }}</p>
               </div>
             </div>
           </div>
+
         </vuu-pull>
       </div>
 
@@ -70,7 +76,7 @@ export default {
   data() {
     return {
       dev_details: {},
-      value1: 0,
+      value1: 1,
       value2: 1,
       option1: [
         { text: "全部", value: 0 },
@@ -78,6 +84,7 @@ export default {
         { text: "减少", value: 2 }
       ],
       option2: [
+        { text: "全部", value: -1 },
         { text: "1月", value: 1 },
         { text: "2月", value: 2 },
         { text: "3月", value: 3 },
@@ -231,7 +238,7 @@ export default {
       parmas.login_token = this.log_token;
       parmas.dev_sn = this.dev_details.dev_sn;
       parmas.month = this.value2;
-      parmas.con_type = this.value1;
+      parmas.cp_type = this.value1;
       parmas.cur_page = page;
       get_app_dev_cp_list(parmas)
         .then(res => {
@@ -243,6 +250,7 @@ export default {
             } else {
               this.node_list = this.node_list.concat(res.data.cp_list);
             }
+            console.log(this.node_list);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -272,10 +280,12 @@ export default {
     },
     //筛选状态
     get_status() {
+      this.node_list = [];
       this.get_power_list();
     },
     //筛选月份
     get_thmonth() {
+      this.node_list = [];
       this.get_power_list();
     }
   }

@@ -73,7 +73,7 @@
         <!--  -->
 
         <!--  -->
-        <div class="calculation_bottom_con" v-if="datalist.length > 0">
+        <div class="calculation_bottom_con">
           <div class="calculation_bottom_con_title">
             <img src="../../assets/images/mingxi_icon.png" alt /> 贡献值明细
           </div>
@@ -100,19 +100,28 @@
             :style="{ height: scrollerHeight }"
           >
             <div
+              v-if="datalist.length > 0"
               class="calculation_bottom_con_body"
               v-for="(item, index) in datalist"
               :key="index"
             >
               <div class="calculation_bottom_con_body_item">
-                <span>{{ item.grow }}</span>
-                <span>累计在线{{ (item.online_time / 3600).toFixed(2) }}h</span>
-                <span>{{ item.date_time | formatDate }}</span>
+                <span
+                  >{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</span
+                >
+                <span v-if="item.type == 101">绑定设备</span>
+                <span v-else-if="item.type == 102">解绑设备</span>
+                <span v-else-if="item.type == 103">累计在线</span>
+                <span v-else-if="item.type == 104">离线</span>
+                <span v-else-if="item.type == 105">带宽利用</span>
+                <span v-else-if="item.type == 106">磁盘利用</span>
+                <span>{{ item.time_stamp | formatDate }}</span>
               </div>
             </div>
+
+            <van-empty description="暂无数据" v-else />
           </vuu-pull>
         </div>
-        <van-empty description="暂无数据" v-else />
       </div>
     </div>
   </div>
@@ -122,7 +131,7 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { get_app_dev_cp_list,get_app_dev_con_list } from "../../common/js/api";
+import { get_app_dev_cp_list, get_app_dev_con_list } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
 import { Toast, Dialog } from "vant";
@@ -134,15 +143,15 @@ export default {
       fullWidth: 0,
       node_level: 0,
       progress_num: 0,
-      value11: 0,
-      value22: 0,
+      value11: 1,
+      value22: -1,
       option1: [
         { text: "全部", value: 0 },
         { text: "增长", value: 1 },
         { text: "减少", value: 2 }
       ],
       option2: [
-        { text: "全部", value: 0 },
+        { text: "全部", value: -1 },
         { text: "1月", value: 1 },
         { text: "2月", value: 2 },
         { text: "3月", value: 3 },
@@ -218,9 +227,9 @@ export default {
   mounted() {
     console.log(this.$route.query.dev);
     this.devtitle = this.$route.query.dev.node_name;
-    this.progress_num = this.$route.query.dev.contribution;
+    this.progress_num = this.$route.query.dev.con_value;
     this.percentage_num =
-      (this.$route.query.dev.contribution / 2000).toFixed(2) * 100;
+      (this.$route.query.dev.con_value / 2000).toFixed(2) * 100;
     this.fullWidth = document.documentElement.clientWidth;
     this.$refs.progress_con.style.left =
       this.fullWidth * 0.96 * (this.percentage_num / 100) - 13 + "px";
@@ -261,7 +270,12 @@ export default {
       get_app_dev_con_list(parmas)
         .then(res => {
           if (res.status == 0) {
-            this.updateUser({ log_token: res.data.token_info.login_token });
+            this.updateUser({ log_token: res.data.token_info.token });
+            if (parmas.cur_page == 0) {
+              this.datalist = res.data.con_list;
+            } else {
+              this.datalist = this.datalist.concat(res.data.con_list);
+            }
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
