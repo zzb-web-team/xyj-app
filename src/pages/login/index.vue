@@ -26,7 +26,7 @@ import { error } from "util";
 
 export default {
   data() {
-    return { version: "1.3.1.131", tag: "", push_id: "" };
+    return { version: "1.3.1.133", tag: "", push_id: "" };
   },
   computed: mapState({
     log_token: state => state.user.log_token,
