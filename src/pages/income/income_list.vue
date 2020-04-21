@@ -475,7 +475,14 @@ export default {
       var y = date.getFullYear();
       function computeTime(year, month) {
         _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-        _this.endtime = new Date(year, month, 0).getTime() / 1000;
+        var timestamp = Date.parse(new Date()) / 1000;
+        var entime = new Date(year, month, 0).getTime() / 1000;
+        console.log(timestamp, entime);
+        if (timestamp < entime) {
+          _this.endtime = timestamp;
+        } else {
+          _this.endtime = entime;
+        }
       }
       computeTime(y, this.value22);
       this.income_list = [];
