@@ -327,6 +327,7 @@ export default {
       this.$router.go(-1);
     },
     go_node_setail(str) {
+       sessionStorage.setItem("node_sn", JSON.stringify(str.dev_sn));
       this.$router.push({ path: "/node_details", query: { dev: str } });
     }
   }

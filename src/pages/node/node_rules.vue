@@ -72,7 +72,7 @@ export default {
     border-radius: 0.1rem;
     margin: auto;
     text-align: left;
-    font-size: 0.28em;
+    font-size: 0.28rem;
     color: #666666;
     margin-top: 0.33rem;
     font-weight: 500;

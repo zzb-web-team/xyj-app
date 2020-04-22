@@ -17,8 +17,6 @@
         <span>等级规则</span>
       </div>
     </van-nav-bar>
-
-    <!--  -->
     <div class="content">
       <div class="calculation_top">
         <span class="recird_content_left" v-if="node_level == 0">
@@ -92,41 +90,38 @@
               />
             </van-dropdown-menu>
           </div>
-          <div>
-            <vuu-pull
-              ref="vuuPull"
-              :options="pullOptions"
-              v-on:loadTop="loadTop"
-              v-on:loadBottom="loadBottom"
-              :style="{ height: scrollerHeight }"
-            >
-              <div class="pull_con">
-
-                <div
-                  v-if="datalist.length > 0"
-                  class="calculation_bottom_con_body"
-                  v-for="(item, index) in datalist"
-                  :key="index"
-                >
-                  <div class="calculation_bottom_con_body_item">
-                    <span
-                      >{{ item.opt_value > 0 ? "+" : ""
-                      }}{{ item.opt_value }}</span
-                    >
-                    <span v-if="item.type == 101">绑定设备</span>
-                    <span v-else-if="item.type == 102">解绑设备</span>
-                    <span v-else-if="item.type == 103">累计在线</span>
-                    <span v-else-if="item.type == 104">离线</span>
-                    <span v-else-if="item.type == 105">带宽利用</span>
-                    <span v-else-if="item.type == 106">磁盘利用</span>
-                    <span>{{ item.time_stamp | formatDate }}</span>
-                  </div>
+          <vuu-pull
+            ref="vuuPull"
+            :options="pullOptions"
+            v-on:loadTop="loadTop"
+            v-on:loadBottom="loadBottom"
+            :style="{ height: scrollerHeight }"
+          >
+            <div class="pull_con">
+              <div
+                v-if="datalist.length > 0"
+                class="calculation_bottom_con_body"
+                v-for="(item, index) in datalist"
+                :key="index"
+              >
+                <div class="calculation_bottom_con_body_item">
+                  <span
+                    >{{ item.opt_value > 0 ? "+" : ""
+                    }}{{ item.opt_value }}</span
+                  >
+                  <span v-if="item.type == 101">绑定设备</span>
+                  <span v-else-if="item.type == 102">解绑设备</span>
+                  <span v-else-if="item.type == 103">累计在线</span>
+                  <span v-else-if="item.type == 104">离线</span>
+                  <span v-else-if="item.type == 105">带宽利用</span>
+                  <span v-else-if="item.type == 106">磁盘利用</span>
+                  <span>{{ item.time_stamp | formatDate }}</span>
                 </div>
-
-                <van-empty description="暂无数据" v-else />
               </div>
-            </vuu-pull>
-          </div>
+
+              <van-empty description="暂无数据" v-else />
+            </div>
+          </vuu-pull>
         </div>
       </div>
     </div>
@@ -174,8 +169,18 @@ export default {
       pagenum: 0,
       allpage: 1,
       datalist: [
-        { grow: "+1", online_time: 7492, date_time: 1585726943 },
-        { grow: "+2", online_time: 243, date_time: 1585794943 }
+        // { opt_value: -1, online_time: 7492, time_stamp: 1585726943, type: 103 },
+        // { opt_value: 2, online_time: 243, time_stamp: 1585794943, type: 106 },
+        // { opt_value: -1, online_time: 7492, time_stamp: 1585726943, type: 105 },
+        // { opt_value: 2, online_time: 243, time_stamp: 1585794943, type: 102 },
+        // { opt_value: -1, online_time: 7492, time_stamp: 1585726943, type: 106 },
+        // { opt_value: -2, online_time: 243, time_stamp: 1585794943, type: 105 },
+        // { opt_value: 2, online_time: 243, time_stamp: 1585794943, type: 102 },
+        // { opt_value: -1, online_time: 7492, time_stamp: 1585726943, type: 106 },
+        // { opt_value: -2, online_time: 243, time_stamp: 1585794943, type: 105 },
+        // { opt_value: 2, online_time: 243, time_stamp: 1585794943, type: 102 },
+        // { opt_value: -1, online_time: 7492, time_stamp: 1585726943, type: 106 },
+        // { opt_value: -2, online_time: 243, time_stamp: 1585794943, type: 105 }
       ],
 
       pullOptions: {
@@ -208,15 +213,9 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight - 0.92 * (window.deviceWidth / 7.5) + "px";
+        return window.innerHeight - 4.4 * (window.deviceWidth / 7.5) + "px";
       } else {
-        return (
-          window.innerHeight -
-          window.innerHeight * 0.245 -
-          50 -
-          1.5734 * 50 +
-          "px"
-        );
+        return window.innerHeight - 50 - 4.4 * 50 + "px";
       }
     }
   },
@@ -272,19 +271,26 @@ export default {
     get_cp_list(page) {
       let parmas = new Object();
       parmas.login_token = this.log_token;
-      parmas.dev_sn = this.$route.query.dev.dev_sn;
+      if (this.$route.query.dev.dev_sn) {
+        parmas.dev_sn = this.$route.query.dev.dev_sn;
+      } else {
+        parmas.dev_sn = JSON.parse(sessionStorage.getItem("node_sn"));
+      }
+
       parmas.month = this.value22;
       parmas.con_type = this.value11;
       parmas.cur_page = page;
       get_app_dev_con_list(parmas)
         .then(res => {
           if (res.status == 0) {
+            this.$nextTick(() => {
+              if (parmas.cur_page == 0) {
+                this.datalist = res.data.con_list;
+              } else {
+                this.datalist = this.datalist.concat(res.data.con_list);
+              }
+            });
             this.updateUser({ log_token: res.data.token_info.token });
-            if (parmas.cur_page == 0) {
-              this.datalist = res.data.con_list;
-            } else {
-              this.datalist = this.datalist.concat(res.data.con_list);
-            }
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -394,11 +400,12 @@ export default {
   background: #f8fafb;
   overflow: hidden;
   .content {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
+    margin-top: 0.92rem;
     .calculation_top {
       width: 100%;
-      height: 24.5%;
+      height: 2rem;
       background: url(../../assets/images/shebeisuanli.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
@@ -410,7 +417,7 @@ export default {
         align-items: center;
         text-align: left;
         color: #ffffff;
-        padding-top: 1.6rem;
+        // padding-top: 1.6rem;
         margin-bottom: 0.2rem;
         padding-left: 4%;
         img {
@@ -512,12 +519,14 @@ export default {
           z-index: 11;
         }
         .pull_con {
-          overflow-x: hidden;
-          overflow-y: scroll;
-        }
-        .calculation_bottom_con_body {
+          // overflow-x: hidden;
+          // overflow-y: scroll;
           width: 100%;
           height: auto;
+        }
+        .calculation_bottom_con_body {
+          overflow-x: hidden;
+          overflow-y: scroll;
           .calculation_bottom_con_body_item {
             width: 92%;
             padding-left: 4%;
