@@ -63,7 +63,7 @@
                   <span>{{
                     index + 1 >= 10 ? index + 1 : "0" + (index + 1)
                   }}</span>
-                  <span
+                  <span v-show="item.dev_type == -1"
                     ><img src="../../assets/images/findtishi.png" alt="" />
                     非法设备</span
                   >

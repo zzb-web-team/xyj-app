@@ -126,6 +126,9 @@ export default {
 /deep/.van-nav-bar__right {
   right: 0.2rem;
 }
+/deep/.van-nav-bar .van-icon {
+  margin-top: 0;
+}
 .van-nav-bar {
   color: #333333;
   background: #ffffff;
@@ -133,7 +136,7 @@ export default {
 .findnum {
   text-align: left;
   padding-left: 0.3rem;
-  font-size: 0.5rem;
+  font-size: 0.3rem;
   font-weight: 600;
   color: #000;
   margin: 1rem 0 0.06rem 0;

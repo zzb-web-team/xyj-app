@@ -2,7 +2,11 @@
   <div class="container">
     <navBar :title="title"></navBar>
     <div class="content">
-      <div class="content_item" @click="goremotecontrol()" v-fb="{cls:'my_stt'}">
+      <div
+        class="content_item"
+        @click="goremotecontrol()"
+        v-fb="{ cls: 'my_stt' }"
+      >
         <img src="../../assets/images/icon.png" alt />
         <p>西柚遥控器</p>
       </div>
@@ -29,12 +33,12 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted() {
-   try {
-      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
     } catch (e) {}
     try {
       window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
-        "#559afe,#2762fd"
+        "#ffffff"
       );
     } catch (error) {}
   },

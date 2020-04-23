@@ -2,7 +2,7 @@
   <div class="container">
     <van-nav-bar
       size="0.4rem"
-      left-text="返回"
+      left-text=""
       right-text="扫码绑定"
       left-arrow
       fixed
@@ -12,7 +12,7 @@
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#333333" />
-        <span>返回</span>
+        <span></span>
       </div>
       <div slot="right">
         <span>扫码绑定</span>
