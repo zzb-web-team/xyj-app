@@ -2,45 +2,51 @@
   <div class="container">
     <van-nav-bar
       size="0.4rem"
-      left-text="返回"
+      left-text=""
       left-arrow
       fixed
       @click-left="onClickLeft"
       :z-index="2000"
     >
       <div slot="left" class="alltitleleft">
-        <van-icon name="arrow-left" color="#ffffff" />
-        <span>返回</span>
+        <van-icon name="arrow-left" color="#333333" />
+        <span></span>
       </div>
     </van-nav-bar>
     <!--  -->
-    <div class="findnum">发现{{num}}台本地设备</div>
+    <div class="findnum">发现{{ num }}台本地设备</div>
     <div id="content">
       <div
-        v-for="(item,index) in listarr"
+        v-for="(item, index) in listarr"
         v-bind:key="index"
         :class="`dev${index}`"
         class="dev"
         @click="gobing(item.sn)"
       >
         <div class="list_top">
-          <div style=" display: flex;justify-content: flex-start;align-items: center;">
+          <div
+            style=" display: flex;justify-content: flex-start;align-items: center;"
+          >
             <span class="title_name">SN:</span>
-            <span class="con_name">{{item.sn}}</span>
+            <span class="con_name">{{ item.sn }}</span>
           </div>
-          <div style=" display: flex;justify-content: flex-start;align-items: center;">
+          <div
+            style=" display: flex;justify-content: flex-start;align-items: center;"
+          >
             <span class="title_name">版本号:</span>
-            <span class="con_name con_name_right">{{item.version}}</span>
+            <span class="con_name con_name_right">{{ item.version }}</span>
           </div>
         </div>
         <p>
           <span class="title_name">MAC地址:</span>
-          {{item.mac}}
+          {{ item.mac }}
         </p>
       </div>
     </div>
     <div>
-      <van-button class="introduction_start" @click="goLink()">下一步</van-button>
+      <van-button class="introduction_start" @click="goLink()"
+        >下一步</van-button
+      >
     </div>
   </div>
 </template>
@@ -114,19 +120,15 @@ export default {
 </script>
 <style lang="less" scoped>
 /deep/.van-nav-bar .van-icon {
-  color: #ffffff;
+  color: #333333;
   vertical-align: middle;
 }
 /deep/.van-nav-bar__right {
   right: 0.2rem;
 }
 .van-nav-bar {
-  color: #fff;
-  background: linear-gradient(
-    45deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
-  );
+  color: #333333;
+  background: #ffffff;
 }
 .findnum {
   text-align: left;
@@ -212,9 +214,10 @@ export default {
     height: 0.88rem;
     background: linear-gradient(
       90deg,
-      rgba(116, 90, 243, 1) 0%,
-      rgba(92, 116, 243, 1) 100%
+      rgba(254, 168, 107, 1) 0%,
+      rgba(255, 109, 110, 1) 100%
     );
+    box-shadow: 0px 5px 5px 0px rgba(255, 109, 110, 0.1);
     border-radius: 1rem;
     border: none;
   }

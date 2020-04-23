@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <van-nav-bar
-      left-text="返回"
+      left-text=""
       left-a
       rrow
       left-arrow
@@ -11,8 +11,8 @@
       :z-index="2000"
     >
       <div slot="left" class="alltitleleft">
-        <van-icon name="arrow-left" color="#ffffff" />
-        <span>返回</span>
+        <van-icon name="arrow-left" color="#333333" />
+        <!-- <span>返回</span> -->
       </div>
       <div slot="right" class="titright">
         <van-icon name="scan" size="0.4rem" />
@@ -22,7 +22,7 @@
     </van-nav-bar>
     <scroller>
       <div class="container_introduction">
-        <div class="number">发现{{number}}个西柚机</div>
+        <div class="number">发现{{ number }}个西柚机</div>
         <div class="introduction_text">
           <div class="protocol_text" id="protocol_text_con">
             <van-swipe
@@ -39,29 +39,34 @@
                 <div
                   class="item_active_left"
                   @click="previouspage()"
-                  v-bind:style="{opacity:leftstyle}"
+                  v-bind:style="{ opacity: leftstyle }"
                 >
                   <img src="../../assets/images/findzuo.png" />
                 </div>
                 <div
                   class="item_active_right"
                   @click="nextpage()"
-                  v-bind:style="{opacity:rightstyle}"
+                  v-bind:style="{ opacity: rightstyle }"
                 >
                   <img src="../../assets/images/findyou.png" />
                 </div>
               </div>
               <van-swipe-item
-                v-for="(item,index) in deviceArr"
+                v-for="(item, index) in deviceArr"
                 v-bind:key="index"
-                @click="changeitem(item,index)"
+                @click="changeitem(item, index)"
               >
                 <!-- :ref="`deviceArr${index}`" -->
 
                 <!-- 类容区域 -->
                 <div class="serial">
-                  <span>{{(index+1>=10)?index+1:"0"+(index+1)}}</span>
-                  <span><img src="../../assets/images/findtishi.png" alt=""> 非法设备</span>
+                  <span>{{
+                    index + 1 >= 10 ? index + 1 : "0" + (index + 1)
+                  }}</span>
+                  <span
+                    ><img src="../../assets/images/findtishi.png" alt="" />
+                    非法设备</span
+                  >
                 </div>
                 <div class="find_devive">
                   <div class="find_devive_item item_active">
@@ -70,9 +75,11 @@
 
                   <div class="find_devive_item item_active_one">
                     <!-- <img src="../../assets/images/binding_capacity.png" alt /> -->
-                    容量：{{((item.free_cap)/1024/1024/1024).toFixed(2)}}GB
+                    容量：{{
+                      (item.free_cap / 1024 / 1024 / 1024).toFixed(2)
+                    }}GB
                   </div>
-                  <div class="find_devive_item">序号：{{item.dev_sn}}</div>
+                  <div class="find_devive_item">序号：{{ item.dev_sn }}</div>
                   <!-- <div class="find_devive_item">请为西柚机取个名字</div> -->
                   <div class="find_devive_item item_active_two">
                     <input
@@ -87,17 +94,25 @@
                   <div class="find_devive_item item_btn">
                     <div
                       class="usertel"
-                      v-bind:style="{display:item.nonestyle}"
-                    >{{item.bind_user_tel_num|newtel}}</div>
-                    <div class="usert" v-bind:style="{display:item.feistyle}">{{item.bind_num}}</div>
+                      v-bind:style="{ display: item.nonestyle }"
+                    >
+                      {{ item.bind_user_tel_num | newtel }}
+                    </div>
+                    <div
+                      class="usert"
+                      v-bind:style="{ display: item.feistyle }"
+                    >
+                      {{ item.bind_num }}
+                    </div>
                     <div>
                       <div class="item_btn_check">
                         <!-- <van-checkbox v-model="checked"></van-checkbox> -->
                         <van-button
                           class="find_btn"
-                          @click="setname(item.dev_name,item.dev_sn,index)"
+                          @click="setname(item.dev_name, item.dev_sn, index)"
                           :disabled="devnameokArr[index]"
-                        >{{item.bind}}</van-button>
+                          >{{ item.bind }}</van-button
+                        >
                       </div>
                     </div>
                   </div>
@@ -108,7 +123,9 @@
         </div>
 
         <div class="dopbtn">
-          <van-button class="introduction_start" @click="bindind()">绑定完成</van-button>
+          <van-button class="introduction_start" @click="bindind()"
+            >绑定完成</van-button
+          >
         </div>
       </div>
     </scroller>
@@ -157,18 +174,18 @@ export default {
       // devlist: ['PTFS201909000014'],
       devlist: [],
       deviceArr: [
-        {
-          free_cap: 16000000000,
-          bind_user_tel_num: 18872926121,
-          dev_sn: "m15y65123k",
-          bind: "立即绑定"
-        },
-        {
-          free_cap: 96000000000,
-          bind_user_tel_num: 15913246981,
-          dev_sn: "c1my6f1dr31",
-          bind: "已绑定"
-        }
+        // {
+        //   free_cap: 16000000000,
+        //   bind_user_tel_num: 18872926121,
+        //   dev_sn: "m15y65123k",
+        //   bind: "立即绑定"
+        // },
+        // {
+        //   free_cap: 96000000000,
+        //   bind_user_tel_num: 15913246981,
+        //   dev_sn: "c1my6f1dr31",
+        //   bind: "已绑定"
+        // }
       ]
     };
   },
@@ -505,27 +522,28 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 /deep/.van-nav-bar .van-icon {
-  color: #fff;
+  color: #333333;
+}
+/deep/ .van-nav-bar .van-icon {
+  margin-top: 0;
 }
 .titright {
   line-height: 44px;
   padding-right: 0.2rem;
+  display: flex;
+  align-items: center;
   span {
-    color: #fff;
+    color: #333333;
   }
 }
 .van-nav-bar {
-  color: #fff;
-  background: linear-gradient(
-    45deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
-  );
+  color: #333333;
+  background: #ffffff;
 }
 .alltitleleft span {
-  color: #ffffff;
+  color: #333333;
   font-size: 0.28rem;
 }
 .container {
@@ -617,7 +635,7 @@ export default {
           font-size: 0.24rem;
           display: flex;
           align-items: center;
-          img{
+          img {
             width: 20%;
             margin-right: 0.1rem;
           }
