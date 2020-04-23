@@ -105,6 +105,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#ffffff"
+      );
+    } catch (error) {}
     this.get_use_dev_list(0);
   },
   methods: {
@@ -193,7 +201,7 @@ export default {
             res.data.dynamic_list.forEach((adme, indexs) => {
               let sad = adme.dev_sn;
               let deas = new Object();
-                deas = adme;
+              deas = adme;
               if (obje[sad]) {
                 obje[sad].event_type = deas.event_type;
                 obje[sad].event_val = deas.event_val;

@@ -162,6 +162,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     // this.total_revenue = this.$route.query.allshou;
     this.changetime();
     this.get_use_dev_list();

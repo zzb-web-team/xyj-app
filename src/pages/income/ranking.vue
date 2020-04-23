@@ -6,67 +6,77 @@
 
     <div class="xiala">
       <!-- <Scroll> -->
-        <!-- 网络异常 -->
-        <div class="refresh" v-show="refresh">
-          <div
-            style="width:100%;height:46px;position: fixed;top: 0;z-index: 0;background: linear-gradient(45deg, #745af3 10%, #5c74f3 100%);"
-          ></div>
-          <div class="norefresh">
-            <img src="../../assets/images/unusual_inset.png" alt />
-            <p>网络异常，下拉刷新</p>
+      <!-- 网络异常 -->
+      <div class="refresh" v-show="refresh">
+        <div
+          style="width:100%;height:46px;position: fixed;top: 0;z-index: 0;background: linear-gradient(45deg, #745af3 10%, #5c74f3 100%);"
+        ></div>
+        <div class="norefresh">
+          <img src="../../assets/images/unusual_inset.png" alt />
+          <p>网络异常，下拉刷新</p>
+        </div>
+      </div>
+      <div class="ranking" v-show="!refresh">
+        <div class="top">
+          <div class="topimg">
+            <div class="ranking_title">收益排行</div>
+            <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
+          </div>
+          <div class="ranking_img">
+            <!-- <img src="../../assets/images/earnings_bg1_trophy.png" /> -->
           </div>
         </div>
-        <div class="ranking" v-show="!refresh">
-          <div class="top">
-            <div class="topimg">
-              <div class="ranking_title">收益排行</div>
-              <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
-            </div>
-            <div class="ranking_img">
-              <!-- <img src="../../assets/images/earnings_bg1_trophy.png" /> -->
-            </div>
-          </div>
 
-          <van-pull-refresh class="xiala" v-model="isLoading" @refresh="onRefresh">
-            <div class="nointerval" v-show="noint">
-              <img src="../../assets/images/earnings_illustration5.png" alt />
-              <p>排行榜暂未更新</p>
+        <van-pull-refresh
+          class="xiala"
+          v-model="isLoading"
+          @refresh="onRefresh"
+        >
+          <div class="nointerval" v-show="noint">
+            <img src="../../assets/images/earnings_illustration5.png" alt />
+            <p>排行榜暂未更新</p>
+          </div>
+          <div class="ranking_con" v-show="int">
+            <div class="ranking_con_title">
+              <div class="tltle_l">名次</div>
+              <div class="tltle_m">收益</div>
+              <div class="tltle_n">西柚机数量</div>
+              <div class="tltle_r">用户</div>
             </div>
-            <div class="ranking_con" v-show="int">
-              <div class="ranking_con_title">
-                <div class="tltle_l">名次</div>
-                <div class="tltle_m">收益</div>
-                <div class="tltle_n">西柚机数量</div>
-                <div class="tltle_r">用户</div>
-              </div>
-              <div class="ranking_item" v-for="(item, index) in incomeArr" v-bind:key="index">
-                <div
-                  class="ranking_item_l"
-                  :class="{
+            <div
+              class="ranking_item"
+              v-for="(item, index) in incomeArr"
+              v-bind:key="index"
+            >
+              <div
+                class="ranking_item_l"
+                :class="{
                   ranking_item_l1: index == 0,
                   ranking_item_l2: index == 1,
                   ranking_item_l3: index == 2
                 }"
-                >{{ (index + 1) | screen }}</div>
-                <div
-                  class="ranking_item_r"
-                  :class="{
+              >
+                {{ (index + 1) | screen }}
+              </div>
+              <div
+                class="ranking_item_r"
+                :class="{
                   ranking_item_r1: index == 0,
                   ranking_item_r2: index == 1,
                   ranking_item_r3: index == 2
                 }"
-                >
-                  <p class="item_p1">
-                    <b>{{ (item.profit_rank / 1000000).toFixed(6) }}</b>
-                  </p>
-                  <!-- <p>poc</p> -->
-                </div>
-                <div class="ranking_item_n">{{ item.bind_num }}</div>
-                <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
+              >
+                <p class="item_p1">
+                  <b>{{ (item.profit_rank / 1000000).toFixed(6) }}</b>
+                </p>
+                <!-- <p>poc</p> -->
               </div>
+              <div class="ranking_item_n">{{ item.bind_num }}</div>
+              <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
             </div>
-          </van-pull-refresh>
-        </div>
+          </div>
+        </van-pull-refresh>
+      </div>
       <!-- </Scroll> -->
     </div>
   </div>
@@ -117,6 +127,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     this.revenueranking();
   },
   methods: {

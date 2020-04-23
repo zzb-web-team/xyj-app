@@ -170,6 +170,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     this.total_revenue = this.$route.query.income;
     let date = new Date();
     this.value2 = date.getMonth() + 1;

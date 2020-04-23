@@ -60,7 +60,7 @@
 import { mapState, mapMutations } from "vuex";
 import foot from "../../components/foot";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { Empty,Dialog } from "vant";
+import { Empty, Dialog } from "vant";
 import {
   query_node_dynamic_info,
   get_user_average_cp,
@@ -111,6 +111,14 @@ export default {
     devsn: state => state.management.devsn
   }),
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#ffffff"
+      );
+    } catch (error) {}
     this.get_cp();
     this.get_use_dev_list();
   },
@@ -250,7 +258,7 @@ export default {
           }
         })
         .catch(error => {
-            console.log(error);
+          console.log(error);
         });
     },
     go_recird() {

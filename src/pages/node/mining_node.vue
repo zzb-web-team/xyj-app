@@ -96,7 +96,7 @@ import {
 } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
-import { Toast, Empty,Dialog } from "vant";
+import { Toast, Empty, Dialog } from "vant";
 // import {meap} from "../../components/my_map"
 export default {
   data() {
@@ -142,6 +142,14 @@ export default {
     })
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#f8f8f8");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#f8f8f8"
+      );
+    } catch (error) {}
     this.get_use_dev_list(0);
     this.get_coordinate();
   },
@@ -327,7 +335,7 @@ export default {
       this.$router.go(-1);
     },
     go_node_setail(str) {
-       sessionStorage.setItem("node_sn", JSON.stringify(str.dev_sn));
+      sessionStorage.setItem("node_sn", JSON.stringify(str.dev_sn));
       this.$router.push({ path: "/node_details", query: { dev: str } });
     }
   }

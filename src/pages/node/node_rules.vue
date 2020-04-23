@@ -1,16 +1,26 @@
 <template>
   <div class="rules">
-    <navBar title="节点等级规则" left-text="返回" left-arrow fixed @click-left="onClickLeft">
+    <navBar
+      title="节点等级规则"
+      left-text="返回"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    >
       <!-- <van-icon name="question-o" slot="right" size="0.4rem" /> -->
     </navBar>
     <!-- 内容 -->
     <div class="content first_con">
       <p class="content_title">等级有效期</p>
-      <p class="content_text">用户等级有效期为1年,有效期截止时间用户保留节点贡献值80%,清算扣除节点贡献值20%。</p>
+      <p class="content_text">
+        用户等级有效期为1年,有效期截止时间用户保留节点贡献值80%,清算扣除节点贡献值20%。
+      </p>
     </div>
     <div class="content">
       <p class="content_title">升级规则</p>
-      <p class="content_text">用户在等级有效期内达到升级门槛,新等级立即生效,等级到期后,用户等级将根据上个有效期内累计的贡献值重新计算。</p>
+      <p class="content_text">
+        用户在等级有效期内达到升级门槛,新等级立即生效,等级到期后,用户等级将根据上个有效期内累计的贡献值重新计算。
+      </p>
     </div>
     <div class="content">
       <p class="content_title">节点等级对照表</p>
@@ -50,7 +60,16 @@ export default {
   components: {
     navBar: navBar
   },
-  mounted() {},
+  mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#ffffff"
+      );
+    } catch (error) {}
+  },
   methods: {
     onClickLeft() {
       this.$router.go(-1);

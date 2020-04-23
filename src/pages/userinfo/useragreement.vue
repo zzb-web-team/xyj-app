@@ -79,7 +79,7 @@ export default {
   }
 };
 </script>
- 
+
 <style lang="less" scoped >
 .container {
   width: 100%;

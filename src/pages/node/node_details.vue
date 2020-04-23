@@ -232,6 +232,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     this.devtitle = this.$route.query.dev.node_name;
     this.progress_num = this.$route.query.dev.con_value;
     this.percentage_num =

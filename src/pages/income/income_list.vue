@@ -210,6 +210,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     let date = new Date();
     this.value22 = date.getMonth() + 1;
     this.value11 = this.$route.query.allshou.dev_sn;

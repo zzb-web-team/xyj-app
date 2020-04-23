@@ -15,9 +15,7 @@
                 <p>{{ user_name }}</p>
                 <p>
                   <img src="../../assets/images/phone_img.png" alt />
-                  {{
-                  phone_number
-                  }}
+                  {{ phone_number }}
                 </p>
               </div>
               <button @click.stop="goUserName()" :disabled="flag">
@@ -45,7 +43,11 @@
                 </div>
               </div>
             </div>
-            <div class="user_con_item" @click="gotool()" v-fb="{ cls: 'my_touchfeedback' }">
+            <div
+              class="user_con_item"
+              @click="gotool()"
+              v-fb="{ cls: 'my_touchfeedback' }"
+            >
               <div class="con_item_l">
                 <img src="../../assets/images/per_list_icon_toolbox.png" alt />
                 <span>工具箱</span>
@@ -130,7 +132,11 @@
             </div>-->
           </div>
           <div>
-            <van-button class="out_login" @click="loginOut()" v-fb="{ cls: 'my_touchfeedback' }">
+            <van-button
+              class="out_login"
+              @click="loginOut()"
+              v-fb="{ cls: 'my_touchfeedback' }"
+            >
               <b>退出登录</b>
             </van-button>
           </div>
@@ -198,6 +204,14 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted: function() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#ffffff"
+      );
+    } catch (error) {}
     this.whatBrowser();
     if (this.$parent.onLine == false) {
       Toast("无法连接网络，请检查网络状态");

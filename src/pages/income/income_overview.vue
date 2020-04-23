@@ -183,6 +183,14 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#ffffff"
+      );
+    } catch (error) {}
     this.get_all_income(90);
     this.get_all_dev_income(0);
   },
@@ -441,7 +449,8 @@ export default {
             border: solid 0.01rem #eeeeee;
             border-radius: 0.1rem;
             img {
-              width: 40%;
+              width: 0.6rem;
+              height: 0.6rem;
             }
             .content_body_bottom_right_detail {
               width: 96%;

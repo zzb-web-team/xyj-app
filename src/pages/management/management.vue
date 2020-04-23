@@ -11,10 +11,10 @@
       :z-index="2000"
     >
       <div slot="left">
-        <van-icon name="search" color="black" size="0.5rem" />
+        <van-icon name="search" color="black" size="0.4rem" />
       </div>
       <div slot="right" class="titright">
-        <van-icon name="plus" color="black" size="0.5rem" />
+        <van-icon name="plus" color="black" size="0.4rem" />
       </div>
       <!-- <van-icon name="comment" slot="right" size="0.46rem" color="#808080" /> -->
     </van-nav-bar>

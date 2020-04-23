@@ -225,6 +225,14 @@ export default {
     devsn: state => state.management.devsn
   }),
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#ffffff"
+      );
+    } catch (error) {}
     if (this.$route.query.devsn) {
       this.value1 = this.$route.query.devname;
       this.dev_sn = this.$route.query.devsn;
