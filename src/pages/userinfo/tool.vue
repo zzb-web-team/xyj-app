@@ -29,12 +29,12 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted() {
-    try {
+   try {
       window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
     } catch (e) {}
     try {
       window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
-        "#745af3,#5e73f3"
+        "#559afe,#2762fd"
       );
     } catch (error) {}
   },

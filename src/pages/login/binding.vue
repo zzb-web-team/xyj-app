@@ -82,13 +82,13 @@ export default {
   }),
   mounted() {
     try {
-      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
     } catch (e) {}
     try {
       window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
-        "#745af3,#5e73f3"
+        "#ffffff"
       );
-    } catch (e) {}
+    } catch (error) {}
     if (this.$parent.onLine == false) {
       Toast("无法连接网络，请检查网络状态");
     } else {

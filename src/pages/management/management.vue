@@ -215,12 +215,12 @@ export default {
     } else {
       this.topshow = false;
     }
-    try {
-      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+   try {
+      window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
     } catch (e) {}
     try {
       window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
-        "#745af3,#5e73f3"
+        "#ffffff"
       );
     } catch (error) {}
     this.device(0, 0);

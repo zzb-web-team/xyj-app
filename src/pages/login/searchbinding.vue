@@ -2,7 +2,7 @@
   <div class="container">
     <van-nav-bar
       size="0.4rem"
-      left-text="返回"
+      left-text=""
       right-text="扫码绑定"
       left-arrow
       fixed
@@ -11,8 +11,8 @@
       :z-index="2000"
     >
       <div slot="left" class="searchleft">
-        <van-icon name="arrow-left" color="#ffffff" />
-        <span>返回</span>
+        <van-icon name="arrow-left" color="#333333" />
+        <span></span>
       </div>
       <div slot="right" class="searchright">
         <van-icon name="scan" size="0.4rem" />
@@ -24,14 +24,18 @@
         <div class="toptext">
           <span>没有发现西柚机</span>
         </div>
-        <div class="protocol_text">将设备接通电源，插入网线，等待灯光闪烁，确认你的手机和设备在同一网络（同一WIFI）</div>
+        <div class="protocol_text">
+          将设备接通电源，插入网线，等待灯光闪烁，确认你的手机和设备在同一网络（同一WIFI）
+        </div>
         <div class="introduction_text">
           <div class="find_devive_item">
             <img src="../../assets/images/sea_illustrations3.png" />
           </div>
         </div>
         <div>
-          <van-button class="introduction_start" @click="onClickRight()">尝试扫码绑定</van-button>
+          <van-button class="introduction_start" @click="onClickRight()"
+            >尝试扫码绑定</van-button
+          >
         </div>
         <div>
           <div class="argin" @click="goLink()">重新搜索</div>
@@ -154,9 +158,9 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 /deep/.van-nav-bar .van-icon {
-  color: #ffffff;
+  color: #333333;
   vertical-align: middle;
   margin-right: 0.2rem;
 }
@@ -164,13 +168,12 @@ export default {
   margin-left: -20px;
   padding-left: 12px;
 }
+/deep/.van-nav-bar .van-icon {
+  margin-top: 0;
+}
 .van-nav-bar {
-  color: #fff;
-  background: linear-gradient(
-    45deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
-  );
+  color: #333333;
+  background: #ffffff;
 }
 .searchleft span {
   margin-left: -0.2rem;
@@ -180,7 +183,7 @@ export default {
 .searchright span {
   margin-left: -0.2rem;
   margin-right: 0.2rem;
-  color: #fff;
+  color: #333333;
 }
 .titright {
   line-height: 33px;
@@ -292,9 +295,10 @@ export default {
       height: 0.88rem;
       background: linear-gradient(
         90deg,
-        rgba(116, 90, 243, 1) 0%,
-        rgba(92, 116, 243, 1) 100%
+        rgba(254, 168, 107, 1) 0%,
+        rgba(255, 109, 110, 1) 100%
       );
+      box-shadow: 0 0.1rem 0.1rem 0 #ff6d6e1a;
       border-radius: 1rem;
       margin-top: 0.6rem;
       border: none;
@@ -302,7 +306,7 @@ export default {
     .argin {
       margin-top: 0.35rem;
       font-size: 0.32rem;
-      color: #5f7bf2;
+      color: #fea86b;
     }
     .jumpover {
       border-bottom: 1px solid #424b66;
