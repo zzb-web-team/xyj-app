@@ -206,9 +206,10 @@ export default {
         { name: "今天", value: 1 },
         { name: "近一周", value: 2 }
       ],
-      xdata: [1, 2, 3],
-      ydata: [3, 2, 1],
+      xdata: [],
+      ydata: [],
       echart_data_list: [],
+      echart_data_list_x: [],
       dev_sn: "",
       timetype: 1,
       bandtype: 0,
@@ -237,6 +238,7 @@ export default {
       this.value1 = this.$route.query.devname;
       this.dev_sn = this.$route.query.devsn;
     }
+    this.set_x_data();
     this.get_cp();
     this.get_dev_cap();
     this.get_use_dev_list();
@@ -367,9 +369,13 @@ export default {
               this.echart_data_list = res.data.bd_list;
               console.log(this.echart_data_list);
               if (params.bandwidth_type == 0) {
-                this.drawLine();
+                this.$nextTick(() => {
+                  this.drawLine();
+                });
               } else {
-                this.drawLine("down");
+                this.$nextTick(() => {
+                  this.drawLine("down");
+                });
               }
             } else {
               Toast(res.err_msg);
@@ -402,7 +408,6 @@ export default {
     //存储和网络显示切换
     switch_tabs(name, title) {
       this.tabname = name;
-      console.log(this.tabname);
       if (name == 1) {
         this.get_dev_bangwidth();
         let linechartex1 = document.getElementById("myChart_shang");
@@ -554,6 +559,7 @@ export default {
       this.show2 = false;
       this.value2 = item.name;
       this.timetype = item.value;
+      this.set_x_data();
       if (this.tabname == 0) {
         this.get_dev_cap();
       } else {
@@ -583,6 +589,29 @@ export default {
               this.drawLine("down");
             });
           }
+        }
+      }
+    },
+    //生成x轴时间
+    set_x_data() {
+      let tod = new Date(new Date().toLocaleDateString()).getTime();
+      let wek = tod - 3600 * 1000 * 24 * 7;
+      let yes = tod - 3600 * 1000 * 24 * 1;
+      this.echart_data_list_x = [];
+      if (this.timetype == 1) {
+        for (var i = 0; i < 288; i++) {
+          this.echart_data_list_x.push(tod);
+          tod += 300000;
+        }
+      } else if (this.timetype == 0) {
+        for (var i = 0; i < 288; i++) {
+          this.echart_data_list_x.push(yes);
+          yes += 300000;
+        }
+      } else if (this.timetype == 2) {
+        for (var i = 0; i < 56; i++) {
+          this.echart_data_list_x.push(wek);
+          wek += 10800000;
         }
       }
     },
@@ -641,12 +670,13 @@ export default {
       //   ]
       // };
       let _this = this;
-      if (_this.timetype == 2) {
-        var dataCount = 744;
-      } else {
-        var dataCount = 288;
-      }
+      // if (_this.timetype == 2) {
+      //   var dataCount = 744;
+      // } else {
+      //   var dataCount = 288;
+      // }
       console.log(_this.echart_data_list);
+      // console.log(_this.echart_data_list_x);
       // var data = generateData(dataCount);
       var option = {
         // title: {//头部的下载按钮
@@ -685,8 +715,14 @@ export default {
           }
         ],
         xAxis: {
-          data: _this.echart_data_list.map(function(item) {
-            return formatTime("yyyy-MM-dd\nhh:mm:ss", item[1]);
+          data: _this.echart_data_list_x.map(function(item) {
+            var timestamp4 = new Date(item); //直接用 new Date(时间戳) 格式转化获得当前时间
+            var ds =
+              timestamp4.toLocaleDateString().replace(/\//g, "-") +
+              " " +
+              timestamp4.toTimeString().substr(0, 8);
+            //利用拼接正则等手段转化为yyyy-MM-dd hh:mm:ss 格式
+            return ds;
           }),
           silent: false,
           splitLine: {
@@ -721,7 +757,7 @@ export default {
           {
             type: "bar",
             data: _this.echart_data_list.map(function(item) {
-              return item[0];
+              return item;
             }),
             // Set `large` for large data amount
             large: true,
@@ -772,7 +808,6 @@ export default {
         }
 
         var time = +new Date(y, m, d);
-        console.log(time);
         var smallBaseValue;
         //生成随机数
         function next(idx) {
