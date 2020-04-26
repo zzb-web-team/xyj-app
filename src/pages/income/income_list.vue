@@ -12,7 +12,7 @@
         <p>累计收益(gfm)</p>
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
-      <div class="income_con_btn" v-show="income_list.length > 0">
+      <div class="income_con_btn" v-show="income_list.length">
         <van-dropdown-menu>
           <van-dropdown-item
             v-model="value11"
@@ -26,7 +26,7 @@
           />
         </van-dropdown-menu>
       </div>
-      <div v-if="income_list.length > 0">
+      <div v-if="income_list.length">
         <vuu-pull
           ref="vuuPull"
           :options="pullOptions"
@@ -481,15 +481,21 @@ export default {
       var _this = this;
       var date = new Date();
       var y = date.getFullYear();
+      var timestamp =
+        new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
       function computeTime(year, month) {
-        _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-        var timestamp = Date.parse(new Date()) / 1000;
-        var entime = new Date(year, month, 0).getTime() / 1000;
-        console.log(timestamp, entime);
-        if (timestamp < entime) {
-          _this.endtime = timestamp;
+        console.log(year, month);
+        if (month == 0) {
+          _this.starttime = new Date(year, month, 1).getTime() / 1000;
+          _this.endtime = timestamp - 1;
         } else {
-          _this.endtime = entime;
+          _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
+          var entime = new Date(year, month, 0).getTime() / 1000;
+          if (timestamp < entime) {
+            _this.endtime = timestamp - 1;
+          } else {
+            _this.endtime = entime - 1;
+          }
         }
       }
       computeTime(y, this.value22);
@@ -511,21 +517,29 @@ export default {
         return false;
       }
       if (activeNames) this.slcsi = activeNames;
-      let statime =
-        Date.parse(this.timestampToTime(this.slcsi.date_stamp)) / 1000;
-      let endtime = statime + 86400;
+      // let statime =
+      //   Date.parse(this.timestampToTime(this.slcsi.date_stamp)) / 1000;
+      // let endtime = statime + 86400;
       let params = new Object();
+
+      // params.start_time = statime;
+      // params.end_time = endtime;
+      params.start_time = this.starttime;
+      params.end_time = this.endtime;
       params.login_token = this.log_token;
-      params.start_time = statime;
-      params.end_time = endtime;
       params.cur_page = this.page;
       params.dev_sn = this.value11;
       devinformation(params)
         .then(res => {
           if (res.status == 0) {
             for (let lewf of res.data.dev_info_list) {
-              if (lewf.date_stamp > statime && lewf.date_stamp <= endtime) {
+              if (
+                lewf.date_stamp > params.start_time &&
+                lewf.date_stamp <= params.end_time
+              ) {
                 this.devarrlist = lewf;
+                this.$forceUpdate();
+                console.log(this.devarrlist);
                 return false;
               }
             }
@@ -538,7 +552,7 @@ export default {
         })
         .catch(error => {});
     },
-    //事件戳转时间
+    //时间戳转时间
     timestampToTime(timestamp) {
       var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
       var Y = date.getFullYear() + "-";
