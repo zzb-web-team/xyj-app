@@ -108,10 +108,10 @@
                   <p v-else-if="item.node_grade == 2000">
                     <img src="../../assets/images/huangjin.svg" alt />黄金节点
                   </p>
-                  <p v-else-if="item.node_grade == 8000">
+                  <p v-else-if="item.node_grade == 6000">
                     <img src="../../assets/images/bojin.svg" alt />铂金节点
                   </p>
-                  <p v-else-if="item.node_grade == 16000">
+                  <p v-else-if="item.node_grade == 18000">
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
                   <p>算力：{{ item.cp_value ? item.cp_value : 0 }}</p>
@@ -215,7 +215,7 @@ export default {
     } else {
       this.topshow = false;
     }
-   try {
+    try {
       window.android.setStatusBarAndNavigationBarColor("1", "#ffffff");
     } catch (e) {}
     try {
@@ -407,6 +407,7 @@ export default {
               this.das.push(deas);
             });
             this.minerInfo = this.das;
+            console.log(this.minerInfo);
           } else if (res.status == -999) {
             this.$toast({
               message: "登录已过期，请重新登录",

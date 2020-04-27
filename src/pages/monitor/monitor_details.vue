@@ -159,7 +159,8 @@ import {
   get_dev_cap_list,
   get_dev_bandwidth_list,
   get_user_average_cp,
-  isbindinglist
+  isbindinglist,
+  getuserdevlist
 } from "../../common/js/api";
 import {
   TabbarItem,
@@ -242,6 +243,7 @@ export default {
     this.get_cp();
     this.get_dev_cap();
     this.get_use_dev_list();
+    this.get_all_income();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
@@ -250,6 +252,7 @@ export default {
       setTimeout(() => {
         this.get_cp();
         this.get_use_dev_list();
+        this.get_all_income();
         if (this.tabname == 0) {
           this.get_dev_cap();
         } else {
@@ -304,6 +307,47 @@ export default {
         .catch(error => {
           //  console.log(error);
         });
+    },
+    //获取昨日收益
+    get_all_income() {
+      let params = new Object();
+      let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+      let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
+      let starttime = endtimes - 90 * 24 * 3600; //获取7天的时间戳
+      let token = this.log_token;
+      params.login_token = token;
+      params.start_time = starttime;
+      params.end_time = endtimes;
+      params.query_type = 1;
+      params.cur_page = 0;
+      params.dev_sn = "";
+      getuserdevlist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            this.storage.income = (res.data.yes_profit / 100).toFixed(2);
+          } else if (res.status == -17) {
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
     },
     //获取数据--监控（存储）
     get_dev_cap() {
