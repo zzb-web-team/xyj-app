@@ -517,15 +517,15 @@ export default {
         return false;
       }
       if (activeNames) this.slcsi = activeNames;
-      // let statime =
-      //   Date.parse(this.timestampToTime(this.slcsi.date_stamp)) / 1000;
-      // let endtime = statime + 86400;
+      let statime =
+        Date.parse(this.timestampToTime(this.slcsi.date_stamp)) / 1000;
+      let endtime = statime + 86400;
       let params = new Object();
 
-      // params.start_time = statime;
-      // params.end_time = endtime;
-      params.start_time = this.starttime;
-      params.end_time = this.endtime;
+      params.start_time = statime;
+      params.end_time = endtime;
+      // params.start_time = this.starttime;
+      // params.end_time = this.endtime;
       params.login_token = this.log_token;
       params.cur_page = this.page;
       params.dev_sn = this.value11;
@@ -538,16 +538,18 @@ export default {
                 lewf.date_stamp <= params.end_time
               ) {
                 this.devarrlist = lewf;
-                this.$forceUpdate();
+
                 console.log(this.devarrlist);
                 return false;
               }
             }
+
             if (this.page >= res.data.total_page) {
               return false;
             }
             this.page++;
             this.item_open();
+            this.$forceUpdate();
           }
         })
         .catch(error => {});

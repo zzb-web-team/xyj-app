@@ -367,7 +367,7 @@ export default {
               this.band.online_time = (res.data.online_time / 3600).toFixed(2);
               this.band.offline_times_num = res.data.offline_times;
               this.echart_data_list = res.data.bd_list;
-              console.log(this.echart_data_list);
+              //   console.log(this.echart_data_list);
               if (params.bandwidth_type == 0) {
                 this.$nextTick(() => {
                   this.drawLine();
@@ -675,7 +675,7 @@ export default {
       // } else {
       //   var dataCount = 288;
       // }
-      console.log(_this.echart_data_list);
+      //   console.log(_this.echart_data_list);
       // console.log(_this.echart_data_list_x);
       // var data = generateData(dataCount);
       var option = {
@@ -757,7 +757,7 @@ export default {
           {
             type: "bar",
             data: _this.echart_data_list.map(function(item) {
-              return item;
+              return (item.db / 1024 / 1024).toFixed(2);
             }),
             // Set `large` for large data amount
             large: true,
