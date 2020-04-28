@@ -77,7 +77,7 @@
                 <img src="../../assets/images/income_suanli_new.png" alt />
                 <div class="content_body_bottom_right_detail">
                   <p>算力</p>
-                  <p>{{ item.total_com_power }}</p>
+                  <p>{{ item.cp_value }}</p>
                 </div>
               </div>
             </div>
@@ -98,7 +98,8 @@ import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   getuserdevlist,
-  query_node_total_profit_info
+  query_node_total_profit_info,
+  get_app_dev_con_val
 } from "../../common/js/api";
 import { Toast, Dialog } from "vant";
 export default {
@@ -161,7 +162,8 @@ export default {
         //   total_com_power: 102375,
         //   dev_sn: 6
         // }
-      ]
+      ],
+      demo_minerInfo: []
     };
   },
   computed: {
@@ -232,12 +234,17 @@ export default {
               log_token: res.data.token_info.token
             });
             if (params.cur_page == 0) {
-              this.dev_income_list = res.data.dev_total_profit_list;
+              // this.dev_income_list = res.data.dev_total_profit_list;
+              this.demo_minerInfo = res.data.dev_total_profit_list;
             } else {
-              this.dev_income_list = this.dev_income_list.concat(
+              // this.dev_income_list = this.dev_income_list.concat(
+              //   res.data.dev_total_profit_list
+              // );
+              this.demo_minerInfo = this.demo_minerInfo.concat(
                 res.data.dev_total_profit_list
               );
             }
+            this.get_con();
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -302,6 +309,43 @@ export default {
         })
         .catch(error => {});
     },
+    //获取算力值
+    get_con(num) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      get_app_dev_con_val(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.token });
+          }
+          if (num == 0) {
+            this.minerInfo = [];
+          }
+          let obje = {};
+          res.data.dev_value_list.forEach((item, index) => {
+            let key = item.dev_sn;
+            let value = item;
+            obje[key] = value;
+            obje.cp_value = "";
+            obje.con_value = "";
+            obje.node_grade = "";
+          });
+          this.demo_minerInfo.forEach((adme, indexs) => {
+            let sad = adme.dev_sn;
+            if (obje[sad]) {
+              let deas = new Object();
+              deas = adme;
+              deas.cp_value = obje[sad].cp_value;
+              deas.con_value = obje[sad].con_value;
+              deas.node_grade = obje[sad].node_grade;
+              this.dev_income_list.push(deas);
+            }
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
 
     onClickRight() {
       this.$router.push({
@@ -323,8 +367,9 @@ export default {
     go_calculation_details(val) {
       let detail = new Object();
       detail.dev_sn = val.dev_sn;
-      detail.power = val.total_com_power;
+      detail.cp_value = val.cp_value;
       detail.dev_name = "";
+      console.log(detail);
       this.$router.push({
         path: "/calculation_details",
         query: { item_detail: detail }

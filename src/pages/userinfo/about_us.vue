@@ -5,7 +5,7 @@
       <van-cell is-link @click="goprivacy" v-fb="{ cls: 'my_touchfeedback' }">隐私政策</van-cell>
       <van-cell is-link @click="goUserAgreement" v-fb="{ cls: 'my_touchfeedback' }">用户协议</van-cell>
       <van-cell title="版本" class="ves">
-        <i></i>1.3.1.137
+        <i></i>1.3.1.138
       </van-cell>
     </div>
   </div>

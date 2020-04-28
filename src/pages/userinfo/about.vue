@@ -13,9 +13,9 @@
             </div>
             <div class="app_name">
               <span class="app_name_left">西柚APP</span>
-              <span class="app_name_right">V 1.3.1.137</span>
+              <span class="app_name_right">V 1.3.1.138</span>
             </div>
-            <p>更新于 2019-12-20</p>
+            <p>更新于 2020-04-28</p>
           </div>
 
           <hr />

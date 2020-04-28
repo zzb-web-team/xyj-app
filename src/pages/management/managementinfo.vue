@@ -261,7 +261,7 @@ export default {
                 } else {
                   this.currentRate =
                     (
-                      1 -
+
                       res.data.dev_info_list[0].free_cap /
                         res.data.dev_info_list[0].total_cap
                     ).toFixed(4) * 100;
