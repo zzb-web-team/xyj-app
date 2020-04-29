@@ -313,7 +313,7 @@ export default {
                     this.deviceArr[index].bind_num = "非法设备";
                     this.deviceArr[index].bind = "立即绑定";
                   } else {
-                    if (item.bind_state == 0) {
+                    if (item.bind_state == 0||item.bind_state==102) {
                       this.deviceArr[index].nonestyle = "none";
                       this.deviceArr[index].feistyle = "none";
                       this.deviceArr[index].bind = "立即绑定";
