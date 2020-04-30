@@ -298,7 +298,7 @@ export default {
                     }
                     this.devlist.push(item);
                   });
-                  if (res.data.page_num == 0) {
+                  if (params.page_num == 0) {
                     this.zan_minerInfo = this.devlist;
                   } else {
                     this.zan_minerInfo.push(...this.devlist); //数组拼接
@@ -385,6 +385,7 @@ export default {
       get_app_dev_con_val(params)
         .then(res => {
           if (res.status == 0) {
+            this.das=[];
             this.updateUser({ log_token: res.data.token_info.token });
             let obje = {};
             res.data.dev_value_list.forEach((item, index) => {
@@ -448,6 +449,7 @@ export default {
     },
     //下拉刷新
     loadRefresh() {
+      this.minerInfo=[];
       this.localcache = [];
       this.devlist = [];
       this.device(0, 1);

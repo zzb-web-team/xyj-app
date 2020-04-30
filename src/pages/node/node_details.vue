@@ -144,7 +144,7 @@ export default {
       fullWidth: 0,
       node_level: 0,
       progress_num: 0,
-      value11: 1,
+      value11: 0,
       value22: -1,
       option1: [
         { text: "全部", value: 0 },
@@ -242,13 +242,27 @@ export default {
     } catch (error) {}
     this.devtitle = this.$route.query.dev.node_name;
     this.progress_num = this.$route.query.dev.con_value;
-    this.percentage_num =
-      (this.$route.query.dev.con_value / 2000).toFixed(2) * 100;
+    if (this.progress_num < 2000) {
+      this.percentage_num = parseInt(
+        (this.progress_num / 2000).toFixed(2) * 100
+      );
+    } else if (this.progress_num >= 2000 && this.progress_num < 6000) {
+      this.percentage_num = parseInt(
+        (this.progress_num / 6000).toFixed(2) * 100
+      );
+    } else if (this.progress_num >= 6000) {
+      this.percentage_num = parseInt(
+        (this.progress_num / 18000).toFixed(2) * 100
+      );
+    }
+
     this.fullWidth = document.documentElement.clientWidth;
     this.$refs.progress_con.style.left =
       this.fullWidth * 0.96 * (this.percentage_num / 100) - 13 + "px";
     var date = new Date();
     this.value22 = date.getMonth() + 1;
+    console.log(this.progress_num, this.percentage_num);
+    return false;
     this.get_cp_list(0);
   },
   methods: {
