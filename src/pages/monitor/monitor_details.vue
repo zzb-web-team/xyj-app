@@ -38,7 +38,7 @@
             {{ value1 }}
             <van-icon name="play" size="0.3rem" />
           </van-button>
-          <van-button type="default" @click="xiuxiuxiu2">
+          <van-button type="default" @click="xiuxiuxiu2" v-show="time_show">
             {{ value2 }}
             <van-icon name="play" size="0.3rem" />
           </van-button>
@@ -177,6 +177,7 @@ export default {
       active: 1,
       title: "监控",
       show1: false,
+      time_show: false,
       show2: false,
       storage: {
         total: 0,
@@ -354,7 +355,8 @@ export default {
       let params = new Object();
       params.login_token = this.log_token;
       params.dev_sn = this.dev_sn;
-      params.time_type = this.timetype;
+      // params.time_type = this.timetype;
+      params.time_type = 1;
       get_dev_cap_list(params)
         .then(res => {
           if (res.status == 0) {
@@ -453,6 +455,7 @@ export default {
     switch_tabs(name, title) {
       this.tabname = name;
       if (name == 1) {
+        this.time_show = true;
         this.get_dev_bangwidth();
         let linechartex1 = document.getElementById("myChart_shang");
         if (linechartex1) {
@@ -466,6 +469,7 @@ export default {
           });
         }
       } else {
+        this.time_show = false;
         this.get_dev_cap();
       }
     },

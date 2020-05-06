@@ -1,11 +1,6 @@
 <template>
   <div class="all_income">
-    <navBar
-      title="收益明细"
-      left-arrow
-      fixed
-      @click-left="onClickLeft"
-    ></navBar>
+    <navBar :title="title" left-arrow fixed @click-left="onClickLeft"></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -14,11 +9,12 @@
       </div>
       <div class="income_con_btn" v-show="income_list.length">
         <van-dropdown-menu>
-          <van-dropdown-item
+          <!-- <van-dropdown-item
             v-model="value11"
             :options="option1"
             @change="changedev"
-          />
+            v-show="dev_show"
+          /> -->
           <van-dropdown-item
             v-model="value22"
             :options="option2"
@@ -111,9 +107,11 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      title: "收益明细",
       total_revenue: 0,
       activeNames: ["1"],
       showdev: false,
+      dev_show: false,
       income_list: [],
       value11: 0,
       value22: 0,
@@ -275,6 +273,9 @@ export default {
               devobj.text = item.dev_name;
               devobj.value = item.dev_sn;
               this.option1.push(devobj);
+              if (item.dev_sn == this.$route.query.allshou.dev_sn) {
+                this.title = item.dev_name + " 收益明细";
+              }
             });
           } else if (res.status == -17) {
             this.rescount = 0;
@@ -625,6 +626,9 @@ export default {
 /deep/.van-empty {
   margin-top: 2rem;
 }
+/deep/.van-dropdown-menu {
+  width: 40%;
+}
 .all_income {
   width: 100%;
   height: 100%;
@@ -655,6 +659,8 @@ export default {
       width: 100%;
       position: relative;
       z-index: 11;
+      display: flex;
+      flex-flow: row-reverse;
     }
     .income_con_body {
       background-color: #fff;
