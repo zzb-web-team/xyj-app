@@ -122,10 +122,8 @@ export default {
         this.datalist[num].aoenbum = 2;
       }
       this.$forceUpdate();
-      console.log(this.datalist[num]);
     },
     go_help_detail(datadetail, num) {
-      console.log(datadetail);
       this.$router.push({
         path: "help_detail",
         query: { problem: datadetail }
@@ -205,8 +203,6 @@ export default {
             for (var key in obje) {
               this.datalist.push(obje[key]);
             }
-
-            console.log(this.datalist);
           }
         })
         .catch(error => {

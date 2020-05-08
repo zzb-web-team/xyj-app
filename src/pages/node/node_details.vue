@@ -19,15 +19,15 @@
     </van-nav-bar>
     <div class="content">
       <div class="calculation_top">
-        <span class="recird_content_left" v-if="node_level == 0">
+        <span class="recird_content_left" v-if="progress_num == 0">
           <img src="../../assets/images/putong.svg" alt />
           普通节点
         </span>
-        <span class="recird_content_left" v-else-if="node_level == 1">
+        <span class="recird_content_left" v-else-if="progress_num == 2000">
           <img src="../../assets/images/huangjin.svg" alt />
           黄金节点
         </span>
-        <span class="recird_content_left" v-else-if="node_level == 2">
+        <span class="recird_content_left" v-else-if="progress_num == 6000">
           <img src="../../assets/images/bojin.svg" alt />
           铂金节点
         </span>
@@ -39,7 +39,7 @@
           color="#316CFC"
           pivot-text="percentage_num"
           pivot-color="#ffffff"
-          :percentage="percentage_num"
+          :percentage="percenb"
         />
         <div class="progress_num">
           <span>0</span>
@@ -140,9 +140,8 @@ export default {
   data() {
     return {
       percentage_num: 0,
+      percenb: 0,
       devtitle: "",
-      fullWidth: 0,
-      node_level: 0,
       progress_num: 0,
       value11: 0,
       value22: -1,
@@ -240,29 +239,20 @@ export default {
         "#559afe,#2762fd"
       );
     } catch (error) {}
+
     this.devtitle = this.$route.query.dev.node_name;
     this.progress_num = this.$route.query.dev.con_value;
-    if (this.progress_num < 2000) {
-      this.percentage_num = parseInt(
-        (this.progress_num / 2000).toFixed(2) * 100
-      );
-    } else if (this.progress_num >= 2000 && this.progress_num < 6000) {
-      this.percentage_num = parseInt(
-        (this.progress_num / 6000).toFixed(2) * 100
-      );
-    } else if (this.progress_num >= 6000) {
-      this.percentage_num = parseInt(
-        (this.progress_num / 18000).toFixed(2) * 100
-      );
-    }
 
-    this.fullWidth = document.documentElement.clientWidth;
-    this.$refs.progress_con.style.left =
-      this.fullWidth * 0.96 * (this.percentage_num / 100) - 13 + "px";
-    var date = new Date();
-    this.value22 = date.getMonth() + 1;
-    console.log(this.progress_num, this.percentage_num);
-    return false;
+    if (this.progress_num < 2000) {
+      this.percenb = parseInt((this.progress_num / 2000).toFixed(2) * 100);
+    } else if (this.progress_num >= 2000 && this.progress_num < 6000) {
+      this.percenb = parseInt((this.progress_num / 6000).toFixed(2) * 100);
+    } else if (this.progress_num >= 6000) {
+      this.percenb = parseInt((this.progress_num / 18000).toFixed(2) * 100);
+    }
+    console.log(this.progress_num, this.percenb);
+    // var date = new Date();
+    // this.value22 = date.getMonth() + 1;
     this.get_cp_list(0);
   },
   methods: {

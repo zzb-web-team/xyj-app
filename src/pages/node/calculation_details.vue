@@ -75,8 +75,8 @@ export default {
   data() {
     return {
       dev_details: {},
-      value1: 1,
-      value2: 1,
+      value1: 0,
+      value2: -1,
       option1: [
         { text: "全部", value: 0 },
         { text: "增加", value: 1 },
@@ -199,9 +199,17 @@ export default {
     }
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     this.dev_details = this.$route.query.item_detail;
     var date = new Date();
-    this.value2 = date.getMonth() + 1;
+    // this.value2 = date.getMonth() + 1;
     this.get_power_list(0);
   },
   methods: {

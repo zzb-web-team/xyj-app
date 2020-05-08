@@ -436,7 +436,7 @@ export default {
         var y = date.getFullYear();
         function computeTime(year, month) {
           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-          _this.endtime = new Date(year, month, 0).getTime() / 1000;
+          _this.endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
         }
         computeTime(y, this.value22);
       }

@@ -52,7 +52,7 @@
             <div class="content_body_top" @click="go_income_list(item)">
               <div>
                 <img src="../../assets/images/income_dev_name.png" alt />
-                {{ item.devname }}
+                {{ item.dev_name }}
               </div>
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </div>
@@ -99,7 +99,8 @@ import boadind from "../../assets/images/spinwhile.gif"; //动画
 import {
   getuserdevlist,
   query_node_total_profit_info,
-  get_app_dev_con_val
+  get_app_dev_con_val,
+  isbindinglist
 } from "../../common/js/api";
 import { Toast, Dialog } from "vant";
 export default {
@@ -163,6 +164,7 @@ export default {
         //   dev_sn: 6
         // }
       ],
+      user_dev_list: [],
       demo_minerInfo: []
     };
   },
@@ -222,6 +224,45 @@ export default {
         }
       }, 500);
     },
+    get_use_dev_list() {
+      let params = new Object();
+      params.login_token = this.log_token;
+
+      isbindinglist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.token_info.login_token });
+            this.user_dev_list=res.data.bind_devinfo_list;
+            // res.data.bind_devinfo_list.forEach(item => {
+            //   let devobj = new Object();
+            //   devobj.dev_name = item.dev_name;
+            //   devobj.dev_sn = item.dev_sn;
+            //   this.user_dev_list.push(devobj);
+            // });
+             this.get_con();
+          } else if (res.status == -17) {
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          // console.log(error);
+        });
+    },
     //获取设备收益列表
     get_all_dev_income(page) {
       let params = new Object();
@@ -244,7 +285,7 @@ export default {
                 res.data.dev_total_profit_list
               );
             }
-            this.get_con();
+            this.get_use_dev_list();
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -326,9 +367,13 @@ export default {
             let key = item.dev_sn;
             let value = item;
             obje[key] = value;
-            obje.cp_value = "";
-            obje.con_value = "";
-            obje.node_grade = "";
+            obje[key].dev_name = "";
+          });
+           this.user_dev_list.forEach((deem) => {
+            let uev_sn=deem.dev_sn;
+             if (obje[uev_sn]) {
+               obje[uev_sn].dev_name = deem.dev_name;
+            }
           });
           this.demo_minerInfo.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
@@ -338,6 +383,7 @@ export default {
               deas.cp_value = obje[sad].cp_value;
               deas.con_value = obje[sad].con_value;
               deas.node_grade = obje[sad].node_grade;
+              deas.dev_name = obje[sad].dev_name;
               this.dev_income_list.push(deas);
             }
           });
@@ -369,7 +415,6 @@ export default {
       detail.dev_sn = val.dev_sn;
       detail.cp_value = val.cp_value;
       detail.dev_name = "";
-      console.log(detail);
       this.$router.push({
         path: "/calculation_details",
         query: { item_detail: detail }

@@ -1,6 +1,6 @@
 <template>
   <div class="all_income">
-    <navBar :title="title" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -44,7 +44,7 @@
             >
               <div class="income_bottom_top">
                 <span></span>
-                <p>{{ item.devname }}</p>
+                <p>{{devname }}</p>
               </div>
               <div class="income_bottom_con">
                 <div class="income_bottom_con_item con_item_left">
@@ -108,6 +108,7 @@ export default {
   data() {
     return {
       title: "收益明细",
+      devname:"",
       total_revenue: 0,
       activeNames: ["1"],
       showdev: false,
@@ -219,15 +220,16 @@ export default {
     let date = new Date();
     this.value22 = date.getMonth() + 1;
     this.value11 = this.$route.query.allshou.dev_sn;
+    this.devname=this.$route.query.allshou.dev_name;
     this.changetime();
-    this.get_use_dev_list();
+    //this.get_use_dev_list();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
     //下拉刷新
     loadTop() {
       setTimeout(() => {
-        this.get_use_dev_list();
+        //this.get_use_dev_list();
         if (this.value11 == 0) {
           this.get_all_income(0);
           this.get_income_list(0);
@@ -273,9 +275,9 @@ export default {
               devobj.text = item.dev_name;
               devobj.value = item.dev_sn;
               this.option1.push(devobj);
-              if (item.dev_sn == this.$route.query.allshou.dev_sn) {
-                this.title = item.dev_name + " 收益明细";
-              }
+              // if (item.dev_sn == this.$route.query.allshou.dev_sn) {
+              //   this.title = item.dev_name + " 收益明细";
+              // }
             });
           } else if (res.status == -17) {
             this.rescount = 0;
@@ -485,17 +487,16 @@ export default {
       var timestamp =
         new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
       function computeTime(year, month) {
-        console.log(year, month);
         if (month == 0) {
           _this.starttime = new Date(year, month, 1).getTime() / 1000;
-          _this.endtime = timestamp - 1;
+          _this.endtime = timestamp + 86399;
         } else {
           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
           var entime = new Date(year, month, 0).getTime() / 1000;
           if (timestamp < entime) {
             _this.endtime = timestamp - 1;
           } else {
-            _this.endtime = entime - 1;
+            _this.endtime = entime + 86399;
           }
         }
       }
@@ -539,8 +540,6 @@ export default {
                 lewf.date_stamp <= params.end_time
               ) {
                 this.devarrlist = lewf;
-
-                console.log(this.devarrlist);
                 return false;
               }
             }

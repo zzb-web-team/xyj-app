@@ -408,7 +408,6 @@ export default {
               this.das.push(deas);
             });
             this.minerInfo = this.das;
-            console.log(this.minerInfo);
           } else if (res.status == -999) {
             this.$toast({
               message: "登录已过期，请重新登录",
