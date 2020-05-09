@@ -192,7 +192,7 @@ export default {
     get_income(page) {
       let params = new Object();
       let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
-      let endtime = statime + 86400;
+      let endtime = statime + 86399;
       params.login_token = this.log_token;
       params.cur_page = page;
       params.start_time = statime;
@@ -236,7 +236,7 @@ export default {
     get_dev_detail(page) {
       let params = new Object();
       let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
-      let endtime = statime + 86400;
+      let endtime = statime + 86399;
       params.login_token = this.log_token;
       params.start_time = statime;
       params.end_time = endtime;

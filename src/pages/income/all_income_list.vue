@@ -41,7 +41,7 @@
           >
             <van-cell
               is-link
-              :title="'+' + (item.user_total_profit / 10000).toFixed(2) + 'gfm'"
+              :title="'+' + (item.user_total_profit / 100).toFixed(2) + 'gfm'"
               @click="go_income_detail(item)"
               >{{ item.date_stamp | formatDate }}</van-cell
             >
@@ -398,7 +398,7 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.total_revenue = (res.data.user_total_profit / 10000).toFixed(
+            this.total_revenue = (res.data.user_total_profit / 100).toFixed(
               2
             );
           } else if (res.status == -17) {

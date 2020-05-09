@@ -515,13 +515,15 @@ export default {
       this.showdev = false;
     },
     item_open(activeNames) {
+      console.log(activeNames);
+      console.log()
       if (activeNames.date_stamp == this.slcsi.date_stamp) {
         return false;
       }
-      if (activeNames) this.slcsi = activeNames;
+      this.slcsi = activeNames;
       let statime =
         Date.parse(this.timestampToTime(this.slcsi.date_stamp)) / 1000;
-      let endtime = statime + 86400;
+      let endtime = statime + 86399;
       let params = new Object();
 
       params.start_time = statime;
@@ -531,25 +533,46 @@ export default {
       params.login_token = this.log_token;
       params.cur_page = this.page;
       params.dev_sn = this.value11;
+      console.log(params);
       devinformation(params)
         .then(res => {
           if (res.status == 0) {
-            for (let lewf of res.data.dev_info_list) {
-              if (
-                lewf.date_stamp > params.start_time &&
-                lewf.date_stamp <= params.end_time
-              ) {
-                this.devarrlist = lewf;
-                return false;
-              }
-            }
-
-            if (this.page >= res.data.total_page) {
-              return false;
-            }
-            this.page++;
-            this.item_open();
+            this.devarrlist=res.data.dev_info_list[0];
+            console.log(this.devarrlist);
+            // for (let lewf of res.data.dev_info_list) {
+            //   if (
+            //     lewf.date_stamp > params.start_time &&
+            //     lewf.date_stamp <= params.end_time
+            //   ) {
+            //     this.devarrlist = lewf;
+            //     return false;
+            //   }
+            // }
+            // if (this.page >= res.data.total_page) {
+            //   return false;
+            // }
+            // this.page++;
+            // this.item_open();
             this.$forceUpdate();
+          }else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
           }
         })
         .catch(error => {});
