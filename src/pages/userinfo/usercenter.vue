@@ -693,8 +693,8 @@ export default {
           align-items: center;
           text-align: center;
           img {
-            width: 30%;
-            height: 100%;
+            width: 0.37rem;
+            height: 0.4rem;
           }
         }
         .con_item_l {
@@ -771,7 +771,8 @@ export default {
             text-align: left;
             img {
               margin-right: 0.1rem;
-              width: 18%;
+              width: 0.4rem;
+              height: 0.4rem;
             }
             p {
               color: #333333;

@@ -14,7 +14,7 @@
       </div>
       <!--  -->
 
-      <div class="content_body" v-if="dev_income_list.length > 0">
+      <div class="content_body" v-if="list_show">
         <vuu-pull
           ref="vuuPull"
           :options="pullOptions"
@@ -27,17 +27,17 @@
             v-for="(item, index) in dev_income_list"
             :key="index"
           >
-            <div class="content_body_top" @click="go_income_list(item)">
+            <div class="content_body_top">
               <span>
                 <img src="../../assets/images/income_dev_name.png" alt />
                 {{ item.dev_name }}
               </span>
               <span>
-                算力：{{ item.dev_profit }}
-                <img src="../../assets/images/per_icon_arrow.png" alt />
+                算力：{{ item.com_power }}
+                <!-- <img src="../../assets/images/per_icon_arrow.png" alt /> -->
               </span>
             </div>
-            <div class="content_body_bottom" @click="go_income_list(item)">
+            <div class="content_body_bottom">
               <div class="content_body_bottom_left">
                 <img src="../../assets/images/income_shouyi_new.png" alt />
                 <div class="content_body_bottom_right_detail">
@@ -98,6 +98,7 @@ export default {
       total_revenue: 0,
       revenue_time: 0,
       dev_income_list: [],
+      list_show: true,
       income_detail: [],
       pagenum: 0,
       allpage: 1,
@@ -156,6 +157,15 @@ export default {
       }
     }
   },
+  watch: {
+    dev_income_list: {
+      handler(newvalue, oldvalue) {
+        console.log(newvalue);
+        this.dev_income_list = newvalue;
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.total_revenue = (
       this.$route.query.allshou.user_total_profit / 100
@@ -190,25 +200,32 @@ export default {
     },
     //收益
     get_income(page) {
+      let data_date = this.timestampToTime(this.revenue_time);
+      let statime = new Date(data_date).getTime() / 1000;
+      let endtime = statime * 1 + 86399;
       let params = new Object();
-      let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
-      let endtime = statime + 86399;
       params.login_token = this.log_token;
       params.cur_page = page;
       params.start_time = statime;
       params.end_time = endtime;
+
       alldevrevenue(params)
         .then(res => {
           if (res.status == 0) {
-            if (params.cur_page == 0) {
-              this.income_detail = res.data.dev_profit_list;
+            if (res.data.dev_profit_list) {
+              if (params.cur_page == 0) {
+                this.income_detail = res.data.dev_profit_list;
+              } else {
+                this.income_detail = this.income_detail.concat(
+                  res.data.dev_profit_list
+                );
+              }
+              this.allpage = res.data.total_page;
+              this.get_dev_detail(params.cur_page);
             } else {
-              this.income_detail = this.income_detail.concat(
-                res.data.dev_profit_list
-              );
+              this.list_show = false;
+              return false;
             }
-            this.allpage = res.data.total_page;
-            this.get_dev_detail(params.cur_page);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -234,9 +251,10 @@ export default {
     },
     //详情
     get_dev_detail(page) {
+      let data_date = this.timestampToTime(this.revenue_time);
+      let statime = new Date(data_date).getTime() / 1000;
+      let endtime = statime * 1 + 86399;
       let params = new Object();
-      let statime = Date.parse(this.timestampToTime(this.revenue_time)) / 1000;
-      let endtime = statime + 86399;
       params.login_token = this.log_token;
       params.start_time = statime;
       params.end_time = endtime;
@@ -244,26 +262,27 @@ export default {
       alldevinformation(params)
         .then(res => {
           if (res.status == 0) {
-            for (let i = 0; i < this.income_detail.length; i++) {
-              for (let j = 0; j < res.data.dev_info_list.length; j++) {
-                if (
-                  this.income_detail[i].dev_sn ==
-                  res.data.dev_info_list[j].dev_sn
-                ) {
-                  this.income_detail[i].total_cap =
-                    res.data.dev_info_list[j].total_cap;
-                  this.income_detail[i].free_cap =
-                    res.data.dev_info_list[j].free_cap;
-                  this.income_detail[i].up_bandwidth =
-                    res.data.dev_info_list[j].up_bandwidth;
-                  this.income_detail[i].down_bandwidth =
-                    res.data.dev_info_list[j].down_bandwidth;
-                  this.income_detail[i].online_time =
-                    res.data.dev_info_list[j].online_time;
-                }
-              }
+            if (!res.data.dev_info_list || res.data.dev_info_list.length < 0) {
+              this.list_show = false;
+              return false;
             }
-            this.dev_income_list = this.income_detail;
+            let incomeobj = new Object();
+            res.data.dev_info_list.forEach((item, index) => {
+              let key = item.dev_sn;
+              let value = item;
+              incomeobj[key] = value;
+            });
+            this.income_detail.forEach((item, index) => {
+              let sn = item.dev_sn;
+              if (incomeobj[sn]) {
+                incomeobj[sn].com_power = item.com_power;
+                incomeobj[sn].dev_name = item.dev_name;
+                incomeobj[sn].dev_profit = item.dev_profit;
+                incomeobj[sn].dev_sn = item.dev_sn;
+                this.dev_income_list.push(incomeobj[sn]);
+              }
+            });
+            console.log(this.dev_income_list);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -290,12 +309,14 @@ export default {
     //事件戳转时间
     timestampToTime(timestamp) {
       var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
-      var Y = date.getFullYear() + "-";
+      var Y = date.getFullYear() + "/";
       var M =
         (date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "-";
-      var D = date.getDate() + " ";
+          : date.getMonth() + 1) + "/";
+      var D =
+        (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + " ";
+      // var D = date.getDate() + " ";
       var h = 0 + ":";
       var m = 0 + ":";
       var s = 0;
@@ -413,7 +434,7 @@ export default {
         text-align: left;
 
         img {
-          width: 18%;
+          width: 12%;
         }
         .content_body_top {
           display: flex;
@@ -423,10 +444,11 @@ export default {
           font-size: 0.28rem;
           font-weight: 600;
           span {
-            width: 2rem;
+            width: 3rem;
             display: flex;
             overflow: hidden;
-            align-items: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             img {
               margin-right: 0.1rem;
             }

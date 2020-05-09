@@ -1,6 +1,11 @@
 <template>
   <div class="all_income">
-    <navBar title="收益明细" left-arrow fixed @click-left="onClickLeft"></navBar>
+    <navBar
+      title="收益明细"
+      left-arrow
+      fixed
+      @click-left="onClickLeft"
+    ></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -35,7 +40,6 @@
             v-for="(item, index) in income_list"
             :key="index"
             accordion
-            @change="item_open(item)"
           >
             <van-collapse-item
               :title="'+' + (item.dev_profit / 100).toFixed(2) + 'gfm'"
@@ -44,7 +48,7 @@
             >
               <div class="income_bottom_top">
                 <span></span>
-                <p>{{devname }}</p>
+                <p>{{ devname }}</p>
               </div>
               <div class="income_bottom_con">
                 <div class="income_bottom_con_item con_item_left">
@@ -52,7 +56,7 @@
                   <p>
                     {{
                       (
-                        (devarrlist.total_cap - devarrlist.free_cap) /
+                        (item.total_cap - item.free_cap) /
                         1024 /
                         1024 /
                         1024
@@ -62,24 +66,18 @@
                 </div>
                 <div class="income_bottom_con_item con_item_center">
                   <p>上行带宽</p>
-                  <p>
-                    {{ (devarrlist.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
-                  </p>
+                  <p>{{ (item.up_bandwidth / 1024 / 1024).toFixed(2) }}Mbps</p>
                 </div>
                 <div class="income_bottom_con_item con_item_right">
                   <p>下行带宽</p>
                   <p>
-                    {{
-                      (devarrlist.down_bandwidth / 1024 / 1024).toFixed(2)
-                    }}Mbps
+                    {{ (item.down_bandwidth / 1024 / 1024).toFixed(2) }}Mbps
                   </p>
                 </div>
               </div>
               <div class="income_bottom_bot">
                 <div>算力：{{ item.com_power }}</div>
-                <div>
-                  在线时长：{{ (devarrlist.online_time / 3600).toFixed(2) }}h
-                </div>
+                <div>在线时长：{{ (item.online_time / 3600).toFixed(2) }}h</div>
               </div>
             </van-collapse-item>
           </van-collapse>
@@ -108,13 +106,19 @@ export default {
   data() {
     return {
       title: "收益明细",
-      devname:"",
+      devname: "",
       total_revenue: 0,
       activeNames: ["1"],
       showdev: false,
       dev_show: false,
-      income_list: [],
-      value11: 0,
+      income_list: [
+        {
+          dev_profit: 165,
+          date_stamp: 1588694400,
+          com_power: 56
+        }
+      ],
+      value11: 1,
       value22: 0,
       option1: [
         { text: "全部", value: 0 }
@@ -143,16 +147,9 @@ export default {
       starttime: 0,
       endtime: 0,
       page: 0,
-      slcsi: {},
+      slcsi: [],
       pagenum: 0,
       allpage: 1,
-      devarrlist: {
-        total_cap: 0,
-        free_cap: 0,
-        up_bandwidth: 0,
-        down_bandwidth: 0,
-        online_time: 0
-      },
       pullOptions: {
         isBottomRefresh: true,
         isTopRefresh: true,
@@ -178,6 +175,15 @@ export default {
         let date = new Date(time);
         return formatDate(date, "yyyy-MM-dd");
       }
+    }
+  },
+  watch: {
+    income_list: {
+      handler(newName, oldName) {
+        console.log(newName, oldName);
+        this.income_list = newName;
+      },
+      deep: true
     }
   },
   computed: {
@@ -220,7 +226,7 @@ export default {
     let date = new Date();
     this.value22 = date.getMonth() + 1;
     this.value11 = this.$route.query.allshou.dev_sn;
-    this.devname=this.$route.query.allshou.dev_name;
+    this.devname = this.$route.query.allshou.dev_name;
     this.changetime();
     //this.get_use_dev_list();
   },
@@ -231,7 +237,7 @@ export default {
       setTimeout(() => {
         //this.get_use_dev_list();
         if (this.value11 == 0) {
-          this.get_all_income(0);
+          // this.get_all_income(0);
           this.get_income_list(0);
         } else {
           this.get_dev_income(0);
@@ -248,7 +254,7 @@ export default {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
           if (this.value11 == 0) {
-            this.get_all_income(this.pagenum);
+            // this.get_all_income(this.pagenum);
             this.get_income_list(this.pagenum);
           } else {
             this.get_dev_income(this.pagenum);
@@ -262,46 +268,6 @@ export default {
         }
       }, 500);
     },
-    //获取用户设备列表
-    get_use_dev_list() {
-      let params = new Object();
-      params.login_token = this.log_token;
-      isbindinglist(params)
-        .then(res => {
-          if (res.status == 0) {
-            this.updateUser({ log_token: res.token_info.login_token });
-            res.data.bind_devinfo_list.forEach(item => {
-              let devobj = new Object();
-              devobj.text = item.dev_name;
-              devobj.value = item.dev_sn;
-              this.option1.push(devobj);
-              // if (item.dev_sn == this.$route.query.allshou.dev_sn) {
-              //   this.title = item.dev_name + " 收益明细";
-              // }
-            });
-          } else if (res.status == -17) {
-            this.rescount = 0;
-            Dialog.alert({
-              message: "账号在其它地方登录，请重新登录"
-            }).then(() => {
-              this.clearUser();
-              this.$router.push({ path: "/login" });
-            });
-          } else if (res.status == -13) {
-            this.rescount = 0;
-            if (res.err_code == 424) {
-              Toast({
-                message: "您的账户已被冻结，请联系相关工作人员",
-                duration: 3000
-              });
-              setTimeout(() => {
-                this.$router.push({ path: "/login" });
-              }, 3000);
-            }
-          }
-        })
-        .catch(error => {});
-    },
     //获取单台设备每日收益列表
     get_dev_income_day(page) {
       let params = new Object();
@@ -314,12 +280,11 @@ export default {
         .then(res => {
           if (res.status == 0) {
             if (params.cur_page == 0) {
-              this.income_list = res.data.dev_profit_list;
+              this.slcsi = res.data.dev_profit_list;
             } else {
-              this.income_list = this.income_list.concat(
-                res.data.dev_profit_list
-              );
+              this.slcsi = this.slcsi.concat(res.data.dev_profit_list);
             }
+            this.item_open(page);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -389,7 +354,7 @@ export default {
         })
         .catch(error => {}); //获取每天总收益
     },
-    //获取单台设备收益
+    //获取单台设备总收益
     get_dev_income(page) {
       let params = new Object();
       params.login_token = this.log_token;
@@ -473,7 +438,7 @@ export default {
     changedev() {
       this.income_list = [];
       if (this.value11 == 0) {
-        this.get_all_income(0);
+        // this.get_all_income(0);
         this.get_income_list(0);
       } else {
         this.get_dev_income(0);
@@ -503,7 +468,7 @@ export default {
       computeTime(y, this.value22);
       this.income_list = [];
       if (this.value11 == 0) {
-        this.get_all_income(0);
+        // this.get_all_income(0);
         this.get_income_list(0);
       } else {
         this.get_dev_income(0);
@@ -514,47 +479,37 @@ export default {
     onCancel_dev() {
       this.showdev = false;
     },
-    item_open(activeNames) {
-      console.log(activeNames);
-      console.log()
-      if (activeNames.date_stamp == this.slcsi.date_stamp) {
-        return false;
-      }
-      this.slcsi = activeNames;
-      let statime =
-        Date.parse(this.timestampToTime(this.slcsi.date_stamp)) / 1000;
-      let endtime = statime + 86399;
+    item_open(pagenum) {
       let params = new Object();
-
-      params.start_time = statime;
-      params.end_time = endtime;
-      // params.start_time = this.starttime;
-      // params.end_time = this.endtime;
       params.login_token = this.log_token;
-      params.cur_page = this.page;
+      params.start_time = this.starttime;
+      params.end_time = this.endtime;
+      params.cur_page = pagenum;
       params.dev_sn = this.value11;
-      console.log(params);
       devinformation(params)
         .then(res => {
           if (res.status == 0) {
-            this.devarrlist=res.data.dev_info_list[0];
-            console.log(this.devarrlist);
-            // for (let lewf of res.data.dev_info_list) {
-            //   if (
-            //     lewf.date_stamp > params.start_time &&
-            //     lewf.date_stamp <= params.end_time
-            //   ) {
-            //     this.devarrlist = lewf;
-            //     return false;
-            //   }
-            // }
-            // if (this.page >= res.data.total_page) {
-            //   return false;
-            // }
-            // this.page++;
-            // this.item_open();
-            this.$forceUpdate();
-          }else if (res.status == -17) {
+            let obje = {};
+            res.data.dev_info_list.forEach((item, index) => {
+              let key = this.eachTime(item.date_stamp);
+              let value = item;
+              obje[key] = value;
+            });
+            console.log(obje);
+            this.slcsi.forEach((item, index) => {
+              let item_tiem = this.eachTime(item.date_stamp);
+              console.log(item_tiem);
+              if (obje[item_tiem]) {
+                item.down_bandwidth = obje[item_tiem].down_bandwidth;
+                item.free_cap = obje[item_tiem].free_cap;
+                item.online_time = obje[item_tiem].online_time;
+                item.total_cap = obje[item_tiem].total_cap;
+                item.up_bandwidth = obje[item_tiem].up_bandwidth;
+              }
+            });
+            this.income_list = this.slcsi;
+            console.log(this.slcsi);
+          } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -590,6 +545,16 @@ export default {
       var m = 0 + ":";
       var s = 0;
       return Y + M + D + h + m + s;
+    },
+    eachTime(timestamp) {
+      var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate();
+      return Y + M + D;
     }
   },
   components: {

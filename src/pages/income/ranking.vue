@@ -67,7 +67,7 @@
                 }"
               >
                 <p class="item_p1">
-                  <b>{{ (item.profit_rank / 1000000).toFixed(6) }}</b>
+                  <b>{{ (item.profit_rank / 100).toFixed(2) }}</b>
                 </p>
                 <!-- <p>poc</p> -->
               </div>

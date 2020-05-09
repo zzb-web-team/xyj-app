@@ -42,7 +42,8 @@
             >
               <div class="content_left">
                 <p>{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</p>
-                <p>{{ item.total_value }}</p>
+                <!-- <p>{{ item.total_value }}</p> -->
+                <p>{{dev_details.dev_name}}</p>
               </div>
               <div class="content_right">
                 <p v-if="item.type == 201">等级提升</p>
