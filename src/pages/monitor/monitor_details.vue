@@ -360,7 +360,9 @@ export default {
       get_dev_cap_list(params)
         .then(res => {
           if (res.status == 0) {
-            this.updateUser({ log_token: res.data.token_info.token });
+            if (res.data.token_info) {
+              this.updateUser({ log_token: res.data.token_info.token });
+            }
             if (res.err_code == 0) {
               this.cap.total = (res.data.total_cap / 1073741824).toFixed(2);
               this.cap.free = (res.data.free_cap / 1073741824).toFixed(2);
