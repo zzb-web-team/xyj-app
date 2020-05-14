@@ -49,11 +49,11 @@
           </div>
           <div class="device_bandwidth">
             <span>
-              上行{{ up_bandwidth }}
+              上行:{{ up_bandwidth }}Mbps
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </span>
             <span>
-              下行{{ down_bandwidth }}
+              下行:{{ down_bandwidth }}Mbps
               <img src="../../assets/images/per_icon_arrow.png" alt />
             </span>
           </div>
@@ -107,7 +107,7 @@
             <div class="user_con_item">
               <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
-              <div class="con_item_r">{{ item.dev_type }}</div>
+              <div class="con_item_r">第{{ item.dev_type }}代西柚机</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
@@ -141,7 +141,8 @@ import {
   restarts, //重启
   reClose,
   bindingmill, //解绑设备
-  setDevName //设置设备名称
+  setDevName, //设置设备名称
+  devinformation
 } from "../../common/js/api.js";
 import { err } from "../../common/js/status";
 import { error } from "util";
@@ -168,14 +169,15 @@ export default {
       show: false,
       devsta: false,
       minerInfoArr: [],
-      up_bandwidth: "5092Mbps",
-      down_bandwidth: "1052Mbps",
+      up_bandwidth: "",
+      down_bandwidth: "",
       dev_sn: ""
     };
   },
 
   mounted() {
     this.scan(0);
+    this.band_width();
   },
   computed: {
     ...mapState({
@@ -261,9 +263,8 @@ export default {
                 } else {
                   this.currentRate =
                     (
-
                       res.data.dev_info_list[0].free_cap /
-                        res.data.dev_info_list[0].total_cap
+                      res.data.dev_info_list[0].total_cap
                     ).toFixed(4) * 100;
                 }
               } else {
@@ -319,6 +320,56 @@ export default {
             // Toast("网络错误，请重新请求");
           });
       }
+    },
+    band_width() {
+      let params = new Object();
+      let starttime =
+        new Date(new Date().toLocaleDateString()).getTime() / 1000 - 86400;
+      let endtime = starttime + 86399;
+      params.login_token = this.log_token;
+      params.start_time = starttime;
+      params.end_time = endtime;
+      params.cur_page = 0;
+      params.dev_sn = this.devsn;
+      devinformation(params)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.token });
+            this.up_bandwidth = (
+              res.data.dev_info_list[0].up_bandwidth /
+              1024 /
+              1024
+            ).toFixed(2);
+            this.down_bandwidth = (
+              res.data.dev_info_list[0].down_bandwidth /
+              1024 /
+              1024
+            ).toFixed(2);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     go_monitor() {
       this.$router.push({
