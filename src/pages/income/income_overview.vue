@@ -51,7 +51,12 @@
           >
             <div class="content_body_top" @click="go_income_list(item)">
               <div>
-                <img src="../../assets/images/income_dev_name.png" alt />
+                <img
+                  v-if="item.cp_value >= 0"
+                  src="../../assets/images/income_dev_name.png"
+                  alt
+                />
+                <img v-else src="../../assets/images/income_dev_name_hui.png" alt />
                 {{ item.dev_name }}
               </div>
               <img src="../../assets/images/per_icon_arrow.png" alt />
@@ -77,7 +82,16 @@
                   'pointer-events': item.cp_value >= 0 ? 'auto' : 'none'
                 }"
               >
-                <img src="../../assets/images/income_suanli_new.png" alt />
+                <img
+                  v-if="item.cp_value >= 0"
+                  src="../../assets/images/income_suanli_new.png"
+                  alt
+                />
+                <img
+                  v-else
+                  src="../../assets/images/income_suanli_new_hui.png"
+                  alt
+                />
                 <div class="content_body_bottom_right_detail">
                   <p>算力</p>
                   <p>{{ item.cp_value >= 0 ? item.cp_value : "--" }}</p>
@@ -114,6 +128,7 @@ export default {
       all_income: 0,
       last_income: 0,
       weak_income: 0,
+      page: 0,
       pullOptions: {
         isBottomRefresh: true,
         isTopRefresh: true,
@@ -169,7 +184,8 @@ export default {
         // }
       ],
       user_dev_list: [],
-      demo_minerInfo: []
+      demo_minerInfo: [],
+      conval_list: []
     };
   },
   computed: {
@@ -362,6 +378,7 @@ export default {
     //获取算力值
     get_con(num) {
       let params = new Object();
+      params.page = num;
       params.login_token = this.log_token;
       get_app_dev_con_val(params)
         .then(res => {
@@ -369,10 +386,16 @@ export default {
             this.updateUser({ log_token: res.data.token_info.token });
           }
           if (num == 0) {
-            this.minerInfo = [];
+            this.conval_list = res.data.dev_value_list;
+          } else {
+            this.conval_list = this.conval_list.concat(res.data.dev_value_list);
           }
+          // if (res.data.dev_value_list.xxx != 0) {
+          //   this.page++;
+          //   this.get_con(this.page);
+          // }
           let obje = {};
-          res.data.dev_value_list.forEach((item, index) => {
+           this.conval_list.forEach((item, index) => {
             let key = item.dev_sn;
             let value = item;
             obje[key] = value;
