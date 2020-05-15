@@ -20,10 +20,17 @@
             </div>
             <div class="codfe">
               <template v-if="YzmStatus">
-                <van-button class="codeYzm" :disabled="timeout" @click="getCode()"></van-button>
+                <van-button
+                  class="codeYzm"
+                  :disabled="timeout"
+                  @click="getCode()"
+                ></van-button>
               </template>
               <template v-else>
-                <van-button class="codeYzm" v-bind:text="count + 'S'"></van-button>
+                <van-button
+                  class="codeYzm"
+                  v-bind:text="count + 'S'"
+                ></van-button>
               </template>
             </div>
           </div>
@@ -50,7 +57,9 @@
             <div
               class="van-field__error-message"
               v-show="errors.has('yzm') && yzmFlag.touched"
-            >{{ errors.first("yzm") }}</div>
+            >
+              {{ errors.first("yzm") }}
+            </div>
           </div>
         </div>
         <div class="get_verification_code">
@@ -278,8 +287,7 @@ export default {
                                 }
                               }
                             })
-                            .catch(error => {
-                            });
+                            .catch(error => {});
                           this.$router.push({
                             path: "/first_bind"
                           });
@@ -358,8 +366,7 @@ export default {
                                 }
                               }
                             })
-                            .catch(error => {
-                            });
+                            .catch(error => {});
                           this.$router.push({
                             path: "/dynamic_node"
                           });
@@ -411,6 +418,7 @@ export default {
                 }
               })
               .catch(error => {
+                console.log(error);
                 this.repeats = 0;
                 this.rescount++;
                 this.goNext();
@@ -487,6 +495,7 @@ export default {
             }
           })
           .catch(error => {
+            console.log(error);
           });
       }
     },

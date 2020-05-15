@@ -73,11 +73,14 @@
               <div
                 class="content_body_bottom_right"
                 @click="go_calculation_details(item)"
+                v-bind:style="{
+                  'pointer-events': item.cp_value >= 0 ? 'auto' : 'none'
+                }"
               >
                 <img src="../../assets/images/income_suanli_new.png" alt />
                 <div class="content_body_bottom_right_detail">
                   <p>算力</p>
-                  <p>{{ item.cp_value }}</p>
+                  <p>{{ item.cp_value >= 0 ? item.cp_value : "--" }}</p>
                 </div>
               </div>
             </div>
@@ -100,7 +103,8 @@ import {
   getuserdevlist,
   query_node_total_profit_info,
   get_app_dev_con_val,
-  isbindinglist
+  isbindinglist,
+  getdevhistoricalname
 } from "../../common/js/api";
 import { Toast, Dialog } from "vant";
 export default {
@@ -226,20 +230,25 @@ export default {
     },
     get_use_dev_list() {
       let params = new Object();
+      let nowtime = new Date(new Date().toLocaleDateString());
+      let starttime = nowtime.setTime(
+        nowtime.getTime() - 3600 * 1000 * 24 * 90
+      );
       params.login_token = this.log_token;
-
-      isbindinglist(params)
+      params.start_ts = starttime / 1000;
+      params.end_ts = Date.parse(new Date()) / 1000;
+      getdevhistoricalname(params)
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.token_info.login_token });
-            this.user_dev_list=res.data.bind_devinfo_list;
+            this.user_dev_list = res.data;
             // res.data.bind_devinfo_list.forEach(item => {
             //   let devobj = new Object();
             //   devobj.dev_name = item.dev_name;
             //   devobj.dev_sn = item.dev_sn;
             //   this.user_dev_list.push(devobj);
             // });
-             this.get_con();
+            this.get_con();
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -369,10 +378,10 @@ export default {
             obje[key] = value;
             obje[key].dev_name = "";
           });
-           this.user_dev_list.forEach((deem) => {
-            let uev_sn=deem.dev_sn;
-             if (obje[uev_sn]) {
-               obje[uev_sn].dev_name = deem.dev_name;
+          this.user_dev_list.forEach(deem => {
+            let uev_sn = deem.dev_sn;
+            if (obje[uev_sn]) {
+              obje[uev_sn].dev_name = deem.dev_name;
             }
           });
           this.demo_minerInfo.forEach((adme, indexs) => {
