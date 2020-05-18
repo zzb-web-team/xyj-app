@@ -12,7 +12,7 @@
         <p>累计收益(gfm)</p>
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
-      <div class="income_con_btn" v-show="income_list.length">
+      <div class="income_con_btn">
         <van-dropdown-menu>
           <!-- <van-dropdown-item
             v-model="value11"

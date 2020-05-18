@@ -17,7 +17,7 @@
       </div>
     </van-nav-bar>
     <!--  -->
-    <div class="income_con" v-if="income_list.length > 0">
+    <div class="income_con" >
       <div class="income_con_top">
         <p>积分()</p>
         <p class="dev_num">{{ total_revenue }}</p>
@@ -45,7 +45,7 @@
         v-on:loadBottom="loadBottom"
         :style="{ height: scrollerHeight }"
       >
-        <div class="incon_con_body">
+        <div class="incon_con_body" v-if="income_list.length > 0">
           <div
             class="incon_con_body_item"
             v-for="(item, index) in income_list"
@@ -67,9 +67,10 @@
             </div>
           </div>
         </div>
+      <van-empty image="search" description="暂无数据" v-else />
       </vuu-pull>
     </div>
-    <van-empty image="search" description="暂无数据" v-else />
+
   </div>
 </template>
 
@@ -475,7 +476,7 @@ export default {
   color: #ffffff;
 }
 /deep/.van-empty {
-  margin-top: 4rem;
+  margin-top: 1rem;
 }
 .all_income {
   width: 100%;

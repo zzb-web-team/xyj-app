@@ -228,3 +228,7 @@ body {
 .van-nav-bar .van-icon {
     margin-top: 0.4rem;
 }
+
+.node_nodata>.van-empty__image {
+    margin-top: -3rem;
+}

@@ -13,7 +13,7 @@
         <p>{{ dev_details.dev_name }}</p>
       </div>
 
-      <div class="calculation_bottom" v-if="node_list.length > 0">
+      <div class="calculation_bottom">
         <van-dropdown-menu>
           <van-dropdown-item
             v-model="value1"
@@ -34,7 +34,7 @@
           v-on:loadBottom="loadBottom"
           :style="{ height: scrollerHeight }"
         >
-          <div class="pull_con">
+          <div class="pull_con" v-if="node_list.length > 0">
             <div
               class="calculation_content"
               v-for="(item, index) in node_list"
@@ -43,7 +43,7 @@
               <div class="content_left">
                 <p>{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</p>
                 <!-- <p>{{ item.total_value }}</p> -->
-                <p>{{dev_details.dev_name}}</p>
+                <p>{{ dev_details.dev_name }}</p>
               </div>
               <div class="content_right">
                 <p v-if="item.type == 201">等级提升</p>
@@ -56,10 +56,10 @@
               </div>
             </div>
           </div>
+
+          <van-empty description="暂无数据" v-else />
         </vuu-pull>
       </div>
-
-      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -329,6 +329,8 @@ export default {
   .content {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
     .calculation_top {
       width: 100%;
       height: 24.5%;
@@ -347,13 +349,14 @@ export default {
       }
     }
     .calculation_bottom {
-      // height: 77.5%;
+      height: 75.5%;
       font-size: 0.24rem;
       border-radius: 0.2rem 0.2rem 0 0;
       background: #f8fafb;
       width: 100%;
       position: relative;
       top: -2%;
+      // flex: 1;
       .pull_con {
         overflow-x: hidden;
         overflow-y: scroll;

@@ -97,9 +97,8 @@
             v-on:loadBottom="loadBottom"
             :style="{ height: scrollerHeight }"
           >
-            <div class="pull_con">
+            <div class="pull_con" v-if="datalist.length > 0">
               <div
-                v-if="datalist.length > 0"
                 class="calculation_bottom_con_body"
                 v-for="(item, index) in datalist"
                 :key="index"
@@ -118,9 +117,8 @@
                   <span>{{ item.time_stamp | formatDate }}</span>
                 </div>
               </div>
-
-              <van-empty description="暂无数据" v-else />
             </div>
+            <van-empty class="node_nodata" description="暂无数据" v-else />
           </vuu-pull>
         </div>
       </div>
