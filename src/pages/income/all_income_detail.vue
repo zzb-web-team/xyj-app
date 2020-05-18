@@ -191,7 +191,11 @@ export default {
     //下拉刷新
     loadTop() {
       setTimeout(() => {
-        this.get_income(0);
+        if (this.dev_sn == 0) {
+          this.get_income(0);
+        } else {
+          this.get_dev_income_day(0);
+        }
         if (this.$refs.vuuPull.closeLoadTop) {
           this.$refs.vuuPull.closeLoadTop();
         }
@@ -202,7 +206,12 @@ export default {
       setTimeout(() => {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
-          this.get_income(this.pagenum);
+
+          if (this.dev_sn == 0) {
+            this.get_income(this.pagenum);
+          } else {
+            this.get_dev_income_day(this.pagenum);
+          }
         } else {
           return false;
         }
