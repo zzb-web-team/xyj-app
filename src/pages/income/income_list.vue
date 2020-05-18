@@ -479,6 +479,7 @@ export default {
     onCancel_dev() {
       this.showdev = false;
     },
+    //单台设备详情
     item_open(pagenum) {
       let params = new Object();
       params.login_token = this.log_token;

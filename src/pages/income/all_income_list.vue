@@ -398,9 +398,7 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.total_revenue = (res.data.user_total_profit / 100).toFixed(
-              2
-            );
+            this.total_revenue = (res.data.user_total_profit / 100).toFixed(2);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -453,7 +451,7 @@ export default {
     go_income_detail(val) {
       this.$router.push({
         path: "/all_income_detail",
-        query: { allshou: val }
+        query: { allshou: val, sn: this.value11 }
       });
     },
     //下拉菜单--设备

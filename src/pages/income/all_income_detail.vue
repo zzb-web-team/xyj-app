@@ -87,7 +87,12 @@
 <script>
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
-import { alldevinformation, alldevrevenue } from "../../common/js/api";
+import {
+  alldevinformation,
+  alldevrevenue,
+  devrevenue,
+  devinformation
+} from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
 import { mapState, mapMutations } from "vuex";
@@ -102,6 +107,8 @@ export default {
       income_detail: [],
       pagenum: 0,
       allpage: 1,
+      dev_sn: 0,
+      slcsi: [],
       pullOptions: {
         isBottomRefresh: true,
         isTopRefresh: true,
@@ -170,8 +177,14 @@ export default {
     this.total_revenue = (
       this.$route.query.allshou.user_total_profit / 100
     ).toFixed(2);
+    this.dev_sn = this.$route.query.sn;
     this.revenue_time = this.$route.query.allshou.date_stamp;
-    this.get_income(0);
+    console.log(this.dev_sn);
+    if (this.dev_sn == 0) {
+      this.get_income(0);
+    } else {
+      this.get_dev_income_day(0);
+    }
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
@@ -306,6 +319,107 @@ export default {
         })
         .catch();
     },
+    //获取单台设备每日收益列表
+    get_dev_income_day(page) {
+      let params = new Object();
+      let data_date = this.timestampToTime(this.revenue_time);
+      let statime = new Date(data_date).getTime() / 1000;
+      let endtime = statime * 1 + 86399;
+      params.login_token = this.log_token;
+      params.start_time = statime;
+      params.end_time = endtime;
+      params.cur_page = page;
+      params.dev_sn = this.dev_sn;
+      devrevenue(params)
+        .then(res => {
+          if (res.status == 0) {
+            if (params.cur_page == 0) {
+              this.slcsi = res.data.dev_profit_list;
+            } else {
+              this.slcsi = this.slcsi.concat(res.data.dev_profit_list);
+            }
+            this.item_open(page);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
+    },
+    //单台设备详情
+    item_open(pagenum) {
+      let params = new Object();
+      let data_date = this.timestampToTime(this.revenue_time);
+      let statime = new Date(data_date).getTime() / 1000;
+      let endtime = statime * 1 + 86399;
+      params.login_token = this.log_token;
+      params.start_time = statime;
+      params.end_time = endtime;
+      params.cur_page = pagenum;
+      params.dev_sn = this.dev_sn;
+      devinformation(params)
+        .then(res => {
+          if (res.status == 0) {
+            let obje = {};
+            res.data.dev_info_list.forEach((item, index) => {
+              let key = this.eachTime(item.date_stamp);
+              let value = item;
+              obje[key] = value;
+            });
+            console.log(obje);
+            this.slcsi.forEach((item, index) => {
+              let item_tiem = this.eachTime(item.date_stamp);
+              console.log(item_tiem);
+              if (obje[item_tiem]) {
+                item.down_bandwidth = obje[item_tiem].down_bandwidth;
+                item.free_cap = obje[item_tiem].free_cap;
+                item.online_time = obje[item_tiem].online_time;
+                item.total_cap = obje[item_tiem].total_cap;
+                item.up_bandwidth = obje[item_tiem].up_bandwidth;
+                item.dev_name = res.data.dev_name;
+              }
+            });
+            this.dev_income_list = this.slcsi;
+            console.log(this.dev_income_list);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
+    },
     //事件戳转时间
     timestampToTime(timestamp) {
       var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -321,6 +435,16 @@ export default {
       var m = 0 + ":";
       var s = 0;
       return Y + M + D + h + m + s;
+    },
+    eachTime(timestamp) {
+      var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate();
+      return Y + M + D;
     },
     onClickLeft() {
       this.$router.go(-1);
