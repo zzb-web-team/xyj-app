@@ -107,7 +107,7 @@
             <div class="user_con_item">
               <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
-              <div class="con_item_r">第{{ item.dev_type }}代西柚机</div>
+              <div class="con_item_r">{{item.dev_type==1?"AMS805":"RK3328"}}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
