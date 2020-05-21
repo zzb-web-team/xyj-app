@@ -153,7 +153,7 @@
           <p>签到成功</p>
           <p class="add_num">
             算力
-            <span>+1</span>
+            <span>+{{ gongxianzhi }}</span>
           </p>
         </div>
       </div>
@@ -171,7 +171,8 @@ import {
   loginout,
   sign,
   authorization,
-  query_daily_sign
+  query_daily_sign,
+  get_sign_value
 } from "../../common/js/api.js";
 import {
   logout,
@@ -192,6 +193,7 @@ export default {
       active: 4,
       isLoading: false,
       show: false,
+      gongxianzhi: 0,
       all_income: 0,
       system: "",
       flag: false
@@ -241,7 +243,7 @@ export default {
       query_daily_sign(params)
         .then(res => {
           if (res.status == 0) {
-             this.updateUser({
+            this.updateUser({
               log_token: res.data.login_token
             });
             //sign_state == 0代表未签到
@@ -406,11 +408,7 @@ export default {
             this.updateUser({
               log_token: res.data.login_token
             });
-            this.show = true;
-            this.flag = true;
-            setInterval(() => {
-              this.show = false;
-            }, 3000);
+            this.getgxz();
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -436,6 +434,47 @@ export default {
         })
         .catch(error => {
           // console.log(error);
+        });
+    },
+    //获取颠倒所得贡献值
+    getgxz() {
+      let params = new Object();
+      params.login_token = this.log_token;
+      get_sign_value(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({
+              log_token: res.data.token_info.token
+            });
+            this.gongxianzhi = res.data.cp_sign_value;
+            this.show = true;
+            this.flag = true;
+            setTimeout(() => {
+              this.show = false;
+            }, 3000);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
     //个人中心
