@@ -981,8 +981,8 @@ export default {
   height: 100%;
   background-color: #f8fafb;
   .monitor_y {
-    height: 667px;
-    overflow-y: scroll;
+    height: 100%;
+    // overflow-y: scroll;
     margin-top: 0.92rem;
   }
   .monitor_top {

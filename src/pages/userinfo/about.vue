@@ -13,7 +13,7 @@
             </div>
             <div class="app_name">
               <span class="app_name_left">西柚APP</span>
-              <span class="app_name_right">V 1.3.1.148</span>
+              <span class="app_name_right">V 1.3.1.150</span>
             </div>
             <p>更新于 2020-05-18</p>
           </div>

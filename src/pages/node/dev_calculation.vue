@@ -138,10 +138,13 @@ export default {
     //上拉加载
     loadBottom() {
       setTimeout(() => {
-        if (this.pagenum < this.allpage) {
+        if (this.pagenum < this.allpage - 1) {
           this.pagenum++;
           this.device(this.pagenum);
         } else {
+          if (this.$refs.vuuPull.closeLoadBottom) {
+            this.$refs.vuuPull.closeLoadBottom();
+          }
           return false;
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
@@ -164,6 +167,7 @@ export default {
               if (res.err_code == 0) {
                 this.allpage = res.data.total_page; //总页码
                 this.pagenum = res.data.page_num;
+
                 if (params.page_num == 0) {
                   this.demo_minerInfo = res.data.bind_devinfo_list;
                 } else {

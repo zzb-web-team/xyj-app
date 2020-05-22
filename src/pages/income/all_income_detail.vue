@@ -1,11 +1,6 @@
 <template>
   <div class="all_income">
-    <navBar
-      title="收益明细"
-      left-arrow
-      fixed
-      @click-left="onClickLeft"
-    ></navBar>
+    <navBar title="收益明细" left-arrow @click-left="onClickLeft"></navBar>
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
@@ -145,23 +140,7 @@ export default {
       charge_psd: state => state.user.charge_psd
     }),
     scrollerHeight: function() {
-      if (window.innerWidth > 375) {
-        return (
-          window.innerHeight -
-          window.innerHeight * 0.245 -
-          0.92 * (window.deviceWidth / 7.5) -
-          50 +
-          "px"
-        );
-      } else {
-        return (
-          window.innerHeight -
-          0.92 * 50 -
-          window.innerHeight * 0.245 -
-          50 +
-          "px"
-        );
-      }
+      return window.innerHeight - window.innerHeight * 0.245 + "px";
     }
   },
   watch: {
@@ -530,9 +509,11 @@ export default {
   height: 100%;
   background-color: #fff;
   .income_con {
-    margin-top: 0.92rem;
+    // margin-top: 0.92rem;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     .income_con_top {
       width: 100%;
       height: 24.5%;
@@ -577,12 +558,15 @@ export default {
           font-size: 0.28rem;
           font-weight: 600;
           span {
+            display: inline-block;
             width: 3rem;
             display: flex;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             img {
+              width: 0.42rem;
+              height: 0.42rem;
               margin-right: 0.1rem;
             }
           }
@@ -592,7 +576,8 @@ export default {
             color: #666666;
             justify-content: flex-end;
             img {
-              width: 20%;
+              width: 0.42rem;
+              height: 0.42rem;
               margin-left: 0.1rem;
               margin-right: 0;
             }
@@ -613,7 +598,9 @@ export default {
             border: solid 0.01rem #eeeeee;
             border-radius: 0.1rem;
             img {
-              width: 28%;
+               width: 0.42rem;
+              height: 0.42rem;
+              margin-right: 0.1rem;
             }
             .content_body_bottom_right_detail {
               width: 96%;

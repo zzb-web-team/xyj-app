@@ -18,7 +18,7 @@
     </van-nav-bar>
     <!--  -->
     <div class="content">
-      <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop">
+      <!-- <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop"> -->
         <div class="content_top">
           <div class="content_top_all" @click="go_all_income_list">
             <p>
@@ -39,10 +39,11 @@
           </div>
         </div>
 
+  <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop" :style="{ height: scrollerHeight }">
         <div
           class="content_body"
           v-if="dev_income_list.length > 0"
-          :style="{ height: scrollerHeight }"
+
         >
           <div
             class="content_con"
@@ -200,9 +201,9 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight - 4.52 * (window.deviceWidth / 7.5) + "px";
+        return window.innerHeight -3.6 * (window.deviceWidth / 7.5) + "px";
       } else {
-        return window.innerHeight - 4.52 * 50 + "px";
+        return window.innerHeight - 3.6 * 50 + "px";
       }
     }
   },
@@ -471,7 +472,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
-  // overflow: hidden;
+  overflow: hidden;
   .titrights {
     margin-right: 0.2rem;
     color: #666666;
@@ -529,6 +530,7 @@ export default {
       width: 100%;
       overflow-x: hidden;
       overflow-y: scroll;
+      padding-bottom: 1.5rem;
       .content_con {
         width: 84%;
         padding: 4%;

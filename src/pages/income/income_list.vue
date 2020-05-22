@@ -199,17 +199,12 @@ export default {
         return (
           window.innerHeight -
           window.innerHeight * 0.245 -
-          0.92 * (window.deviceWidth / 7.5) -
-          50 +
+          0.92 * (window.deviceWidth / 7.5) +
           "px"
         );
       } else {
         return (
-          window.innerHeight -
-          0.92 * 50 -
-          window.innerHeight * 0.245 -
-          50 +
-          "px"
+          window.innerHeight - 0.92 * 50 - window.innerHeight * 0.245 + "px"
         );
       }
     }
@@ -621,6 +616,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  overflow: hidden;
   .income_con {
     margin-top: 0.92rem;
     height: 100%;

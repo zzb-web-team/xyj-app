@@ -12,7 +12,7 @@
         <p>累计收益(gfm)</p>
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
-      <div class="income_con_btn" >
+      <div class="income_con_btn">
         <van-dropdown-menu>
           <van-dropdown-item
             v-model="value11"
@@ -142,23 +142,7 @@ export default {
       charge_psd: state => state.user.charge_psd
     }),
     scrollerHeight: function() {
-      if (window.innerWidth > 375) {
-        return (
-          window.innerHeight -
-          window.innerHeight * 0.245 -
-          0.92 * (window.deviceWidth / 7.5) -
-          50 +
-          "px"
-        );
-      } else {
-        return (
-          window.innerHeight -
-          0.92 * 50 -
-          window.innerHeight * 0.245 -
-          50 +
-          "px"
-        );
-      }
+      return window.innerHeight - window.innerHeight * 0.245-50 + "px";
     }
   },
   mounted() {
@@ -513,7 +497,7 @@ export default {
   border: 1px solid #eeeeee;
 }
 /deep/.van-nav-bar {
-  z-index: 2 !important;
+  z-index: 16 !important;
   color: #fff;
   background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
 }
@@ -524,15 +508,16 @@ export default {
 /deep/.van-icon-arrow-left:before {
   color: #ffffff;
 }
-/deep/.van-empty__image{
+/deep/.van-empty__image {
   margin-top: 1rem;
 }
 .all_income {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  overflow: hidden;
   .income_con {
-    margin-top: 0.92rem;
+    // margin-top: 0.92rem;
     height: 100%;
     .income_con_top {
       width: 100%;
