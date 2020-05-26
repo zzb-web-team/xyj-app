@@ -139,10 +139,10 @@ export default {
                 if (res.status == 0) {
                   if (res.err_code == 0) {
                     this.rescount = 0;
-                    this.updateUser({
-                      log_token: res.data.login_token,
-                      user_name: this.userName
-                    });
+                    // this.updateUser({
+                    //   log_token: res.data.login_token,
+                    //   user_name: this.userName
+                    // });
                     // if (res.err_code == 0) {
                     Toast.success({
                       message: "修改成功",

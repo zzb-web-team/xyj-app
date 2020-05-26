@@ -155,9 +155,9 @@ export default {
             this.repeats = 0;
             if (res.status == 0) {
               this.rescount = 0;
-              this.updateUser({
-                log_token: res.data.login_token
-              });
+              // this.updateUser({
+              //   log_token: res.data.login_token
+              // });
               Toast({
                 message: "修改成功",
                 duration: 800
