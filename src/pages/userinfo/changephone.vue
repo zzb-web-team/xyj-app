@@ -67,7 +67,7 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { Toast, Dialog } from "vant";
-import { get_code, settelnum, logout } from "../../common/js/api.js";
+import { get_code, settelnum, logout, login } from "../../common/js/api.js";
 import { err } from "../../common/js/status";
 
 export default {
@@ -124,7 +124,7 @@ export default {
           return false;
         }
         let params = new Object();
-        let changetelnumflag = 0;
+        let changetelnumflag = 1;
         params.user_tel = this.tel;
         params.change_telnum_flag = changetelnumflag;
         params.login_token = this.log_token; //token;
@@ -200,47 +200,34 @@ export default {
           Toast(`请求超时，请稍后重试`);
           return false;
         }
-
-        //修改手机号码
-        let params = new Object();
-        params.tel_num = this.tel; //新的手机号
-        params.user_passwd = this.YzmCodeInput; //验证码
-        params.login_token = this.log_token; //token;
-        settelnum(params)
+        let param = new Object();
+        param.user_name = this.tel;
+        param.user_passwd = this.YzmCodeInput;
+        param.login_type = 1;
+        login(param)
           .then(res => {
-            this.repeats = 0;
-             this.$router.push({ path: "/updatephone" });
-            if (res.status == 0) {
-              this.rescount = 0;
-              // if (res.err_code == 0) {
-              //退出登录
-              // let param = new Object();
-              // param.login_token = this.log_token;
-              // logout(param)
-              //   .then(res => {
-              //     this.repeats = 0;
-              //     if (res.status == 0) {
-              //       this.rescount = 0;
-              //       // if (res.err_code == 0) {
-              //       this.clearUser();
-              //       this.$router.push({ path: "/" });
-              //     } else if (res.status == -5) {
-              //       this.rescount++;
-              //       this.goLink();
-              //     }
-              //   })
-              //   .catch(error => {
-              //     this.repeats = 0;
-              //     this.rescount++;
-              //     this.goLink();
-              //     // Toast("网络错误，请重新请求");
-              //   });
+            if (res.status == 0 || res.status == 1) {
+              this.updateUser({
+                log_token: res.data.login_token
+              });
+              this.$router.push({ path: "/updatephone" });
             } else if (res.status == -5) {
               this.rescount++;
-              this.goLink();
+              this.goNext();
+            } else if (res.status == -13) {
+              this.rescount = 0;
+              if (res.err_code == 424) {
+                Toast(`您的账户已被冻结，请联系相关工作人员`);
+              }
+            } else if (res.status == -15) {
+              this.rescount = 0;
+              if (res.err_code == 405) {
+                this.rescount = 0;
+                Toast(`验证码错误`);
+              }
             } else if (res.status == -900) {
               this.rescount = 0;
-              this.$router.push({ path: "/login" });
+              Toast(`验证码不能为空`);
             } else {
               this.rescount = 0;
               const tip = this.$backStatusMap[res.status] || err[res.status];
@@ -248,11 +235,8 @@ export default {
               this.$toast(str);
             }
           })
-          .catch(error => {
-            this.repeats = 0;
-            this.rescount++;
-            this.goLink();
-          });
+          .catch(error => {});
+
       }
     },
     resetDiv() {
