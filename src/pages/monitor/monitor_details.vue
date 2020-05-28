@@ -816,7 +816,7 @@ export default {
               label: {
                 position: "middle", //将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
                 formatter: function(params) {
-                  return `${params.value} Mb/s`;
+                  return `${params.value} Mbps`;
                 }
               },
 
