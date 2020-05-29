@@ -138,16 +138,17 @@ export default {
                 this.repeats = 0;
                 if (res.status == 0) {
                   if (res.err_code == 0) {
-                    this.rescount = 0;
-                    // this.updateUser({
-                    //   log_token: res.data.login_token,
-                    //   user_name: this.userName
-                    // });
-                    // if (res.err_code == 0) {
+                    console.log(param.col_value);
+                    this.updateUser({
+                      log_token: res.data.login_token,
+                      user_name: param.col_value
+                    });
+                      console.log(this.login_token,this.user_name);
                     Toast.success({
                       message: "修改成功",
                       duration: 800
                     });
+                    this.rescount = 0;
                     setTimeout(() => {
                       //修改完成之后回到个人中心
                       this.$router.push({

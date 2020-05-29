@@ -223,6 +223,7 @@ export default {
       this.query_sign();
       this.get_all_income(90);
     }
+    console.log(this.user_name);
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
