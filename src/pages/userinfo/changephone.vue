@@ -124,10 +124,10 @@ export default {
           return false;
         }
         let params = new Object();
-        let changetelnumflag = 1;
+        let changetelnumflag = 0;
         params.user_tel = this.tel;
         params.change_telnum_flag = changetelnumflag;
-        params.login_token = this.log_token; //token;
+       // params.login_token = this.log_token; //token;
         get_code(params)
           .then(res => {
             this.repeats = 0;
