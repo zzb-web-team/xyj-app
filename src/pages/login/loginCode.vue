@@ -16,7 +16,7 @@
         <div class="login_input">
           <div class="tel">
             <div>
-              <i>已发送至{{ tel }}(十分钟之内有效)</i>
+              <i class="telnum">已发送至{{ tel }}(60秒内有效)</i>
             </div>
             <div class="codfe">
               <template v-if="YzmStatus">
@@ -599,6 +599,9 @@ body {
           margin-bottom: 0.16rem;
           display: flex;
           justify-content: space-between;
+          .telnum{
+            font-size: 0.26rem;
+          }
           .codfe {
             margin-top: -0.1rem;
           }

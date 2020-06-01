@@ -79,7 +79,6 @@ export default {
       active: 2,
       timer: null,
       YzmStatus: true,
-      phoneNum: "",
       YzmCode: "",
       tel: "",
       YzmCodeInput: "",
@@ -95,8 +94,7 @@ export default {
     charge_psd: state => state.user.charge_psd
   }),
   mounted: function() {
-    this.phoneNum = this.$route.params.usertel;
-    this.tel = this.$route.params.usertel;
+    this.tel = this.phone_number;
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
