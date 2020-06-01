@@ -110,7 +110,7 @@
 import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import { Toast, Dialog } from "vant";
-import { updateUserinfo, get_code } from "../../common/js/api.js";
+import { updateUserinfo, get_code, login } from "../../common/js/api.js";
 import { err } from "../../common/js/status";
 
 export default {
@@ -247,7 +247,7 @@ export default {
               }, 1000);
             } else if (res.status == -5) {
               this.rescount++;
-              this.goLink();
+              this.setpwd();
             } else {
               const tip = this.$backStatusMap[res.status] || err[res.status];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
@@ -257,7 +257,7 @@ export default {
           .catch(error => {
             this.repeats = 0;
             this.rescount++;
-            this.goLink();
+            this.setpwd();
             // Toast("网络错误，请重新请求");
           });
       }
@@ -278,7 +278,8 @@ export default {
         //   return false;
         // }
         //检验验证码格式是否正确
-        if (this.YzmCodeInput === "") {
+        console.log(this.YzmCodeInput);
+        if (this.YzmCodeInput == "") {
           Toast("验证码不能为空");
         } else {
           let reg = /^\d{6}$/;
@@ -286,13 +287,17 @@ export default {
             Toast("验证码为6位数字，请检查验证码格式");
           } else {
             let param = new Object();
-            param.user_name = this.$route.query.phoneNum;
+            param.user_name = this.phone_number;
             param.user_passwd = this.YzmCodeInput;
             param.login_type = 1;
+            this.show = false;
             login(param)
               .then(res => {
                 Toast.clear();
                 if (res.status == 0) {
+                  this.updateUser({
+                    log_token: res.data.login_token
+                  });
                   this.setpwd();
                 } else if (res.status == -13) {
                   this.rescount = 0;
@@ -341,7 +346,7 @@ export default {
         let changetelnumflag = 0;
         params.user_tel = this.phone_number;
         params.change_telnum_flag = changetelnumflag;
-        params.login_token = this.log_token; //token;
+        //params.login_token = this.log_token; //token;
         get_code(params)
           .then(res => {
             this.repeats = 0;

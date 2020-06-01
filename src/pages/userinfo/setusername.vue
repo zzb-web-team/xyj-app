@@ -141,7 +141,7 @@ export default {
                     console.log(param.col_value);
                     this.updateUser({
                       log_token: res.data.login_token,
-                      user_name: param.col_value
+                      user_name: param.col_value[0]
                     });
                       console.log(this.login_token,this.user_name);
                     Toast.success({

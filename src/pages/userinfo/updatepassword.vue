@@ -228,7 +228,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 .van-nav-bar {
   color: #000;
   // box-shadow: 0 5px 5px #e6e6e6;
@@ -323,20 +323,20 @@ export default {
 }
 
 .introduction_start {
-  width: 5.9rem;
+  width: 6.87rem;
   height: 0.88rem;
   background: linear-gradient(
     90deg,
-    rgba(116, 90, 243, 1) 10%,
-    rgba(92, 116, 243, 1) 100%
+    rgba(254, 168, 107, 1) 0%,
+    rgba(255, 109, 110, 1) 100%
   );
-  border-radius: 1rem;
-  margin: auto;
-  font-size: 0.28rem;
-  font-family: PingFangSC-Regular;
+  border-radius: 0.1rem;
+  font-size: 0.3rem;
   font-weight: 400;
   color: rgba(255, 255, 255, 1);
-  line-height: 0.88rem;
-  margin-top: 1.04rem;
+  line-height: 40px;
+  margin: auto;
+  margin-top: 1.2rem;
+  border: none;
 }
 </style>
