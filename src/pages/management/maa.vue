@@ -9,7 +9,7 @@
           <img class="logoimg" src="../../assets/images/per_logo1.png" alt />
         </div>
         <div class="bborder"></div>
-        <p class="text">登陆后该应用将获取以下权限</p>
+        <p class="text">登录后该应用将获取以下权限</p>
         <div class="only">
           <van-checkbox class="prompttext" v-model="checked" checked-color="#07c160">
             <span>获取的你的公开信息(昵称丶手机号)</span>

@@ -198,7 +198,11 @@ export default {
           Toast(`请求超时，请稍后重试`);
           return false;
         }
-
+let myreg = /^\d{6}$/;
+      if (!myreg.test(this.YzmCodeInput)) {
+        Toast("请输入6位数数字密码");
+        return false;
+      }
         //修改手机号码
         let params = new Object();
         params.tel_num = this.tel; //新的手机号

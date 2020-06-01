@@ -3,7 +3,7 @@
     <!-- <van-nav-bar :z-index="2000"></van-nav-bar> -->
 
     <div class="container_introduction">
-      <div class="welcome">手机号登陆</div>
+      <div class="welcome">手机号登录</div>
       <div class="introduction_text">
         <div class="login_input">
           <!-- <p>手机号</p> -->

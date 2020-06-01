@@ -59,7 +59,7 @@
 
         <div class="down">
           <div class="emali" @click="emaillogin()">↑↓切换手机号登录</div>
-          <van-button class="introduction_start">注册并登陆</van-button>
+          <van-button class="introduction_start">注册并登录</van-button>
         </div>
       </div>
     </div>
