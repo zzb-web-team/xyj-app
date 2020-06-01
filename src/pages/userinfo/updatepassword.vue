@@ -57,8 +57,6 @@ import { err } from "../../common/js/status";
 export default {
   data() {
     return {
-      repeats: 0, //防止重复点击
-      rescount: 0, //请求计数
       title: "交易密码修改",
       active: 2,
       userOldPassword: "",
@@ -80,17 +78,6 @@ export default {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        if (this.repeats == 1) {
-          return false;
-        }
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.repeats = 0;
-          this.rescount = 0;
-          Toast.clear();
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
         let myreg = /^\d{6}$/;
         if (!myreg.test(this.userOldPassword)) {
           Toast("请输入原6位正确密码");
@@ -122,7 +109,6 @@ export default {
         updateUserinfo(param)
           .then(res => {
             Toast.clear();
-            this.repeats = 0;
             // res==-1时，token过期，重新登登录
             if (res.status == 0) {
               this.updateUser({
@@ -130,7 +116,6 @@ export default {
                 charge_psd: 1
               });
               if (res.err_code == 0) {
-                this.rescount = 0;
                 Toast.success({
                   message: "设置成功",
                   duration: 800
@@ -138,19 +123,16 @@ export default {
                 setTimeout(() => {
                   //修改完成之后回到个人中心
                   this.$router.push({
-                    path: "/usercenter"
+                    path: "/user"
                   });
                 }, 2000);
-              } else if (res.err_code == 500) {
-                this.rescount = 0;
-              } else {
+              }else {
                 const sta = err[res.err_code]
                   ? this.$t(err[res.err_code])
                   : `请稍后重试 ${res.err_code}`;
                 this.$toast(sta);
               }
             } else if (res.status == -13) {
-              this.rescount = 0;
               if (res.err_code == 424) {
                 Toast({
                   message: "您的账户已被冻结，请联系相关工作人员",
@@ -165,20 +147,14 @@ export default {
                 Toast(`原交易密码错误`);
               }
             } else if (res.status == -999) {
-              this.rescount = 0;
               Toast("登录已过期，请重新登录");
               this.clearUser();
               setTimeout(() => {
                 this.$router.push({ path: "/login" });
               }, 1000);
             } else if (res.status == -900) {
-              this.rescount = 0;
               this.$router.push({ path: "/login" });
-            } else if (res.status == -5) {
-              this.rescount++;
-              this.goLink();
-            } else if (res.status == -17) {
-              this.rescount = 0;
+            }else if (res.status == -17) {
               Dialog.alert({
                 message: "账号在其它地方登录，请重新登录"
               }).then(() => {
@@ -186,17 +162,12 @@ export default {
                 this.$router.push({ path: "/login" });
               });
             } else {
-              this.rescount = 0;
               const tip = this.$backStatusMap[res.status] || err[res.status];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
               this.$toast(str);
             }
           })
           .catch(error => {
-            this.repeats = 0;
-            this.rescount++;
-            this.goLink();
-            // Toast("网络错误，请重新请求");
           });
       }
     },

@@ -444,6 +444,8 @@ export default {
       var _this = this;
       var date = new Date();
       var y = date.getFullYear();
+      var m = date.getMonth();
+      console.log(m);
       var timestamp =
         new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
       function computeTime(year, month) {
@@ -454,7 +456,11 @@ export default {
           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
           var entime = new Date(year, month, 0).getTime() / 1000;
           if (timestamp < entime) {
-            _this.endtime = timestamp - 1;
+            if (m == month-1) {
+              _this.entime = Date.parse(new Date()) / 1000;
+            } else {
+              _this.endtime = timestamp - 1;
+            }
           } else {
             _this.endtime = entime + 86399;
           }

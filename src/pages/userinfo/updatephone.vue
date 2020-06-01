@@ -72,8 +72,6 @@ import { err } from "../../common/js/status";
 export default {
   data() {
     return {
-      repeats: 0, //防止重复点击
-      rescount: 0, //请求计数
       title: "",
       active: 2,
       timer: null,
@@ -103,23 +101,11 @@ export default {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        if (this.repeats == 1) {
-          return false;
-        }
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.repeats = 0;
-          this.rescount = 0;
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
-
         //个人中心获取验证码
         let user_tel = this.tel;
         let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
         if (!myreg.test(this.tel)) {
           Toast("请输入正确手机号码");
-          this.repeats = 0;
           return false;
         }
         let params = new Object();
@@ -129,10 +115,8 @@ export default {
         params.login_token = this.log_token; //token;
         get_code(params)
           .then(res => {
-            this.repeats = 0;
             if (res.status == 0) {
               if (res.err_code == 499) {
-                this.rescount = 0;
                 //验证码倒计时
                 if (!this.timer) {
                   this.YzmStatus = false;
@@ -156,7 +140,6 @@ export default {
                 this.$toast(sta);
               }
             } else if (res.status == -13) {
-              this.rescount = 0;
               if (res.err_code == 424) {
                 Toast({
                   message: "您的账户已被冻结，请联系相关工作人员",
@@ -167,19 +150,14 @@ export default {
                 }, 3000);
               }
             } else if (res.status == -900) {
-              this.rescount = 0;
               this.$router.push({ path: "/login" });
             } else {
-              this.rescount = 0;
-              const tip = this.$backStatusMap[res.status] || err[res.status];
+              const tip = err[res.err_code] ||this.$backStatusMap[res.status];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
               this.$toast(str);
             }
           })
           .catch(error => {
-            this.repeats = 0;
-            this.rescount++;
-            this.gettelCode();
             // Toast("网络错误，请重新请求106");
           });
       }
@@ -188,19 +166,9 @@ export default {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        if (this.repeats == 1) {
-          return false;
-        }
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.repeats = 0;
-          this.rescount = 0;
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
-let myreg = /^\d{6}$/;
+      let myreg = /^\d{6}$/;
       if (!myreg.test(this.YzmCodeInput)) {
-        Toast("请输入6位数数字密码");
+        Toast("验证码错误");
         return false;
       }
         //修改手机号码
@@ -210,49 +178,26 @@ let myreg = /^\d{6}$/;
         params.login_token = this.log_token; //token;
         settelnum(params)
           .then(res => {
-            this.repeats = 0;
             if (res.status == 0) {
-              this.rescount = 0;
-              // if (res.err_code == 0) {
-              //退出登录
               let param = new Object();
               param.login_token = this.log_token;
               logout(param)
                 .then(res => {
-                  this.repeats = 0;
-                  if (res.status == 0) {
-                    this.rescount = 0;
-                    // if (res.err_code == 0) {
-                    this.clearUser();
-                    this.$router.push({ path: "/" });
-                  } else if (res.status == -5) {
-                    this.rescount++;
-                    this.goLink();
-                  }
+                 this.clearUser();
+                 this.$router.push({ path: "/" });
                 })
                 .catch(error => {
-                  this.repeats = 0;
-                  this.rescount++;
-                  this.goLink();
-                  // Toast("网络错误，请重新请求");
                 });
-            } else if (res.status == -5) {
-              this.rescount++;
-              this.goLink();
-            } else if (res.status == -900) {
-              this.rescount = 0;
+            }else if (res.status == -900) {
+
               this.$router.push({ path: "/login" });
             } else {
-              this.rescount = 0;
-              const tip = this.$backStatusMap[res.status] || err[res.status];
+              const tip = this.$backStatusMap[res.status] || err[res.err_code];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
               this.$toast(str);
             }
           })
           .catch(error => {
-            this.repeats = 0;
-            this.rescount++;
-            this.goLink();
           });
       }
     },

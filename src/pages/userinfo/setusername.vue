@@ -24,7 +24,7 @@
             <input
               type="text"
               v-model="userName"
-              placeholder="请输入用户名称"
+              placeholder="请输入昵称"
               v-validate="'required|max:10|user_nickname'"
               name="user_name"
               @blur="resetDiv"
@@ -34,16 +34,17 @@
               name="clear"
               color="#CBCBCB"
               size="20"
-              style="margin-left: 0.1rem;"
+              style="margin-left: 0.1rem;margin-right: 0.1rem;"
               @click="clearusername"
             />
+          </div>
             <div
               class="van-field__error-message"
               v-show="errors.has('user_name') && userNameFlag.touched"
+              style="margin-left: 0.4rem;margin-top: 0.2rem;width: 100%;"
             >
               {{ errors.first("user_name") }}
             </div>
-          </div>
 
           <!-- <div>
             <van-button class="introduction_start" @click="getNext()"

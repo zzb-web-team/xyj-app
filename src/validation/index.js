@@ -4,7 +4,7 @@ import VeeValidate, { Validator } from 'vee-validate';
 
 Validator.extend('phone', {
     validate: value => {
-      return value.length === 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+        return value.length === 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
     }
 });
 
@@ -16,7 +16,7 @@ Validator.extend('user_nickname', {
 
 const messagesZhHans = {
     required: (field) => ``,
-    max:  (n, e) =>  n + "不能超过" + e[0] + "个字符" ,
+    max: (n, e) => n + "不能超过" + e[0] + "个字符",
     phone: '手机格式错误',
     digits: (n, e) => n + '必须为' + e[0] + "位数字",
     user_nickname: () => '用户昵称格式不对'
@@ -33,7 +33,6 @@ Vue.use(VeeValidate, {
     locale: 'zh-Hans',
     useConstraintAttrs: false,
     dictionary: {
-      'zh-Hans': { messages: messagesZhHans, attributes: attributesZhHans }
+        'zh-Hans': { messages: messagesZhHans, attributes: attributesZhHans }
     }
 });
-

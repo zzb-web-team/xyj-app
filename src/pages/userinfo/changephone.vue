@@ -185,19 +185,10 @@ export default {
       }
     },
     goLink() {
+
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        if (this.repeats == 1) {
-          return false;
-        }
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.repeats = 0;
-          this.rescount = 0;
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
         let param = new Object();
         param.user_name = this.tel;
         param.user_passwd = this.YzmCodeInput;
@@ -210,24 +201,18 @@ export default {
               });
               this.$router.push({ path: "/updatephone" });
             } else if (res.status == -5) {
-              this.rescount++;
-              this.goNext();
+              Toast(`响应超时，请稍后重试`);
             } else if (res.status == -13) {
-              this.rescount = 0;
               if (res.err_code == 424) {
                 Toast(`您的账户已被冻结，请联系相关工作人员`);
               }
             } else if (res.status == -15) {
-              this.rescount = 0;
               if (res.err_code == 405) {
-                this.rescount = 0;
                 Toast(`验证码错误`);
               }
             } else if (res.status == -900) {
-              this.rescount = 0;
               Toast(`验证码不能为空`);
             } else {
-              this.rescount = 0;
               const tip = this.$backStatusMap[res.status] || err[res.status];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
               this.$toast(str);

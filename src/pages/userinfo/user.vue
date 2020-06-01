@@ -114,6 +114,7 @@ export default {
     },
     onCancel() {
       this.show = false;
+      this.setActiveSex = true;
     },
     openSetSex() {
       this.show = true;
