@@ -553,11 +553,11 @@ export default {
     //取消
     onCancel1() {
       this.show1 = false;
-      Toast("cancel");
+      //Toast("cancel");
     },
     onCancel2() {
       this.show2 = false;
-      Toast("cancel");
+      //Toast("cancel");
     },
     //选择设备
     onSelect1(item) {

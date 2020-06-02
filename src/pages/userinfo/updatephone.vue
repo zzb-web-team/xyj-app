@@ -152,7 +152,7 @@ export default {
             } else if (res.status == -900) {
               this.$router.push({ path: "/login" });
             } else {
-              const tip = err[res.err_code] ||this.$backStatusMap[res.status];
+              const tip = err[res.err_code] || this.$backStatusMap[res.status];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
               this.$toast(str);
             }
@@ -166,11 +166,23 @@ export default {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-      let myreg = /^\d{6}$/;
-      if (!myreg.test(this.YzmCodeInput)) {
-        Toast("验证码错误");
-        return false;
-      }
+        let user_tel = this.tel;
+        let yztel = /^[1][3,4,5,7,8][0-9]{9}$/;
+        if (user_tel == "") {
+          Toast("请输入手机号码");
+          return false;
+        } else if (!yztel.test(this.tel)) {
+          Toast("请输入正确手机号码");
+          return false;
+        }
+        let myreg = /^\d{6}$/;
+        if (this.YzmCodeInput == "") {
+          Toast("验证码不能为空");
+          return false;
+        } else if (!myreg.test(this.YzmCodeInput)) {
+          Toast("验证码错误");
+          return false;
+        }
         //修改手机号码
         let params = new Object();
         params.tel_num = this.tel; //新的手机号
@@ -183,13 +195,11 @@ export default {
               param.login_token = this.log_token;
               logout(param)
                 .then(res => {
-                 this.clearUser();
-                 this.$router.push({ path: "/" });
+                  this.clearUser();
+                  this.$router.push({ path: "/" });
                 })
-                .catch(error => {
-                });
-            }else if (res.status == -900) {
-
+                .catch(error => {});
+            } else if (res.status == -900) {
               this.$router.push({ path: "/login" });
             } else {
               const tip = this.$backStatusMap[res.status] || err[res.err_code];
@@ -197,8 +207,7 @@ export default {
               this.$toast(str);
             }
           })
-          .catch(error => {
-          });
+          .catch(error => {});
       }
     },
     resetDiv() {
