@@ -449,29 +449,14 @@ export default {
       var timestamp =
         new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
       function computeTime(year, month) {
-        _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-        _this.endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
+        if(month == 0){
+           _this.starttime = new Date(year, month, 1).getTime() / 1000;
+           _this.endtime = timestamp-1;
+        }else{
+           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
+          _this.endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
+        }
       }
-      // function computeTime(year, month) {
-      //   if (month == 0) {
-      //     _this.starttime = new Date(year, month, 1).getTime() / 1000;
-      //     _this.endtime = timestamp + 86399;
-      //   } else {
-      //     _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-      //     var entime = new Date(year, month, 0).getTime() / 1000;
-      //     if (timestamp < entime) {
-      //       console.log(month);
-      //       if (m == month - 1) {
-      //         _this.endtime = parseInt(new Date().getTime() / 1000);
-      //         console.log(_this.endtime);
-      //       } else {
-      //         _this.endtime = timestamp - 1;
-      //       }
-      //     } else {
-      //       _this.endtime = entime + 86399;
-      //     }
-      //   }
-      // }
       computeTime(y, this.value22);
       this.income_list = [];
       if (this.value11 == 0) {
