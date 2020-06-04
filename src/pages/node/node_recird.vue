@@ -134,7 +134,7 @@ export default {
           this.pagenum++;
           this.get_my_dynace_info(this.pagenum);
         } else {
-          return false;
+           this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();

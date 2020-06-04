@@ -306,9 +306,12 @@ export default {
                   this.get_con();
                   if (this.zan_minerInfo.length <= 0) {
                     this.noint = true;
+
                   } else {
                     this.noint = false;
                   }
+                }else{
+                  this.$router.push({path:"/first_bind"});
                 }
               } else if (res.err_code == 292) {
                 this.rescount = 0;

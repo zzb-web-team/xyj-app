@@ -140,9 +140,13 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.token_info.login_token });
-            this.node_pic = res.data.bind_devinfo_list;
-            this.node_pic_name = res.data.bind_devinfo_list[0].dev_name;
-            this.get_my_dynace_info();
+            if (res.data.bind_devinfo_list.length > 0) {
+              this.node_pic = res.data.bind_devinfo_list;
+              this.node_pic_name = res.data.bind_devinfo_list[0].dev_name;
+              this.get_my_dynace_info();
+            } else {
+              this.$router.push({ path: "/first_bind" });
+            }
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"

@@ -113,7 +113,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord: "加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -192,7 +193,7 @@ export default {
             this.get_dev_income_day(this.pagenum);
           }
         } else {
-          return false;
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -508,15 +509,15 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  overflow: hidden;
   .income_con {
-    // margin-top: 0.92rem;
+    margin-top: 0.92rem;
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     .income_con_top {
       width: 100%;
-      height: 24.5%;
+     height: 17.5%;
       background: url(../../assets/images/suanlimingxi.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
@@ -534,7 +535,7 @@ export default {
       }
     }
     .content_body {
-      width: 100%;
+      overflow-x: hidden;
       overflow-y: scroll;
       flex: 1;
       .content_con {
@@ -598,7 +599,7 @@ export default {
             border: solid 0.01rem #eeeeee;
             border-radius: 0.1rem;
             img {
-               width: 0.42rem;
+              width: 0.42rem;
               height: 0.42rem;
               margin-right: 0.1rem;
             }

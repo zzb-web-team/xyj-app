@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import {
   authorization,
@@ -129,7 +128,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord:"加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -207,7 +207,7 @@ export default {
           this.pagenum++;
           this.redemptionrecord(this.pagenum);
         } else {
-          return false;
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();

@@ -88,7 +88,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord:"加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -142,10 +143,7 @@ export default {
           this.pagenum++;
           this.device(this.pagenum);
         } else {
-          if (this.$refs.vuuPull.closeLoadBottom) {
-            this.$refs.vuuPull.closeLoadBottom();
-          }
-          return false;
+           this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();

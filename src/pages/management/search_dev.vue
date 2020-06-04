@@ -15,6 +15,7 @@
 
 <script>
 import tabbar from "../../components/foot";
+import { Toast, Dialog, NavBar } from "vant";
 export default {
   data() {
     return {
@@ -25,11 +26,11 @@ export default {
   mounted() {},
   methods: {
     onSearch(val) {
-      Toast(val);
+      // Toast(val);
     },
     onCancel() {
       this.$router.back(-1);
-      
+
     }
   },
   components: {

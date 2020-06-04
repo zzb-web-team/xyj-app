@@ -115,7 +115,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord:"加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -142,7 +143,7 @@ export default {
       charge_psd: state => state.user.charge_psd
     }),
     scrollerHeight: function() {
-      return window.innerHeight - window.innerHeight * 0.245-50 + "px";
+      return window.innerHeight - window.innerHeight * 0.175-50 + "px";
     }
   },
   mounted() {
@@ -188,7 +189,7 @@ export default {
             this.get_dev_income_day();
           }
         } else {
-          return false;
+           this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -517,11 +518,11 @@ export default {
   background-color: #fff;
   overflow: hidden;
   .income_con {
-    // margin-top: 0.92rem;
+    margin-top: 0.92rem;
     height: 100%;
     .income_con_top {
       width: 100%;
-      height: 24.5%;
+      height: 17.5%;
       background: url(../../assets/images/shouyi_bgc.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;

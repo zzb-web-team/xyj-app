@@ -1,8 +1,20 @@
 <template>
   <div class="container">
-    <navBar :title="title" :right-text="title">
+    <!-- <navBar :title="title" :right-text="title">
       <van-icon name="search" slot="right" />
-    </navBar>
+    </navBar> -->
+     <van-nav-bar
+      size="0.4rem"
+      left-arrow
+      fixed
+      title="个人信息"
+      @click-left="onClickLeft()"
+      :z-index="10"
+    >
+      <div slot="left" class="alltitleleft">
+        <van-icon name="arrow-left" color="#333333" />
+      </div>
+    </van-nav-bar>
     <scroller>
       <div class="user_con">
         <p>个人信息</p>
@@ -102,6 +114,9 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
+    onClickLeft(){
+      this.$router.push({path:"/usercenter"});
+    },
     openSetname() {
       //修改昵称
       this.$router.push({ path: "/setusername" });

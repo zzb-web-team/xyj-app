@@ -238,7 +238,7 @@ export default {
           this.pagenum++;
           this.get_power_list(this.pagenum);
         } else {
-          return false;
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();

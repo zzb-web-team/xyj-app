@@ -158,7 +158,8 @@ export default {
     },
     onClickLeft() {
       Toast.clear();
-      this.$router.push({ path: "/management" });
+      // this.$router.push({ path: "/management" });
+      this.$router.go(-1);
     },
     onClickRight() {
       try {

@@ -68,9 +68,6 @@
             <p>钻石节点</p>
           </div>
         </div>
-        <!--  -->
-
-        <!--  -->
         <div class="calculation_bottom_con">
           <div class="calculation_bottom_con_title">
             <img src="../../assets/images/mingxi_icon.png" alt /> 贡献值明细
@@ -90,6 +87,7 @@
               />
             </van-dropdown-menu>
           </div>
+          <div v-if="datalist.length > 0">
           <vuu-pull
             ref="vuuPull"
             :options="pullOptions"
@@ -97,7 +95,6 @@
             v-on:loadBottom="loadBottom"
             :style="{ height: scrollerHeight }"
           >
-            <div class="pull_con" v-if="datalist.length > 0">
               <div
                 class="calculation_bottom_con_body"
                 v-for="(item, index) in datalist"
@@ -117,9 +114,10 @@
                   <span>{{ item.time_stamp | formatDate }}</span>
                 </div>
               </div>
-            </div>
-            <van-empty class="node_nodata" description="暂无数据" v-else />
+
           </vuu-pull>
+          </div>
+            <van-empty class="node_nodata" description="暂无数据" v-else />
         </div>
       </div>
     </div>
@@ -189,7 +187,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord:"加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -271,7 +270,7 @@ export default {
           this.pagenum++;
           this.get_cp_list(this.pagenum);
         } else {
-          return false;
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -300,6 +299,7 @@ export default {
                 this.datalist = this.datalist.concat(res.data.con_list);
               }
             });
+            this.allpage=res.data.total_page;
             this.updateUser({ log_token: res.data.token_info.token });
           } else if (res.status == -17) {
             Dialog.alert({
@@ -528,15 +528,7 @@ export default {
           position: relative;
           z-index: 11;
         }
-        .pull_con {
-          // overflow-x: hidden;
-          // overflow-y: scroll;
-          width: 100%;
-          height: auto;
-        }
         .calculation_bottom_con_body {
-          overflow-x: hidden;
-          overflow-y: scroll;
           .calculation_bottom_con_body_item {
             width: 92%;
             padding-left: 4%;

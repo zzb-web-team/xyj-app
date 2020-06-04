@@ -159,7 +159,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord:"加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -256,7 +257,7 @@ export default {
             this.get_dev_income_day(this.pagenum);
           }
         } else {
-          return false;
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();

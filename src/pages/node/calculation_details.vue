@@ -1,32 +1,35 @@
 <template>
   <div class="calculation">
-    <navBar
-      title="算力明细"
-      left-text="返回"
+    <van-nav-bar
+      size="0.4rem"
       left-arrow
       fixed
-      @click-left="onClickLeft"
-    ></navBar>
+      title="算力明细"
+      @click-left="onClickLeft()"
+      :z-index="0"
+    >
+      <div slot="left" class="alltitleleft">
+        <van-icon name="arrow-left" color="#ffffff" />
+      </div>
+    </van-nav-bar>
     <div class="content">
       <div class="calculation_top">
         <p class="dev_num">{{ dev_details.cp_value }}</p>
         <p>{{ dev_details.dev_name }}</p>
       </div>
-
-      <div class="calculation_bottom">
-        <van-dropdown-menu>
-          <van-dropdown-item
-            v-model="value1"
-            :options="option1"
-            @change="get_status"
-          />
-          <van-dropdown-item
-            v-model="value2"
-            :options="option2"
-            @change="get_thmonth"
-          />
-        </van-dropdown-menu>
-
+      <van-dropdown-menu>
+        <van-dropdown-item
+          v-model="value1"
+          :options="option1"
+          @change="get_status"
+        />
+        <van-dropdown-item
+          v-model="value2"
+          :options="option2"
+          @change="get_thmonth"
+        />
+      </van-dropdown-menu>
+      <div class="calculation_scroll" v-if="node_list.length > 0">
         <vuu-pull
           ref="vuuPull"
           :options="pullOptions"
@@ -34,44 +37,39 @@
           v-on:loadBottom="loadBottom"
           :style="{ height: scrollerHeight }"
         >
-          <div class="pull_con" v-if="node_list.length > 0">
-            <div
-              class="calculation_content"
-              v-for="(item, index) in node_list"
-              :key="index"
-            >
-              <div class="content_left">
-                <p>{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</p>
-                <p>结余：{{ item.total_value }}</p>
-                <!-- <p>{{ dev_details.dev_name }}</p> -->
-              </div>
-              <div class="content_right">
-                <p v-if="item.type == 201">等级提升</p>
-                <p v-else-if="item.type == 202">绑定设备</p>
-                <p v-else-if="item.type == 203">解绑</p>
-                <p v-else-if="item.type == 204">签到</p>
-                <p v-else-if="item.type == 205">累计在线</p>
-                <p v-else-if="item.type == 206">离线</p>
-                <p>{{ item.time_stamp | formatDate }}</p>
-              </div>
+          <div
+            class="calculation_content"
+            v-for="(item, index) in node_list"
+            :key="index"
+          >
+            <div class="content_left">
+              <p>{{ item.opt_value > 0 ? "+" : "" }}{{ item.opt_value }}</p>
+              <p>结余：{{ item.total_value }}</p>
+            </div>
+            <div class="content_right">
+              <p v-if="item.type == 201">等级提升</p>
+              <p v-else-if="item.type == 202">绑定设备</p>
+              <p v-else-if="item.type == 203">解绑</p>
+              <p v-else-if="item.type == 204">签到</p>
+              <p v-else-if="item.type == 205">累计在线</p>
+              <p v-else-if="item.type == 206">离线</p>
+              <p>{{ item.time_stamp | formatDate }}</p>
             </div>
           </div>
-
-          <van-empty description="暂无数据" v-else />
         </vuu-pull>
       </div>
+      <van-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import { get_app_dev_cp_list } from "../../common/js/api";
+import { Toast, Dialog, NavBar } from "vant";
+import { mapState, mapMutations } from "vuex";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
-import { Toast, Dialog } from "vant";
 export default {
   data() {
     return {
@@ -99,56 +97,6 @@ export default {
         { text: "12月", value: 12 }
       ],
       node_list: [],
-      demo_node_list: [
-        {
-          setnum: "+1",
-          dev_name: "我的西柚机1",
-          online: "26h",
-          current_time: 1583308519
-        },
-        {
-          setnum: "-1",
-          dev_name: "我的西柚机2",
-          online: "94h",
-          current_time: 1583337600
-        },
-        {
-          setnum: "+1",
-          dev_name: "我的西柚机1",
-          online: "26h",
-          current_time: 1583308519
-        },
-        {
-          setnum: "-1",
-          dev_name: "我的西柚机2",
-          online: "94h",
-          current_time: 1583337600
-        },
-        {
-          setnum: "+1",
-          dev_name: "我的西柚机1",
-          online: "26h",
-          current_time: 1583308519
-        },
-        {
-          setnum: "-1",
-          dev_name: "我的西柚机2",
-          online: "94h",
-          current_time: 1583337600
-        },
-        {
-          setnum: "+1",
-          dev_name: "我的西柚机1",
-          online: "26h",
-          current_time: 1583308519
-        },
-        {
-          setnum: "-1",
-          dev_name: "我的西柚机2",
-          online: "94h",
-          current_time: 1583337600
-        }
-      ],
       pagenum: 0,
       allpage: 1,
       pullOptions: {
@@ -160,7 +108,8 @@ export default {
           loadingIcon: boadind
         },
         bottomPull: {
-          loadingIcon: loadind
+          loadingIcon: loadind,
+          triggerWord: "加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -178,9 +127,6 @@ export default {
       }
     }
   },
-  components: {
-    navBar: navBar
-  },
   computed: {
     ...mapState({
       log_token: state => state.user.log_token,
@@ -193,9 +139,16 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight - 0.92 * (window.deviceWidth / 7.5) + "px";
+        return (
+          window.innerHeight -
+          2.18 * (window.deviceWidth / 7.5) -
+          window.innerHeight * 0.175 +
+          "px"
+        );
       } else {
-        return window.innerHeight - window.innerHeight * 0.245 - 50 + "px";
+        return (
+          window.innerHeight - 2.18 * 50 - window.innerHeight * 0.175 + "px"
+        );
       }
     }
   },
@@ -234,7 +187,7 @@ export default {
           this.pagenum++;
           this.get_power_list(this.pagenum);
         } else {
-          return false;
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -250,7 +203,6 @@ export default {
       parmas.cur_page = page;
       get_app_dev_cp_list(parmas)
         .then(res => {
-          // this.node_list = this.demo_node_list;
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
             if (parmas.cur_page == 0) {
@@ -304,9 +256,12 @@ export default {
   overflow-y: scroll;
 }
 /deep/.van-nav-bar {
-  z-index: 2056 !important;
+  z-index: 2 !important;
   color: #fff;
   background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+}
+/deep/.van-dropdown-menu {
+  z-index: 11;
 }
 /deep/.van-nav-bar__title {
   font-size: 0.34rem;
@@ -318,22 +273,18 @@ export default {
 /deep/.van-empty {
   margin-top: 2rem;
 }
-/deep/.van-dropdown-menu {
-  z-index: 11;
-}
+
 .calculation {
   width: 100%;
   height: 100%;
   background: #f8fafb;
   overflow: hidden;
   .content {
-    width: 100%;
+    margin-top: 0.92rem;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     .calculation_top {
       width: 100%;
-      height: 24.5%;
+      height: 17.5%;
       background: url(../../assets/images/suanlimingxi.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
@@ -345,22 +296,19 @@ export default {
       .dev_num {
         font-size: 0.6rem;
         font-weight: bold;
-        padding-top: 1.3rem;
+        padding-top: 0.5rem;
       }
     }
-    .calculation_bottom {
-      height: 75.5%;
+    .calculation_scroll {
       font-size: 0.24rem;
       border-radius: 0.2rem 0.2rem 0 0;
       background: #f8fafb;
       width: 100%;
       position: relative;
       top: -2%;
-      // flex: 1;
-      .pull_con {
-        overflow-x: hidden;
-        overflow-y: scroll;
-      }
+      padding-top: 0.2rem;
+      overflow-x: hidden;
+      overflow-y: scroll;
       .calculation_content {
         display: flex;
         justify-content: space-between;

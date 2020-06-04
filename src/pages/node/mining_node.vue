@@ -181,7 +181,7 @@ export default {
           this.pagenum++;
           this.get_use_dev_list(this.pagenum);
         } else {
-          return false;
+           this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -286,6 +286,7 @@ export default {
             let value = item;
             obje[key] = value;
           });
+          this.datalist = [];
           this.zan_datalist.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
             let deas = new Object();
@@ -306,6 +307,7 @@ export default {
               this.datalist.push(deas);
             }
           });
+          this.dev_lists=[];
           this.zan_dev_lists.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
             let deas = new Object();
