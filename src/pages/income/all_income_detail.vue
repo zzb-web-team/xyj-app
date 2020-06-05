@@ -7,16 +7,14 @@
         <p>{{ revenue_time | formatDate }}累计收益(gfm)</p>
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
-      <!--  -->
-
-      <div class="content_body" v-if="list_show">
-        <vuu-pull
-          ref="vuuPull"
-          :options="pullOptions"
-          v-on:loadTop="loadTop"
-          v-on:loadBottom="loadBottom"
-          :style="{ height: scrollerHeight }"
-        >
+      <vuu-pull
+        ref="vuuPull"
+        :options="pullOptions"
+        v-on:loadTop="loadTop"
+        v-on:loadBottom="loadBottom"
+        :style="{ height: scrollerHeight }"
+      >
+        <div class="content_body" v-if="list_show">
           <div
             class="content_con"
             v-for="(item, index) in dev_income_list"
@@ -29,7 +27,6 @@
               </span>
               <span>
                 算力：{{ item.com_power }}
-                <!-- <img src="../../assets/images/per_icon_arrow.png" alt /> -->
               </span>
             </div>
             <div class="content_body_bottom">
@@ -70,16 +67,16 @@
               </div>
             </div>
           </div>
-        </vuu-pull>
-      </div>
-      <van-empty description="暂无数据" v-else />
-
-      <!--  -->
+        </div>
+        <!-- <van-empty description="暂无数据" v-else /> -->
+      </vuu-pull>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapState, mapMutations } from "vuex";
+  import { Toast, Dialog } from "vant";
 import navBar from "../../components/navBar";
 import { formatDate, transformTime } from "../../common/js/date.js";
 import {
@@ -90,8 +87,6 @@ import {
 } from "../../common/js/api";
 import loadind from "../../assets/images/spainpink.gif"; //动画
 import boadind from "../../assets/images/spinwhile.gif"; //动画
-import { mapState, mapMutations } from "vuex";
-import { Toast, Dialog } from "vant";
 export default {
   data() {
     return {
@@ -140,14 +135,23 @@ export default {
       user_sex: state => state.user.user_sex,
       charge_psd: state => state.user.charge_psd
     }),
-    scrollerHeight: function() {
-      return window.innerHeight - window.innerHeight * 0.245 + "px";
+   scrollerHeight: function() {
+      if (window.innerWidth > 375) {
+        return (
+          window.innerHeight -
+          window.innerHeight * 0.175 +
+          "px"
+        );
+      } else {
+        return (
+          window.innerHeight - window.innerHeight * 0.175 + "px"
+        );
+      }
     }
   },
   watch: {
     dev_income_list: {
       handler(newvalue, oldvalue) {
-        console.log(newvalue);
         this.dev_income_list = newvalue;
       },
       deep: true
@@ -186,7 +190,6 @@ export default {
       setTimeout(() => {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
-
           if (this.dev_sn == 0) {
             this.get_income(this.pagenum);
           } else {
@@ -503,7 +506,7 @@ export default {
   color: #ffffff;
 }
 /deep/.van-empty {
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 .all_income {
   width: 100%;
@@ -513,14 +516,14 @@ export default {
   .income_con {
     margin-top: 0.92rem;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     .income_con_top {
       width: 100%;
-     height: 17.5%;
+      height: 17.5%;
       background: url(../../assets/images/suanlimingxi.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
+      position: relative;
+      z-index: 11;
       p {
         color: #fff;
         padding-top: 0.2rem;
@@ -535,9 +538,15 @@ export default {
       }
     }
     .content_body {
+      font-size: 0.24rem;
+      border-radius: 0.2rem 0.2rem 0 0;
+      //background: #f8fafb;
+      width: 100%;
+      position: relative;
+      top: -2%;
+      padding-top: 0.2rem;
       overflow-x: hidden;
       overflow-y: scroll;
-      flex: 1;
       .content_con {
         width: 84%;
         padding: 4%;

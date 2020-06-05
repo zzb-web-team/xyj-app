@@ -176,8 +176,12 @@ export default {
           return false;
         }
         let myreg = /^\d{6}$/;
+
         if (this.YzmCodeInput == "") {
           Toast("验证码不能为空");
+          return false;
+        } else if (this.YzmStatus == true) {
+          Toast("请先获取验证码");
           return false;
         } else if (!myreg.test(this.YzmCodeInput)) {
           Toast("验证码错误");
@@ -191,14 +195,21 @@ export default {
         settelnum(params)
           .then(res => {
             if (res.status == 0) {
-              let param = new Object();
-              param.login_token = this.log_token;
-              logout(param)
-                .then(res => {
-                  this.clearUser();
-                  this.$router.push({ path: "/" });
-                })
-                .catch(error => {});
+              if (res.err_code == 0) {
+                let param = new Object();
+                param.login_token = this.log_token;
+                logout(param)
+                  .then(res => {
+                    this.clearUser();
+                    this.$router.push({ path: "/" });
+                  })
+                  .catch(error => {});
+              } else {
+                const sta = err[res.err_code]
+                  ? this.$t(err[res.err_code])
+                  : `请稍后重试 ${res.err_code}`;
+                this.$toast(sta);
+              }
             } else if (res.status == -900) {
               this.$router.push({ path: "/login" });
             } else {
