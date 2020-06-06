@@ -64,7 +64,8 @@ import { Empty, Dialog } from "vant";
 import {
   query_node_dynamic_info,
   get_user_average_cp,
-  isbindinglist
+  isbindinglist,
+  get_app_dev_con_val
 } from "../../common/js/api";
 export default {
   data() {
@@ -119,6 +120,7 @@ export default {
         "#ffffff"
       );
     } catch (error) {}
+    this.get_con();
     this.get_cp();
     this.get_use_dev_list();
   },
@@ -127,10 +129,24 @@ export default {
     //下拉刷新
     onRefresh() {
       setTimeout(() => {
+         this.get_con();
         this.get_cp();
         this.get_use_dev_list();
         this.isLoading = false;
       }, 500);
+    },
+    get_con(page) {
+      let params = new Object();
+      params.login_token = this.log_token;
+      params.cur_page = page;
+      get_app_dev_con_val(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.data.token_info.token });
+          }
+          this.node_pic_name = res.data.dev_value_list[0].node_index;
+        })
+        .catch(error => {});
     },
     //获取用户设备列表
     get_use_dev_list() {
@@ -142,7 +158,6 @@ export default {
             this.updateUser({ log_token: res.token_info.login_token });
             if (res.data.bind_devinfo_list.length > 0) {
               this.node_pic = res.data.bind_devinfo_list;
-              this.node_pic_name = res.data.bind_devinfo_list[0].dev_name;
               this.get_my_dynace_info();
             } else {
               this.$router.push({ path: "/first_bind" });

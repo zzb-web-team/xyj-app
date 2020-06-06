@@ -46,6 +46,10 @@
             v-for="(item, index) in datalist"
             :key="index"
             @click="go_node_setail(item)"
+            v-bind:style="{
+              'pointer-events': item.con_value >= 0 ? 'auto' : 'none',
+              'color': item.con_value > 0 ? '#666666' : '#ff6d6e'
+            }"
           >
             <span
               class="recird_content_left"
@@ -74,7 +78,7 @@
 
             <span class="recird_content_center">{{ item.node_index }}</span>
             <span class="recird_content_right"
-              >贡献值 {{ item.con_value }}</span
+              >贡献值 {{ item.con_value < 0 ? "--" : item.con_value }}</span
             >
           </div>
         </vuu-pull>
@@ -110,6 +114,7 @@ export default {
       zan_datalist: [],
       zan_dev_lists: [],
       dev_lists: [],
+      value_list: [],
       pagenum: 0,
       active: false,
       allpage: 1,
@@ -167,8 +172,7 @@ export default {
     loadTop() {
       setTimeout(() => {
         this.get_use_dev_list(0);
-        this.get_coordinate();
-
+        this.get_coordinate(0);
         if (this.$refs.vuuPull.closeLoadTop) {
           this.$refs.vuuPull.closeLoadTop();
         }
@@ -180,6 +184,7 @@ export default {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
           this.get_use_dev_list(this.pagenum);
+          this.get_coordinate(this.pagenum);
         } else {
           this.$refs.vuuPull.closeLoadBottom();
         }
@@ -236,7 +241,7 @@ export default {
         });
     },
     //获取设备坐标
-    get_coordinate() {
+    get_coordinate(page) {
       let params = new Object();
       params.login_token = this.log_token;
       query_node_address_info(params)
@@ -245,7 +250,7 @@ export default {
             this.zan_dev_lists = [];
             this.updateUser({ log_token: res.token_info.login_token });
             this.zan_dev_lists = this.zan_dev_lists.concat(res.data.dev_list);
-            this.get_con();
+            this.get_con(page);
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -272,20 +277,30 @@ export default {
         });
     },
     //获取贡献值
-    get_con() {
+    get_con(page) {
       let params = new Object();
       params.login_token = this.log_token;
+      params.cur_page = page;
       get_app_dev_con_val(params)
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
           }
           let obje = {};
-          res.data.dev_value_list.forEach((item, index) => {
-            let key = item.dev_sn;
-            let value = item;
-            obje[key] = value;
-          });
+          if (page == 0) {
+            res.data.dev_value_list.forEach((item, index) => {
+              let key = item.dev_sn;
+              let value = item;
+              obje[key] = value;
+            });
+          } else {
+            this.value_list = this.value_list.concat(res.data.dev_value_list);
+            this.value_list.forEach((item, index) => {
+              let key = item.dev_sn;
+              let value = item;
+              obje[key] = value;
+            });
+          }
           this.datalist = [];
           this.zan_datalist.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
@@ -406,7 +421,7 @@ export default {
           text-overflow: ellipsis;
           white-space: nowrap;
           line-height: 0.6rem;
-          color: #333333;
+          // color: #333333;
           width: 33%;
           img {
             width: 12%;
