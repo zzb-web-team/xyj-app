@@ -703,12 +703,13 @@ export default {
           }
         }
         button {
-          width: 1.42rem;
+          width: 1.52rem;
           height: 0.48rem;
           line-height: 0.4rem;
           border-radius: 0.42rem;
           background-color: #f2f2f2;
           border: 1px solid rgb(255, 255, 255);
+          white-space:nowrap;
         }
       }
       .user_con_item:nth-child(1) {
