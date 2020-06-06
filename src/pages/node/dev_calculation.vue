@@ -26,6 +26,10 @@
             v-for="(item, index) in minerInfo"
             :key="index"
             @click="go_calculation_details(item)"
+             v-bind:style="{
+                  'pointer-events': item.cp_value >= 0 ? 'auto' : 'none',
+                  'color':item.cp_value > 0 ? '#666666':'#ff6d6e'
+            }"
           >
             <div class="item_left">
               <p>{{ item.dev_name }}</p>
@@ -44,7 +48,7 @@
               <p v-else-if="item.node_grade == 18000">
                 <img src="../../assets/images/zuanshi.svg" alt />钻石节点
               </p>
-              <p>算力：{{ item.cp_value }}</p>
+              <p>算力：{{ item.cp_value > 0 ? item.cp_value : "--" }}</p>
             </div>
             <div class="item_right">
               <img src="../../assets/images/per_icon_arrow.png" alt />
@@ -89,7 +93,7 @@ export default {
         },
         bottomPull: {
           loadingIcon: loadind,
-          triggerWord:"加载更多"
+          triggerWord: "加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -143,7 +147,7 @@ export default {
           this.pagenum++;
           this.device(this.pagenum);
         } else {
-           this.$refs.vuuPull.closeLoadBottom();
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -357,7 +361,6 @@ export default {
           padding-left: 4%;
           p:nth-child(2) {
             font-size: 0.24rem;
-            color: #666666;
             margin-top: 0.1rem;
           }
         }
@@ -377,7 +380,6 @@ export default {
           }
           p:nth-child(2) {
             font-size: 0.24rem;
-            color: #666666;
             margin-top: 0.1rem;
           }
         }

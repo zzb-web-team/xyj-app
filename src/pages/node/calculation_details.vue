@@ -14,7 +14,9 @@
     </van-nav-bar>
     <div class="content">
       <div class="calculation_top">
-        <p class="dev_num">{{ dev_details.cp_value }}</p>
+        <p class="dev_num">
+          {{ dev_details.cp_value>0?dev_details.cp_value:"--" }}
+        </p>
         <p>{{ dev_details.dev_name }}</p>
       </div>
       <van-dropdown-menu>

@@ -72,7 +72,7 @@
               钻石节点
             </span>
 
-            <span class="recird_content_center">{{ item.dev_name }}</span>
+            <span class="recird_content_center">{{ item.node_index }}</span>
             <span class="recird_content_right"
               >贡献值 {{ item.con_value }}</span
             >
@@ -181,7 +181,7 @@ export default {
           this.pagenum++;
           this.get_use_dev_list(this.pagenum);
         } else {
-           this.$refs.vuuPull.closeLoadBottom();
+          this.$refs.vuuPull.closeLoadBottom();
         }
         if (this.$refs.vuuPull.closeLoadBottom) {
           this.$refs.vuuPull.closeLoadBottom();
@@ -295,6 +295,7 @@ export default {
               deas.cp_value = obje[sad].cp_value;
               deas.con_value = obje[sad].con_value;
               deas.node_grade = obje[sad].node_grade;
+              deas.node_index = obje[sad].node_index;
               if (obje[sad].node_grade == 0) {
                 deas.node_grade_name = "普通节点";
               } else if (obje[sad].node_grade == 2000) {
@@ -307,7 +308,7 @@ export default {
               this.datalist.push(deas);
             }
           });
-          this.dev_lists=[];
+          this.dev_lists = [];
           this.zan_dev_lists.forEach((adme, indexs) => {
             let sad = adme.dev_sn;
             let deas = new Object();

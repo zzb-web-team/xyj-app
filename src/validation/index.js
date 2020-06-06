@@ -10,7 +10,7 @@ Validator.extend('phone', {
 
 Validator.extend('user_nickname', {
     validate: value => {
-        return /^[\u4E00-\u9FA5A-Za-z0-9_]+$/.test(value);
+        return /^(?!(\d+)$)[\u4E00-\u9FA5A-Za-z0-9_]+$/.test(value);
     }
 });
 

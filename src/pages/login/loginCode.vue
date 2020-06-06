@@ -82,7 +82,7 @@ import { mapState, mapMutations } from "vuex";
 import navBar from "../../components/navBar";
 import SecurityCode from "../../components/verification";
 import metu from "../../components/metu";
-import { get_code, login, getUserinfo, get_tag } from "../../common/js/api.js";
+import { get_code, login, getUserinfo, get_tag,turnon } from "../../common/js/api.js";
 import { Toast, Dialog, NavBar } from "vant";
 import { mapFields } from "vee-validate";
 import { err } from "../../common/js/status";
@@ -107,7 +107,8 @@ export default {
       authCode: "",
       verificationcode: "",
       showKeyboard: true,
-      tag: ""
+      tag: "",
+      version: "1.3.1.152"
     };
   },
   components: {
@@ -238,6 +239,14 @@ export default {
                 Toast.clear();
                 this.repeats = 0;
                 if (res.status == 0) {
+                  let params = new Object();
+                    params.phone = this.$route.query.phoneNum;
+                    params.version = this.version;
+                    turnon(params)
+                      .then(res => {
+                      })
+                      .catch(error => {
+                      });
                   if (res.err_code == 0) {
                     this.rescount = 0;
                     // if (res.err_code == 0) {

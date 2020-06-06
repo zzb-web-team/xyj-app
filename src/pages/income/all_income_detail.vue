@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <!-- <van-empty description="暂无数据" v-else /> -->
+        <van-empty description="暂无数据" v-else />
       </vuu-pull>
     </div>
   </div>

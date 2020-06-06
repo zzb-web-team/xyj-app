@@ -114,7 +114,7 @@
                   <p v-else-if="item.node_grade == 18000">
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
-                  <p>算力：{{ item.cp_value ? item.cp_value : 0 }}</p>
+                  <p>算力：{{ item.cp_value > 0 ? item.cp_value : "--" }}</p>
                 </div>
                 <div class="item_r_img">
                   <img src="../../assets/images/per_icon_arrow.png" />
@@ -290,12 +290,18 @@ export default {
                       item.spancolor = "#0FA427";
                       item.bgccolor = "#0FA427";
                       this.devshow = true;
-                    } else {
+                    } else if (item.dev_online_state == 0) {
                       item.equipment = "离线";
                       item.spancolor = "#333333";
                       item.bgccolor = "#8A8A8A";
                       this.devshow = false;
+                    } else {
+                      item.equipment = "非法设备";
+                      item.spancolor = "#ff6d6e";
+                      item.bgccolor = "#ff6d6e";
+                      this.devshow = false;
                     }
+                    console.log(item);
                     this.devlist.push(item);
                   });
                   if (params.page_num == 0) {
@@ -306,12 +312,11 @@ export default {
                   this.get_con();
                   if (this.zan_minerInfo.length <= 0) {
                     this.noint = true;
-
                   } else {
                     this.noint = false;
                   }
-                }else{
-                  this.$router.push({path:"/first_bind"});
+                } else {
+                  this.$router.push({ path: "/first_bind" });
                 }
               } else if (res.err_code == 292) {
                 this.rescount = 0;
@@ -388,7 +393,7 @@ export default {
       get_app_dev_con_val(params)
         .then(res => {
           if (res.status == 0) {
-            this.das=[];
+            this.das = [];
             this.updateUser({ log_token: res.data.token_info.token });
             let obje = {};
             res.data.dev_value_list.forEach((item, index) => {
@@ -407,6 +412,11 @@ export default {
                 deas.cp_value = obje[sad].cp_value;
                 deas.con_value = obje[sad].con_value;
                 deas.node_grade = obje[sad].node_grade;
+                if (obje[sad].cp_value < 0) {
+                  deas.equipment = "非法设备";
+                  deas.spancolor = "#ff6d6e";
+                  deas.bgccolor = "#ff6d6e";
+                }
               }
               this.das.push(deas);
             });
@@ -451,7 +461,7 @@ export default {
     },
     //下拉刷新
     loadRefresh() {
-      this.minerInfo=[];
+      this.minerInfo = [];
       this.localcache = [];
       this.devlist = [];
       this.device(0, 1);
