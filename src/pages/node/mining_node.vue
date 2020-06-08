@@ -48,7 +48,7 @@
             @click="go_node_setail(item)"
             v-bind:style="{
               'pointer-events': item.con_value >= 0 ? 'auto' : 'none',
-              'color': item.con_value > 0 ? '#666666' : '#ff6d6e'
+              color: item.con_value > 0 ? '#666666' : '#ff6d6e'
             }"
           >
             <span
@@ -286,64 +286,59 @@ export default {
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
           }
-          let obje = {};
+          let dev_obje = new Object();
+          this.zan_dev_lists.forEach((item, indexs) => {
+            let key = item.dev_sn;
+            let value = item;
+            dev_obje[key] = value;
+          });
+          let obje = new Object();
+          this.zan_datalist.forEach((items, indexs) => {
+            let key = items.dev_sn;
+            let value = items;
+            obje[key] = value;
+          });
+          this.dev_lists = [];
+          this.datalist = [];
           if (page == 0) {
-            res.data.dev_value_list.forEach((item, index) => {
-              let key = item.dev_sn;
-              let value = item;
-              obje[key] = value;
+            res.data.dev_value_list.forEach((adme, index) => {
+              let sad = adme.dev_sn;
+              let deas = new Object();
+              deas = adme;
+              if (obje[sad]) {
+                obje[sad].cp_value = deas.cp_value;
+                obje[sad].con_value = deas.con_value;
+                obje[sad].node_grade = deas.node_grade;
+                this.datalist.push(obje);
+              }
+              if (dev_obje[sad]) {
+                dev_obje[sad].cp_value = deas.cp_value;
+                dev_obje[sad].con_value = deas.con_value;
+                dev_obje[sad].node_grade = deas.node_grade;
+                this.dev_lists.push(dev_obje);
+              }
             });
           } else {
             this.value_list = this.value_list.concat(res.data.dev_value_list);
-            this.value_list.forEach((item, index) => {
-              let key = item.dev_sn;
-              let value = item;
-              obje[key] = value;
+            this.value_list.forEach((adme, index) => {
+              let sad = adme.dev_sn;
+              let deas = new Object();
+              deas = adme;
+              if (obje[sad]) {
+                obje[sad].cp_value = deas.cp_value;
+                obje[sad].con_value = deas.con_value;
+                obje[sad].node_grade = deas.node_grade;
+                obje[sad].node_index = deas.node_index;
+                this.datalist.push(obje[sad]);
+              }
+              if (dev_obje[sad]) {
+                dev_obje[sad].cp_value = deas.cp_value;
+                dev_obje[sad].con_value = deas.con_value;
+                dev_obje[sad].node_grade = deas.node_grade;
+                this.dev_lists.push(dev_obje[sad]);
+              }
             });
           }
-          this.datalist = [];
-          this.zan_datalist.forEach((adme, indexs) => {
-            let sad = adme.dev_sn;
-            let deas = new Object();
-            deas = adme;
-            if (obje[sad]) {
-              deas.cp_value = obje[sad].cp_value;
-              deas.con_value = obje[sad].con_value;
-              deas.node_grade = obje[sad].node_grade;
-              deas.node_index = obje[sad].node_index;
-              if (obje[sad].node_grade == 0) {
-                deas.node_grade_name = "普通节点";
-              } else if (obje[sad].node_grade == 2000) {
-                deas.node_grade_name = "黄金节点";
-              } else if (obje[sad].node_grade == 6000) {
-                deas.node_grade_name = "铂金节点";
-              } else if (obje[sad].node_grade == 18000) {
-                deas.node_grade_name = "钻石节点";
-              }
-              this.datalist.push(deas);
-            }
-          });
-          this.dev_lists = [];
-          this.zan_dev_lists.forEach((adme, indexs) => {
-            let sad = adme.dev_sn;
-            let deas = new Object();
-            deas = adme;
-            if (obje[sad]) {
-              deas.cp_value = obje[sad].cp_value;
-              deas.con_value = obje[sad].con_value;
-              deas.node_grade = obje[sad].node_grade;
-              if (obje[sad].node_grade == 0) {
-                deas.node_grade_name = "普通节点";
-              } else if (obje[sad].node_grade == 2000) {
-                deas.node_grade_name = "黄金节点";
-              } else if (obje[sad].node_grade == 6000) {
-                deas.node_grade_name = "铂金节点";
-              } else if (obje[sad].node_grade == 18000) {
-                deas.node_grade_name = "钻石节点";
-              }
-              this.dev_lists.push(deas);
-            }
-          });
         })
         .catch(error => {
           console.log(error);

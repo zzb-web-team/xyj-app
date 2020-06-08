@@ -26,9 +26,9 @@
             v-for="(item, index) in minerInfo"
             :key="index"
             @click="go_calculation_details(item)"
-             v-bind:style="{
-                  'pointer-events': item.cp_value >= 0 ? 'auto' : 'none',
-                  'color':item.cp_value > 0 ? '#666666':'#ff6d6e'
+            v-bind:style="{
+              'pointer-events': item.cp_value >= 0 ? 'auto' : 'none',
+              color: item.cp_value > 0 ? '#666666' : '#ff6d6e'
             }"
           >
             <div class="item_left">
@@ -243,7 +243,7 @@ export default {
             this.minerInfo = [];
           }
           let obje = {};
-          res.data.dev_value_list.forEach((item, index) => {
+          this.demo_minerInfo.forEach((item, indexs) => {
             let key = item.dev_sn;
             let value = item;
             obje[key] = value;
@@ -251,14 +251,14 @@ export default {
             obje.con_value = "";
             obje.node_grade = "";
           });
-          this.demo_minerInfo.forEach((adme, indexs) => {
+          res.data.dev_value_list.forEach((adme, index) => {
             let sad = adme.dev_sn;
             if (obje[sad]) {
               let deas = new Object();
               deas = adme;
-              deas.cp_value = obje[sad].cp_value;
-              deas.con_value = obje[sad].con_value;
-              deas.node_grade = obje[sad].node_grade;
+              obje[sad].cp_value = deas.cp_value;
+              obje[sad].con_value = deas.con_value;
+              obje[sad].node_grade = deas.node_grade;
               if (obje[sad].node_grade == 0) {
                 deas.node_grade_name = "普通节点";
               } else if (obje[sad].node_grade == 2000) {

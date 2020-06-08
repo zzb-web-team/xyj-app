@@ -395,8 +395,8 @@ export default {
           if (res.status == 0) {
             this.das = [];
             this.updateUser({ log_token: res.data.token_info.token });
-            let obje = {};
-            res.data.dev_value_list.forEach((item, index) => {
+             let obje = {};
+            this.zan_minerInfo.forEach((item, indexs) => {
               let key = item.dev_sn;
               let value = item;
               obje[key] = value;
@@ -404,22 +404,23 @@ export default {
               obje.con_value = "";
               obje.node_grade = "";
             });
-            this.zan_minerInfo.forEach((adme, indexs) => {
+            res.data.dev_value_list.forEach((adme, index) => {
               let sad = adme.dev_sn;
               let deas = new Object();
               deas = adme;
               if (obje[sad]) {
-                deas.cp_value = obje[sad].cp_value;
-                deas.con_value = obje[sad].con_value;
-                deas.node_grade = obje[sad].node_grade;
+                obje[sad].cp_value = deas.cp_value;
+                obje[sad].con_value = deas.con_value;
+                obje[sad].node_grade = deas.node_grade;
                 if (obje[sad].cp_value < 0) {
                   deas.equipment = "非法设备";
                   deas.spancolor = "#ff6d6e";
                   deas.bgccolor = "#ff6d6e";
                 }
               }
-              this.das.push(deas);
+              this.das.push(obje[sad]);
             });
+
             this.minerInfo = this.das;
           } else if (res.status == -999) {
             this.$toast({
