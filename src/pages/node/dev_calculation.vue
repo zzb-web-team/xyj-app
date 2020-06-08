@@ -268,7 +268,7 @@ export default {
               } else if (obje[sad].node_grade == 18000) {
                 deas.node_grade_name = "钻石节点";
               }
-              this.minerInfo.push(deas);
+              this.minerInfo.push(obje[sad]);
             }
           });
         })
