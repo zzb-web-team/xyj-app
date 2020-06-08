@@ -98,6 +98,7 @@
                 <input
                   type="text"
                   v-model="device_name"
+                   placeholder="4-20位汉字字母数字组成"
                   @blur="resetDiv"
                   maxlength="10"
                 />
@@ -387,23 +388,6 @@ export default {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        if (this.repeats == 1) {
-          return false;
-        }
-        const toast = Toast.loading({
-          duration: 15000, // 持续展示 toast
-          forbidClick: true, // 禁用背景点击
-          loadingType: "spinner",
-          mask: false
-        });
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.repeats = 0;
-          this.rescount = 0;
-          Toast.clear();
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
         setTimeout(() => {
           //设置设备名称
           this.setActive = true;
@@ -415,24 +399,21 @@ export default {
           params.dev_name = this.device_name;
 
           if (!this.device_name) {
+             this.setActive = false;
             return this.$toast("该西柚机还未设置昵称");
           }
-          if (!/^[\u4E00-\u9FA5A-Za-z0-9_]+$/.test(this.device_name)) {
-            this.device_name = this.zdevname;
-            return this.$toast("昵称不能含有非法字符");
+          if (!/^[\u4E00-\u9FA5A-Za-z0-9_]{4,20}$/.test(this.device_name)) {
+            //this.device_name = this.zdevname;
+             this.setActive = false;
+            return this.$toast("设备名由4-20位汉字字母数字字符组成，请检查输入格式");
           }
           setDevName(params)
             .then(res => {
               Toast.clear();
-              this.repeats = 0;
               if (res.status == 0) {
                 Toast(`设备名已更改`);
                 this.updateUser({ log_token: res.token_info.login_token });
-                if (res.err_code == 0) {
-                  this.rescount = 0;
-                }
               } else if (res.status == -13) {
-                this.rescount = 0;
                 if (res.err_code == 424) {
                   Toast({
                     message: "您的账户已被冻结，请联系相关工作人员",
@@ -443,43 +424,30 @@ export default {
                   }, 3000);
                 }
               } else if (res.status == -999) {
-                this.rescount = 0;
                 Toast("登录已过期，请重新登录");
-                this.clearUser();
                 setTimeout(() => {
                   this.$router.push({ path: "/login" });
                 }, 1000);
               } else if (res.status == -900) {
-                this.rescount = 0;
                 this.$router.push({ path: "/login" });
               } else if (res.status == -17) {
-                this.rescount = 0;
                 Dialog.alert({
                   message: "账号在其它地方登录，请重新登录"
                 }).then(() => {
-                  this.clearUser();
                   this.$router.push({ path: "/login" });
                 });
               } else if (res.status == -500) {
-                this.rescount = 0;
               } else if (res.status == -5) {
-                this.repeats = 0;
-                this.rescount++;
-                this.closeSetname();
+                Toast("响应超时，请稍后重试");
               } else if (res.status == -3) {
-                this.rescount = 0;
                 Toast("设备名称不能包含非法字符");
               } else {
-                this.rescount = 0;
                 const tip = this.$backStatusMap[res.status] || err[res.status];
                 const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
                 this.$toast(str);
               }
             })
             .catch(error => {
-              this.repeats = 0;
-              this.rescount++;
-              this.closeSetname();
               // Toast("网络错误，请重新请求");
             });
         }, 100);

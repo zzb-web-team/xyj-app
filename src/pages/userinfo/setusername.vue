@@ -25,12 +25,13 @@
               type="text"
               v-model="userName"
               placeholder="请输入昵称"
-              v-validate="'required|max:10|user_nickname'"
+              v-validate="'required|min:4|max:20|user_nickname'"
               name="user_name"
               @blur="resetDiv"
               autofocus
             />
             <van-icon
+            v-show="userName"
               name="clear"
               color="#CBCBCB"
               size="20"

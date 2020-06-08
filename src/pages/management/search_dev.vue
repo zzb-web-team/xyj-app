@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <form action="/">
       <van-search
         v-model="value"
@@ -15,7 +15,7 @@
 
 <script>
 import tabbar from "../../components/foot";
-import { Toast, Dialog, NavBar } from "vant";
+import { Toast, Dialog, Search } from "vant";
 export default {
   data() {
     return {
@@ -26,7 +26,7 @@ export default {
   mounted() {},
   methods: {
     onSearch(val) {
-      // Toast(val);
+     console.log("搜素");
     },
     onCancel() {
       this.$router.back(-1);
@@ -40,4 +40,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.content{
+  width: 100%;
+  height: 100%;
+}
 </style>

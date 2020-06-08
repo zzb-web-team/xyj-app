@@ -27,16 +27,9 @@
         </div>
         <div class="user_con_item">
           <div class="con_item_l">性别</div>
-          <div class="con_item_r" v-if="setActiveSex" @click="openSetSex()">
+          <div class="con_item_r" @click="openSetSex()">
             <p>{{ user_sex }}</p>
             <img src="../../assets/images/evenmore.png" />
-          </div>
-          <div class="con_item_r" v-else>
-            <!-- <van-radio-group v-model="user_sex" class="radio_own">
-              <van-radio name="男" size="0.2rem">男</van-radio>
-              <van-radio name="女" size="0.2rem">女</van-radio>
-            </van-radio-group>
-            <div @click.stop="closeSetSex()">确定</div> -->
           </div>
         </div>
         <div class="user_con_item user_active" @click="goSetPhone()">
