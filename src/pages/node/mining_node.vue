@@ -57,7 +57,7 @@
               style="color:#205AFF"
             >
               <img src="../../assets/images/putong.svg" alt />
-              普通节点
+              普通节点 {{ item.node_index }}
             </span>
             <span
               class="recird_content_left"
@@ -65,18 +65,18 @@
               style="color:#FF6B6F"
             >
               <img src="../../assets/images/huangjin.svg" alt />
-              黄金节点
+              黄金节点 {{ item.node_index }}
             </span>
             <span class="recird_content_left" v-show="item.node_grade == 6000">
               <img src="../../assets/images/bojin.svg" alt />
-              铂金节点
+              铂金节点 {{ item.node_index }}
             </span>
             <span class="recird_content_left" v-show="item.node_grade == 18000">
               <img src="../../assets/images/zuanshi.svg" alt />
-              钻石节点
+              钻石节点 {{ item.node_index }}
             </span>
 
-            <span class="recird_content_center">{{ item.node_index }}</span>
+            <span class="recird_content_center">{{ item.dev_name }}</span>
             <span class="recird_content_right"
               >贡献值 {{ item.con_value < 0 ? "--" : item.con_value }}</span
             >
