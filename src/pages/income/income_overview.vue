@@ -19,32 +19,34 @@
     <!--  -->
     <div class="content">
       <!-- <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop"> -->
-        <div class="content_top">
-          <div class="content_top_all" @click="go_all_income_list">
-            <p>
-              累计收益(gfm)
-              <van-icon name="play" />
-            </p>
-            <div>{{ all_income }}</div>
+      <div class="content_top">
+        <div class="content_top_all" @click="go_all_income_list">
+          <p>
+            累计收益(gfm)
+            <van-icon name="play" />
+          </p>
+          <div>{{ all_income }}</div>
+        </div>
+        <div class="content_top_detail">
+          <div class="content_top_detail_left">
+            <p>{{ last_income }}</p>
+            <p>昨日收益(gfm)</p>
           </div>
-          <div class="content_top_detail">
-            <div class="content_top_detail_left">
-              <p>{{ last_income }}</p>
-              <p>昨日收益(gfm)</p>
-            </div>
-            <div class="content_top_detail_right">
-              <p>{{ weak_income }}</p>
-              <p>近一周收益(gfm)</p>
-            </div>
+          <div class="content_top_detail_right">
+            <p>{{ weak_income }}</p>
+            <p>近一周收益(gfm)</p>
           </div>
         </div>
+      </div>
 
-  <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop" :style="{ height: scrollerHeight }">
-        <div
-          class="content_body"
-          v-if="dev_income_list.length > 0"
-
-        >
+      <vuu-pull
+        ref="vuuPull"
+        :options="pullOptions"
+        v-on:loadTop="loadTop"
+        v-on:loadBottom="loadBottom"
+        :style="{ height: scrollerHeight }"
+      >
+        <div class="content_body" v-if="dev_income_list.length > 0">
           <div
             class="content_con"
             v-for="(item, index) in dev_income_list"
@@ -53,11 +55,15 @@
             <div class="content_body_top" @click="go_income_list(item)">
               <div>
                 <img
-                  v-if="item.cp_value >= 0"
+                  v-if="item.total_com_power >= 0"
                   src="../../assets/images/income_dev_name.png"
                   alt
                 />
-                <img v-else src="../../assets/images/income_dev_name_hui.png" alt />
+                <img
+                  v-else
+                  src="../../assets/images/income_dev_name_hui.png"
+                  alt
+                />
                 {{ item.dev_name }}
               </div>
               <img src="../../assets/images/per_icon_arrow.png" alt />
@@ -80,11 +86,11 @@
                 class="content_body_bottom_right"
                 @click="go_calculation_details(item)"
                 v-bind:style="{
-                  'pointer-events': item.cp_value >= 0 ? 'auto' : 'none'
+                  'pointer-events': item.total_com_power >= 0 ? 'auto' : 'none'
                 }"
               >
                 <img
-                  v-if="item.cp_value >= 0"
+                  v-if="item.total_com_power >= 0"
                   src="../../assets/images/income_suanli_new.png"
                   alt
                 />
@@ -95,7 +101,7 @@
                 />
                 <div class="content_body_bottom_right_detail">
                   <p>算力</p>
-                  <p>{{ item.cp_value >= 0 ? item.cp_value : "--" }}</p>
+                  <p>{{ item.total_com_power >= 0 ? item.total_com_power : "--" }}</p>
                 </div>
               </div>
             </div>
@@ -129,7 +135,8 @@ export default {
       all_income: 0,
       last_income: 0,
       weak_income: 0,
-      page: 0,
+      pagenum: 0,
+      allpage:1,
       pullOptions: {
         isBottomRefresh: true,
         isTopRefresh: true,
@@ -201,7 +208,7 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight -3.6 * (window.deviceWidth / 7.5) + "px";
+        return window.innerHeight - 3.6 * (window.deviceWidth / 7.5) + "px";
       } else {
         return window.innerHeight - 3.6 * 50 + "px";
       }
@@ -233,10 +240,10 @@ export default {
     },
     //上拉加载
     loadBottom() {
-      setTimeout(() => {
+       setTimeout(() => {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
-          this.get_power_list(this.pagenum);
+          this.get_all_dev_income(this.pagenum);
         } else {
           this.$refs.vuuPull.closeLoadBottom();
         }
@@ -258,14 +265,21 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.updateUser({ log_token: res.token_info.login_token });
-            this.user_dev_list = res.data;
-            // res.data.bind_devinfo_list.forEach(item => {
-            //   let devobj = new Object();
-            //   devobj.dev_name = item.dev_name;
-            //   devobj.dev_sn = item.dev_sn;
-            //   this.user_dev_list.push(devobj);
-            // });
-            this.get_con();
+            let obje = new Object();
+            res.data.forEach(item => {
+              let key = item.dev_sn;
+              let value = item;
+              obje[key] = value;
+            });
+            this.demo_minerInfo.forEach(deem => {
+              let uev_sn = deem.dev_sn;
+              if (obje[uev_sn]) {
+                deem.dev_name = obje[uev_sn].dev_name;
+                this.dev_income_list.push(deem);
+              }
+            });
+            console.log(dev_income_list);
+            // this.get_con();
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -300,6 +314,7 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
+            this.allpage=res.data.total_page;
             if (params.cur_page == 0) {
               // this.dev_income_list = res.data.dev_total_profit_list;
               this.demo_minerInfo = res.data.dev_total_profit_list;
@@ -396,7 +411,7 @@ export default {
           //   this.get_con(this.page);
           // }
           let obje = {};
-           this.conval_list.forEach((item, index) => {
+          this.conval_list.forEach((item, index) => {
             let key = item.dev_sn;
             let value = item;
             obje[key] = value;

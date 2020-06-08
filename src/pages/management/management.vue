@@ -404,6 +404,8 @@ export default {
               obje.con_value = "";
               obje.node_grade = "";
             });
+            console.log(this.zan_minerInfo);
+            console.log(res.data.dev_value_list);
             res.data.dev_value_list.forEach((adme, index) => {
               let sad = adme.dev_sn;
               let deas = new Object();
@@ -417,8 +419,9 @@ export default {
                   deas.spancolor = "#ff6d6e";
                   deas.bgccolor = "#ff6d6e";
                 }
+                this.das.push(obje[sad]);
               }
-              this.das.push(obje[sad]);
+
             });
 
             this.minerInfo = this.das;
