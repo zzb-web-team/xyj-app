@@ -152,7 +152,7 @@
           <img src="../../assets/images/qiandao_tu.png" alt />
           <p>签到成功</p>
           <p class="add_num">
-            算力
+            {{num}}台设备算力
             <span>+{{ gongxianzhi }}</span>
           </p>
         </div>
@@ -194,6 +194,7 @@ export default {
       isLoading: false,
       show: false,
       gongxianzhi: 0,
+      num:0,
       all_income: 0,
       system: "",
       flag: false
@@ -448,6 +449,7 @@ export default {
               log_token: res.data.token_info.token
             });
             this.gongxianzhi = res.data.cp_sign_value;
+            this.num=res.data.cp_sign_value;
             this.show = true;
             this.flag = true;
             setTimeout(() => {

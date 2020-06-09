@@ -395,7 +395,7 @@ export default {
           if (res.status == 0) {
             this.das = [];
             this.updateUser({ log_token: res.data.token_info.token });
-             let obje = {};
+            let obje = {};
             this.zan_minerInfo.forEach((item, indexs) => {
               let key = item.dev_sn;
               let value = item;
@@ -404,25 +404,27 @@ export default {
               obje.con_value = "";
               obje.node_grade = "";
             });
-            console.log(this.zan_minerInfo);
-            console.log(res.data.dev_value_list);
-            res.data.dev_value_list.forEach((adme, index) => {
-              let sad = adme.dev_sn;
-              let deas = new Object();
-              deas = adme;
-              if (obje[sad]) {
-                obje[sad].cp_value = deas.cp_value;
-                obje[sad].con_value = deas.con_value;
-                obje[sad].node_grade = deas.node_grade;
-                if (obje[sad].cp_value < 0) {
-                  deas.equipment = "非法设备";
-                  deas.spancolor = "#ff6d6e";
-                  deas.bgccolor = "#ff6d6e";
+            console.log(obje);
+            if (res.data.dev_value_list.length > 0) {
+              res.data.dev_value_list.forEach((adme, index) => {
+                let sad = adme.dev_sn;
+                let deas = new Object();
+                deas = adme;
+                if (obje[sad]) {
+                  obje[sad].cp_value = deas.cp_value;
+                  obje[sad].con_value = deas.con_value;
+                  obje[sad].node_grade = deas.node_grade;
+                  if (obje[sad].cp_value < 0) {
+                    deas.equipment = "非法设备";
+                    deas.spancolor = "#ff6d6e";
+                    deas.bgccolor = "#ff6d6e";
+                  }
+                  this.das.push(obje[sad]);
                 }
-                this.das.push(obje[sad]);
-              }
-
-            });
+              });
+            } else {
+              this.das = this.zan_minerInfo;
+            }
 
             this.minerInfo = this.das;
           } else if (res.status == -999) {

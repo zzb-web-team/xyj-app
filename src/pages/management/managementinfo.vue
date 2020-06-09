@@ -98,7 +98,7 @@
                 <input
                   type="text"
                   v-model="device_name"
-                   placeholder="4-20位汉字字母数字组成"
+                  placeholder="4-20位汉字字母数字组成"
                   @blur="resetDiv"
                   maxlength="10"
                 />
@@ -108,7 +108,9 @@
             <div class="user_con_item">
               <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
-              <div class="con_item_r">{{item.dev_type==1?"RK3328":"AMS805"}}</div>
+              <div class="con_item_r">
+                {{ item.dev_type == 1 ? "RK3328" : "AMS805" }}
+              </div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
@@ -399,13 +401,15 @@ export default {
           params.dev_name = this.device_name;
 
           if (!this.device_name) {
-             this.setActive = false;
+            this.setActive = false;
             return this.$toast("该西柚机还未设置昵称");
           }
           if (!/^[\u4E00-\u9FA5A-Za-z0-9_]{4,20}$/.test(this.device_name)) {
             //this.device_name = this.zdevname;
-             this.setActive = false;
-            return this.$toast("设备名由4-20位汉字字母数字字符组成，请检查输入格式");
+            this.setActive = false;
+            return this.$toast(
+              "设备名由4-20位汉字字母数字字符组成，请检查输入格式"
+            );
           }
           setDevName(params)
             .then(res => {
@@ -475,6 +479,7 @@ export default {
         this.show = true;
         Dialog.confirm({
           title: "重启",
+          closeOnPopstate: true,
           message: "确定重启该设备？"
         })
           .then(() => {
@@ -538,6 +543,7 @@ export default {
         this.show = true;
         Dialog.confirm({
           title: "解绑",
+          closeOnPopstate: true,
           message:
             "确认解绑该设备?<br/>①设备产生的收益可以正常兑换<br/>②您不再享受该设备的积分收益<br/>③该设备可被其他任意账号绑定"
         })

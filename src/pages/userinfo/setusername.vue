@@ -105,22 +105,6 @@ export default {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        const toast = Toast.loading({
-          duration: 15000, // 持续展示 toast
-          forbidClick: true, // 禁用背景点击
-          loadingType: "spinner",
-          mask: false
-        });
-        if (this.repeats == 1) {
-          return false;
-        }
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.repeats = 0;
-          this.rescount = 0;
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
         this.$validator.validate().then(valid => {
           if (!valid) {
             // do stuff if not valid.
@@ -136,8 +120,6 @@ export default {
             param.col_value = colvalue;
             updateUserinfo(param)
               .then(res => {
-                Toast.clear();
-                this.repeats = 0;
                 if (res.status == 0) {
                   if (res.err_code == 0) {
                     console.log(param.col_value);
@@ -150,7 +132,6 @@ export default {
                       message: "修改成功",
                       duration: 800
                     });
-                    this.rescount = 0;
                     setTimeout(() => {
                       //修改完成之后回到个人中心
                       this.$router.push({
@@ -158,7 +139,6 @@ export default {
                       });
                     }, 1000);
                   } else if (res.err_code == 500) {
-                    this.rescount = 0;
                   } else {
                     const sta = err[res.err_code]
                       ? this.$t(err[res.err_code])
@@ -166,7 +146,6 @@ export default {
                     this.$toast(sta);
                   }
                 } else if (res.status == -13) {
-                  this.rescount = 0;
                   if (res.err_code == 424) {
                     Toast({
                       message: "您的账户已被冻结，请联系相关工作人员",
@@ -177,20 +156,16 @@ export default {
                     }, 3000);
                   }
                 } else if (res.status == -999) {
-                  this.rescount = 0;
                   Toast("登录已过期，请重新登录");
                   this.clearUser();
                   setTimeout(() => {
                     this.$router.push({ path: "/login" });
                   }, 1000);
                 } else if (res.status == -900) {
-                  this.rescount = 0;
                   this.$router.push({ path: "/login" });
                 } else if (res.status == -5) {
-                  this.rescount++;
-                  this.onClickRight();
+                  Toast("响应超时，请稍后重试");
                 } else if (res.status == -17) {
-                  this.rescount = 0;
                   Dialog.alert({
                     message: "账号在其它地方登录，请重新登录"
                   }).then(() => {
@@ -198,7 +173,6 @@ export default {
                     this.$router.push({ path: "/login" });
                   });
                 } else {
-                  this.rescount = 0;
                   const tip =
                     this.$backStatusMap[res.status] || err[res.status];
                   const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
@@ -207,11 +181,6 @@ export default {
               })
               .catch(error => {
                 console.log(error);
-                Toast.clear();
-                this.repeats = 0;
-                this.rescount++;
-                this.onClickRight();
-                // Toast("网络错误，请重新请求1");
               });
           }
         });
