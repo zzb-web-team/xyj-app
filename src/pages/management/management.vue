@@ -75,12 +75,8 @@
             v-for="(item, index) in minerInfo"
             v-bind:key="index"
             v-show="item.dev_bind_state == 1"
-          > -->
-          <div
-            class="ranking_con"
-            v-for="(item, index) in minerInfo"
-            v-bind:key="index"
-          >
+          >-->
+          <div class="ranking_con" v-for="(item, index) in minerInfo" v-bind:key="index">
             <div
               class="ranking_con_item"
               v-bind:sn="item.dev_sn"
@@ -90,13 +86,12 @@
               <div class="con_item_l">
                 <div class="item_l_top">
                   <div class="item_l_name">{{ item.dev_name }}</div>
-                  <div
-                    class="dot"
-                    v-bind:style="{ background: item.bgccolor }"
-                  ></div>
-                  <span v-bind:style="{ color: item.spancolor }">{{
+                  <div class="dot" v-bind:style="{ background: item.bgccolor }"></div>
+                  <span v-bind:style="{ color: item.spancolor }">
+                    {{
                     item.equipment
-                  }}</span>
+                    }}
+                  </span>
                 </div>
                 <div class="item_l_No">SN:{{ item.dev_sn }}</div>
               </div>
@@ -292,7 +287,7 @@ export default {
                       this.devshow = true;
                     } else if (item.dev_online_state == 0) {
                       item.equipment = "离线";
-                      item.spancolor = "#333333";
+                      item.spancolor = "#8A8A8A";
                       item.bgccolor = "#8A8A8A";
                       this.devshow = false;
                     } else {
@@ -418,6 +413,7 @@ export default {
                     deas.equipment = "非法设备";
                     deas.spancolor = "#ff6d6e";
                     deas.bgccolor = "#ff6d6e";
+                    deas.dev_online_state = -1;
                   }
                   this.das.push(obje[sad]);
                 }

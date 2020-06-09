@@ -20,8 +20,8 @@
         >
           <div class="device_info_left">
             <div class="device_dot">
-              <!-- <div class="dot" v-bind:style="{background:oldcolor}"></div> -->
-              <span>{{ minnerstatus }}</span>
+              <div class="dot" v-bind:style="{background:oldcolor}"></div>
+              <span v-bind:style="{color:oldcolor}">{{ minnerstatus }}</span>
             </div>
             <div class="device_btn" @click="go_monitor()">监控</div>
           </div>
@@ -41,9 +41,9 @@
 
             <div class="device_already">
               {{
-                ((item.total_cap - item.free_cap) / 1024 / 1024 / 1024).toFixed(
-                  2
-                )
+              ((item.total_cap - item.free_cap) / 1024 / 1024 / 1024).toFixed(
+              2
+              )
               }}Gb/{{ (item.total_cap / 1024 / 1024 / 1024).toFixed(2) }}Gb
             </div>
           </div>
@@ -88,11 +88,7 @@
               <div class="con_item_l">设备名称</div>
               <div class="con_item_r" v-if="setActive" @click="openSetname()">
                 <span>{{ device_name }}</span>
-                <img
-                  src="../../assets/images/evenmore.png"
-                  alt
-                  @click="openSetname()"
-                />
+                <img src="../../assets/images/evenmore.png" alt @click="openSetname()" />
               </div>
               <div class="con_item_r" v-else>
                 <input
@@ -108,9 +104,7 @@
             <div class="user_con_item">
               <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
-              <div class="con_item_r">
-                {{ item.dev_type == 1 ? "RK3328" : "AMS805" }}
-              </div>
+              <div class="con_item_r">{{ item.dev_type == 1 ? "RK3328" : "AMS805" }}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
@@ -236,11 +230,14 @@ export default {
         if (dev_online_state == 1) {
           this.oldcolor = "#0FA427";
           this.minnerstatus = "在线";
-        } else {
-          this.oldcolor = "#8A8A8A";
+        } else if (dev_online_state == 0) {
+          this.oldcolor = "#333333";
           this.minnerstatus = "离线";
           // this.devsta = false;
           //根据获取的状态修改状态显示远点的颜色     红色：离线       (根据接口返回值做具体的调整  待定)
+        } else {
+          this.oldcolor = "#ff6d6e";
+          this.minnerstatus = "非法设备";
         }
         let params = new Object();
         let token = this.log_token;
