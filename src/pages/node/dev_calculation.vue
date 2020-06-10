@@ -28,7 +28,7 @@
             @click="go_calculation_details(item)"
             v-bind:style="{
               'pointer-events': item.cp_value >= 0 ? 'auto' : 'none',
-              color: item.cp_value > 0 ? '#666666' : '#ff6d6e'
+              color: item.cp_value >= 0 ? '#666666' : '#ff6d6e'
             }"
           >
             <div class="item_left">
@@ -48,7 +48,7 @@
               <p v-else-if="item.node_grade == 18000">
                 <img src="../../assets/images/zuanshi.svg" alt />钻石节点
               </p>
-              <p>算力：{{ item.cp_value > 0 ? item.cp_value : "--" }}</p>
+              <p>算力：{{ item.cp_value >= 0 ? item.cp_value : "--" }}</p>
             </div>
             <div class="item_right">
               <img src="../../assets/images/per_icon_arrow.png" alt />

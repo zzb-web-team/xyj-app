@@ -152,7 +152,7 @@
           <img src="../../assets/images/qiandao_tu.png" alt />
           <p>签到成功</p>
           <p class="add_num">
-            {{num}}台设备算力
+            <!-- {{num}}台设备算力 -->
             <span>+{{ gongxianzhi }}</span>
           </p>
         </div>

@@ -109,7 +109,7 @@
                   <p v-else-if="item.node_grade == 18000">
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
-                  <p>算力：{{ item.cp_value > 0 ? item.cp_value : "--" }}</p>
+                  <p>算力：{{ item.cp_value >= 0 ? item.cp_value : "--" }}</p>
                 </div>
                 <div class="item_r_img">
                   <img src="../../assets/images/per_icon_arrow.png" />

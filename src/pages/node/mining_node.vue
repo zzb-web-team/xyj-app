@@ -48,7 +48,7 @@
             @click="go_node_setail(item)"
             v-bind:style="{
               'pointer-events': item.con_value >= 0 ? 'auto' : 'none',
-              color: item.con_value > 0 ? '#666666' : '#ff6d6e'
+              color: item.con_value >= 0 ? '#666666' : '#ff6d6e'
             }"
           >
             <span
