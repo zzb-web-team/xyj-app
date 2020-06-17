@@ -408,7 +408,7 @@ export default {
         .then(res => {
           if (res.status == 0) {
             this.updateUser({
-              log_token: res.data.login_token
+              log_token: res.data.token_info.token
             });
             this.getgxz();
           } else if (res.status == -17) {

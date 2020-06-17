@@ -241,12 +241,6 @@ export default {
       }
     },
     gonext() {
-      const toast = Toast.loading({
-        duration: 15000, // 持续展示 toast
-        forbidClick: true, // 禁用背景点击
-        loadingType: "spinner",
-        mask: false
-      });
       if (this.$parent.onLine == false) {
         Toast("无网络连接，请检查网络连接状态");
       } else {
@@ -271,7 +265,6 @@ export default {
             this.show = false;
             login(param)
               .then(res => {
-                Toast.clear();
                 if (res.status == 0) {
                   this.updateUser({
                     log_token: res.data.login_token

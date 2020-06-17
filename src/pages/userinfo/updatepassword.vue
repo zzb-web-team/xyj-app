@@ -91,12 +91,6 @@ export default {
           Toast("确认密码和设置的密码不一致");
           return false;
         }
-        const toast = Toast.loading({
-          duration: 15000, // 持续展示 toast
-          forbidClick: true, // 禁用背景点击
-          loadingType: "spinner",
-          mask: false
-        });
         // 修改密码
         let param = new Object();
         let colname = ["old_charge_psd", "charge_psd"];
@@ -108,7 +102,6 @@ export default {
         param.col_value = colvalue;
         updateUserinfo(param)
           .then(res => {
-            Toast.clear();
             // res==-1时，token过期，重新登登录
             if (res.status == 0) {
               this.updateUser({
