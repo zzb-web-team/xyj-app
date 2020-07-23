@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-nav-bar
+    <!-- <van-nav-bar
       left-text="返回"
       right-text
       rrow
@@ -12,8 +12,10 @@
         <van-icon name="arrow-left" color="#ffffff" />
         <span>返回</span>
       </div>
-    </van-nav-bar>
-
+    </van-nav-bar> -->
+ <navBar>
+      <van-icon name="search" slot="right" />
+    </navBar>
     <div
       style="width:100%;height:0.8rem;position: fixed;top: 0;z-index:0;background: linear-gradient(45deg, #745af3 10%, #5c74f3 100%);"
     ></div>
@@ -31,8 +33,8 @@
           </div>
         </div>
         <div class="ranking" v-show="!refresh">
-          <van-tabs v-model="active_ranking">
-            <van-tab title="西柚机排名" @click="numrank">
+          <van-tabs v-model="active_ranking"  @click="onClick">
+            <van-tab title="西柚机收益排行">
               <div class="nointerval" v-show="noint">
                 <img src="../../assets/images/paiming.png" alt />
                 <p>排行榜暂未更新</p>
@@ -42,15 +44,17 @@
                   <div class="tltle_l">
                     <b>名次</b>
                   </div>
+                  <div class="title_n">
+                    <b>西柚机收益</b>
+                  </div>
                   <div class="tltle_m">
                     <b>西柚机数量</b>
                   </div>
-
                   <div class="tltle_r">
                     <b>用户</b>
                   </div>
                 </div>
-                <div class="ranking_item" v-for="(item,index) in rankList" v-bind:key="index">
+                <div class="ranking_item" v-for="(item,index) in rankLists" v-bind:key="index">
                   <div
                     class="ranking_item_l"
                     :class="{'ranking_item_l1':index==0,
@@ -59,11 +63,13 @@
                   >
                     <b>{{(index+1)|screen}}</b>
                   </div>
+                  <div class="ranking_item_n">
+                    {{item.profit_rank}} gfm
+                  </div>
                   <div
                     class="ranking_item_r"
-                    :class="{'ranking_item_r1':index==0,'ranking_item_r2':index==1,'ranking_item_r3':index==2}"
                   >
-                    <b>{{item.bind_rank}}</b>
+                    <b>{{item.bind_num}}</b>
                   </div>
                   <div class="ranking_item_m">{{item.user_tel|newtel}}</div>
                 </div>
@@ -73,7 +79,7 @@
                 </div>
               </div>
             </van-tab>
-            <van-tab title="储存力排名" @click="pocrank">
+            <van-tab title="节点收益排行">
               <div class="nointerval" v-show="noints">
                 <img src="../../assets/images/earnings_illustration5.png" alt />
                 <p>排行榜暂未更新</p>
@@ -84,25 +90,29 @@
                     <b>名次</b>
                   </div>
                   <div class="tltle_m">
-                    <b>总存储力</b>
+                    <b>节点收益</b>
+                  </div>
+                  <div class="tltle_n">
+                    <b>节点数量</b>
                   </div>
                   <div class="tltle_r">
                     <b>用户</b>
                   </div>
                 </div>
-                <div class="ranking_item" v-for="(item,index) in rankLists" v-bind:key="index">
+                <div class="ranking_item" v-for="(item,index) in rankList" v-bind:key="index">
                   <div
                     class="ranking_item_l"
                     :class="{'ranking_item_l1':index==0,'ranking_item_l2':index==1,'ranking_item_l3':index==2}"
                   >
                     <span>{{(index+1)|screen}}</span>
                   </div>
+                  <div class="ranking_item_n">
+                      {{item.node_income}} 积分
+                  </div>
                   <div
                     class="ranking_item_r"
-                    :class="{'ranking_item_r1':index==0,'ranking_item_r2':index==1,'ranking_item_r3':index==2}"
                   >
-                    <b>{{((item.store_ability)/1000000).toFixed(6)}}</b>
-                    <span>S/d</span>
+                    <b>{{item.bind_rank}}</b>
                   </div>
                   <div class="ranking_item_m">{{item.user_tel|newtel}}</div>
                 </div>
@@ -125,12 +135,11 @@ import { rank } from "../../common/js/api.js";
 import { format } from "date-fns";
 import { mapState, mapMutations } from "vuex";
 import { err } from "../../common/js/status";
+import navBar from "../../components/navBar";
 
 export default {
   data() {
     return {
-      repeats: 0, //防止重复点击
-      rescount: 0, //请求计数
       noint: false,
       noints: false,
       isLoading: false,
@@ -174,6 +183,10 @@ export default {
       }
     }
   },
+
+    components: {
+    navBar: navBar
+  },
   mounted() {
     this.pocrank();
   },
@@ -182,43 +195,33 @@ export default {
     onClickLeft() {
       this.$router.back(-1);
     },
+     onClick(name, title) {
+      if(title=='西柚机收益排行'){
+        this.pocrank();
+      }else{
+        this.numrank();
+      }
+    },
     //获取存储力排名列表
-    pocrank(key) {
+    pocrank() {
       if (this.$parent.onLine == false) {
         Toast("无法连接网络，请检查网络状态");
       } else {
-        if (key != 1) {
-          this.$loading.show("加载中...");
-        }
-        if (this.repeats == 1) {
-          return false;
-        }
-        this.repeats = 1;
-        if (this.rescount >= 3) {
-          this.rescount = 0;
-          this.repeats = 0;
-          this.$loading.hide();
-          this.refresh = true;
-          Toast(`请求超时，请稍后重试`);
-          return false;
-        }
         //存储力排名
         let params = new Object();
-        let querytype = 3;
+        let querytype = 1;
         params.login_token = this.log_token;
         params.query_type = querytype;
         rank(params)
           .then(res => {
-            this.repeats = 0;
             if (res.status == 0) {
-              this.rescount = 0;
               this.updateUser({
                 log_token: res.data.token_info.token
               });
               if (res.err_code == 0) {
                 this.refresh = false;
-                this.rankLists = res.data.store_rank;
-                this.rankLists.sort((a,b)=>{ return b.store_ability-a.store_ability})//降序
+                this.rankLists = res.data.profit_rank;
+                this.rankLists.sort((a,b)=>{ return b.profit_rank-a.profit_rank})//降序
                 if (this.rankLists.length <= 0) {
                   this.noints = true;
                 } else {
@@ -228,7 +231,6 @@ export default {
                   res.data.token_info.token_gen_ts,
                   "YYYY/MM/DD"
                 );
-                this.numrank();
               } else {
                 const sta = err[res.err_code]
                   ? this.$t(err[res.err_code])
@@ -236,14 +238,12 @@ export default {
                 this.$toast(sta);
               }
             } else if (res.status == -999) {
-              this.rescount = 0;
               Toast("登录已过期，请重新登录");
               this.clearUser();
               setTimeout(() => {
                 this.$router.push({ path: "/login" });
               }, 1000);
             } else if (res.status == -17) {
-              this.rescount = 0;
               Dialog.alert({
                 message: "账号在其它地方登录，请重新登录"
               }).then(() => {
@@ -251,7 +251,6 @@ export default {
                 this.$router.push({ path: "/login" });
               });
             } else if (res.status == -13) {
-              this.rescount = 0;
               if (res.err_code == 424) {
                 Toast({
                   message: "您的账户已被冻结，请联系相关工作人员",
@@ -262,24 +261,16 @@ export default {
                 }, 3000);
               }
             } else if (res.status == -500) {
-              this.rescount = 0;
             } else if (res.status == -900) {
-              this.rescount = 0;
               this.$router.push({ path: "/login" });
             } else if (res.status == -5) {
-              this.rescount++;
-              this.pocrank();
             } else {
-              this.rescount = 0;
               const tip = this.$backStatusMap[res.status] || err[res.status];
               const str = tip ? this.$t(tip) : `请稍后重试 ${res.status}`;
               this.$toast(str);
             }
           })
           .catch(error => {
-            this.repeats = 0;
-            this.rescount++;
-            this.pocrank();
             // Toast("网络错误，请重新请求");
           });
       }
@@ -295,7 +286,7 @@ export default {
           this.$loading.hide();
           if (res.status == 0) {
             this.rankList = res.data.bind_rank;
-             this.rankLists.sort((a,b)=>{ return b.bind_rank-a.bind_rank})//降序
+             this.rankList.sort((a,b)=>{ return b.bind_rank-a.bind_rank})//降序
             if (this.rankList.length <= 0) {
               this.noint = true;
             } else {
@@ -309,7 +300,6 @@ export default {
               "YYYY/MM/DD"
             );
           } else if (res.status == -13) {
-            this.rescount = 0;
             if (res.err_code == 424) {
               Toast({
                 message: "您的账户已被冻结，请联系相关工作人员",
@@ -361,40 +351,28 @@ export default {
 </script>
 
 <style lang="less" scoped >
-/deep/.van-tabs__nav {
-  color: #ffffff;
-  background: url(../../assets/images/bg2.png);
-  background-size: 100% 100%;
-}
-/deep/.van-tabs__wrap {
-  position: static;
-}
-/deep/.van-tabs--line {
-  padding-top: 0;
-  top: -0.1rem;
-}
-/deep/.van-tabs--line .van-tabs__wrap {
-  height: 2.88rem;
-}
-/deep/.van-tab {
-  color: #b5bcfe;
-  line-height: 3.2rem;
-  font-size: 0.36rem;
-  span {
-    font-family: TTMeiHeiJ;
-  }
-}
-/deep/.van-tab--active {
-  color: #ffffff;
-  line-height: 3.2rem;
-  font-size: 0.64rem;
-  span {
-    font-family: TTMeiHeiJ;
-  }
-}
 /deep/.van-nav-bar {
+  z-index: 2 !important;
   color: #fff;
-  background: none;
+  // background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+  background-color: #fff;
+}
+/deep/.van-nav-bar__title {
+  font-size: 0.34rem;
+  color: #ffffff;
+}
+/deep/.van-icon-arrow-left:before {
+  // color: #ffffff;
+  color: #000000;
+}
+/deep/.van-tabs__wrap{
+  background-color: #fff;
+}
+/deep/.van-tabs__nav--line{
+  width: 75%;
+  margin: auto;
+  border: 0.01rem #eeeeee solid;
+  border-radius: 0.15rem;
 }
 
 .container {
@@ -402,11 +380,12 @@ export default {
   height: 100%;
   margin: auto;
   overflow: hidden;
-  background: url(../../assets/images/bgc33.png) #f2f2f2 no-repeat 0 0;
+  // background: url(../../assets/images/bgc33.png) #f2f2f2 no-repeat 0 0;
   background-size: 100%;
+
   .xiala {
     height: 100%;
-    margin-top: -0.2rem;
+    margin-top:0.82rem;
     .refresh {
       height: 100%;
       width: 100%;
@@ -470,16 +449,22 @@ export default {
       box-sizing: border-box;
       color: #979797;
       text-align: left;
+       box-sizing:border-box;
+      padding-right: 0.5rem;
       .tltle_l {
         width: 20%;
         text-align: center;
       }
       .tltle_m {
-        width: 40%;
+         width: 25%;
+        text-align: center;
+      }
+      .title_n{
+          width: 25%;
         text-align: center;
       }
       .tltle_r {
-        width: 40%;
+          width: 30%;
         text-align: center;
       }
     }
@@ -488,12 +473,12 @@ export default {
       height: 1rem;
       line-height: 0.5rem;
       margin: 0 auto;
-      // border-bottom: 0.01rem solid #aaaaaa;
       display: flex;
-      // justify-content: space-between;
       justify-content: flex-start;
       align-items: center;
       color: #000;
+      box-sizing:border-box;
+      padding-right: 0.5rem;
       .ranking_item_l {
         width: 20%;
         height: 0.4rem;
@@ -501,20 +486,14 @@ export default {
         justify-content: center;
         font-size: 0.24rem;
         color: #a8a8a8;
-        // background-color: #00a0e9;
         border-radius: 50%;
-        // background: url("../../assets/images/ranking_04.png") no-repeat center;
-        // background-size: 0.4rem 0.4rem;
         &.ranking_item_l1 {
           width: 20%;
           height: 0.4rem;
           display: flex;
           justify-content: center;
-          // align-items: center;
-          //background-color: #cccccc;
           font-size: 0.2rem;
           color: #fff;
-          // margin-left: 0.35rem;
           background: url("../../assets/images/earnings_icon_one.png") no-repeat
             55% 50%;
           background-size: 0.6rem 0.4rem;
@@ -525,11 +504,8 @@ export default {
           height: 0.4rem;
           display: flex;
           justify-content: center;
-          // align-items: center;
-          //background-color: #cccccc;
           font-size: 0.2rem;
           color: #fff;
-          // margin-left: 0.35rem;
           background: url("../../assets/images/earnings_icon_two.png") no-repeat
             55% 50%;
           background-size: 0.6rem 0.4rem;
@@ -539,23 +515,24 @@ export default {
           height: 0.4rem;
           display: flex;
           justify-content: center;
-          // align-items: center;
-          //background-color: #cccccc;
           font-size: 0.2rem;
           color: #fff;
-          // margin-left: 0.35rem;
           background: url("../../assets/images/earnings_icon_three.png")
             no-repeat 55% 50%;
           background-size: 0.6rem 0.4rem;
         }
       }
       .ranking_item_m {
-        width: 40%;
+        width: 25%;
+        // padding-right: 0.4rem;
+      }
+      .ranking_item_n {
+        width: 25%;
         // padding-right: 0.4rem;
       }
       .ranking_item_r {
         // margin-left: 1.45rem;
-        width: 40%;
+        width: 30%;
         text-align: center;
         overflow: hidden;
         color: #000;

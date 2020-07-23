@@ -53,6 +53,7 @@ import tiao from "@/pages/userinfo/tiao";
 import two from "@/pages/userinfo/two";
 import about_us from "@/pages/userinfo/about_us";
 import my_scores from "@/pages/userinfo/my_scores";
+import node_scores from "@/pages/userinfo/node_scores";
 import help_center from "@/pages/userinfo/help_center";
 import help_detail from "@/pages/userinfo/help_detail";
 
@@ -288,6 +289,12 @@ const routes = [{
         path: "/my_scores",
         name: "my_scores",
         component: my_scores,
+        meta: { index: 6 }
+    },
+    {
+        path: "/node_scores",
+        name: "node_scores",
+        component: node_scores,
         meta: { index: 6 }
     },
     {

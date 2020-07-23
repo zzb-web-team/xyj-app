@@ -4,7 +4,7 @@
       size="0.4rem"
       left-arrow
       fixed
-      title="西柚机收益账户"
+      title="节点收益账户"
       @click-left="onClickLeft()"
       @click-right="onClickRight()"
       :z-index="0"
@@ -19,7 +19,7 @@
     <!--  -->
     <div class="income_con" >
       <div class="income_con_top">
-        <p>积分()</p>
+        <!-- <p>积分()</p> -->
         <p class="dev_num">{{ total_revenue }}</p>
       </div>
 
@@ -54,9 +54,9 @@
             <div class="incon_con_body_left">
               <p>
                 {{ item.profit_type == 1 ? "+" : "-"
-                }}{{ (item.cur_profit / 100).toFixed(2) }}gfm
+                }}{{ (item.cur_profit / 100).toFixed(2) }}积分
               </p>
-              <p>{{ (item.total_profit / 100).toFixed(2) }}gfm</p>
+              <p>{{ (item.total_profit / 100).toFixed(2) }}积分</p>
             </div>
             <div class="incon_con_body_right">
               <div>

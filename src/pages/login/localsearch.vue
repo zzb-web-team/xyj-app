@@ -41,6 +41,10 @@
           <span class="title_name">MAC地址:</span>
           {{ item.mac }}
         </p>
+        <p class="title_cpuid">
+           <span class="title_name">CPU-ID:</span>
+          {{ item.cpu_id }}
+        </p>
       </div>
     </div>
     <div>
@@ -178,6 +182,7 @@ export default {
           font-size: 0.3rem;
           color: #737374;
         }
+
         .con_name {
           display: inline-block;
           color: #43577b;
@@ -193,9 +198,9 @@ export default {
       }
       p {
         width: 100%;
-        height: 0.6rem;
+        // height: 0.6rem;
         text-align: left;
-        margin-top: 0.1rem;
+
         color: #43577b;
         span {
           font-weight: 600;
@@ -203,6 +208,9 @@ export default {
           color: #737374;
         }
       }
+      .title_cpuid{
+          margin-bottom: 0.1rem;
+        }
     }
   }
   .introduction_start {

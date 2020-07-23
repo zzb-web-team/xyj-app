@@ -94,9 +94,10 @@
                   </span>
                 </div>
                 <div class="item_l_No">SN:{{ item.dev_sn }}</div>
+                <div class="item_l_cpu">CPU-ID:{{ item.cpu_id }}</div>
               </div>
               <div class="con_item_r">
-                <div class="item_center">
+                <!-- <div class="item_center">
                   <p v-if="item.node_grade == 0">
                     <img src="../../assets/images/putong.svg" alt />普通节点
                   </p>
@@ -110,7 +111,7 @@
                     <img src="../../assets/images/zuanshi.svg" alt />钻石节点
                   </p>
                   <p>算力：{{ item.cp_value >= 0 ? item.cp_value : "--" }}</p>
-                </div>
+                </div> -->
                 <div class="item_r_img">
                   <img src="../../assets/images/per_icon_arrow.png" />
                 </div>
@@ -152,7 +153,7 @@ export default {
       repeats: 0, //防止重复点击
       rescount: 0, //请求计数
       title: "西柚机",
-      active: 2,
+      active: 0,
       refresh: false,
       topshow: false,
       noint: false,
@@ -721,12 +722,19 @@ body {
         line-height: 0.52rem;
         font-size: 0.24rem;
       }
+      .item_l_cpu{
+         color: #666666;
+        text-align: left;
+        line-height: 0.32rem;
+        font-size: 0.24rem;
+      }
     }
+
     .con_item_r {
       display: flex;
       justify-content: space-between;
       padding-left: 0.3rem;
-      width: 45%;
+      // width: 45%;
       .item_center {
         width: 100%;
         overflow: hidden;
@@ -751,8 +759,8 @@ body {
         }
       }
       .item_r_img {
-        width: 0.8rem;
-        height: 1rem;
+        width: 0.6rem;
+        height: 0.8rem;
         line-height: 1.2rem;
         display: flex;
         align-items: center;

@@ -18,15 +18,15 @@
                   {{ phone_number }}
                 </p>
               </div>
-              <button @click.stop="goUserName()" :disabled="flag">
+              <!-- <button @click.stop="goUserName()" :disabled="flag">
                 <img src="../../assets//images/per_pegister_icon.png.png" alt />
                 {{ flag ? "已签到" : "签到" }}
-              </button>
+              </button> -->
               <div class="con_item_img">
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>
-            <div class="user_con_item" v-fb="{ cls: 'my_touchfeedback' }">
+            <!-- <div class="user_con_item" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="user_con_item_border">
                 <div class="con_item_l">
                   <img src="../../assets/images/per_integral_icon.png" alt />
@@ -42,14 +42,14 @@
                   <button @click.stop="goexange()">兑换</button>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div
               class="user_con_item"
               @click="gotool()"
               v-fb="{ cls: 'my_touchfeedback' }"
             >
               <div class="con_item_l">
-                <img src="../../assets/images/per_list_icon_toolbox.png" alt />
+                <!-- <img src="../../assets/images/per_list_icon_toolbox.png" alt /> -->
                 <span>工具箱</span>
               </div>
               <div class="con_item_r">
@@ -58,8 +58,8 @@
             </div>
             <div class="user_con_item" @click="gojifen()">
               <div class="con_item_l">
-                <img src="../../assets/images/per_list_icon_integral.png" alt />
-                <span>我的积分</span>
+                <!-- <img src="../../assets/images/per_list_icon_integral.png" alt /> -->
+                <span>收益账户</span>
               </div>
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
@@ -67,14 +67,14 @@
             </div>
             <div class="user_con_item" @click="gohelp()">
               <div class="con_item_l">
-                <img src="../../assets/images/per_list_icon_help.png" alt />
+                <!-- <img src="../../assets/images/per_list_icon_help.png" alt /> -->
                 <span>帮助中心</span>
               </div>
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>
-            <div class="user_con_item" @click="gowe()">
+            <!-- <div class="user_con_item" @click="gowe()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_list_icon_about.png" alt />
                 <span>关于我们</span>
@@ -82,7 +82,7 @@
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
-            </div>
+            </div> -->
             <!-- <div class="user_con_item" @click="goPassword()" v-fb="{ cls: 'my_touchfeedback' }">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_password@3x.png" alt />
@@ -114,22 +114,32 @@
                 <img src="../../assets/images/evenmore.png" />
               </div>
             </div>-->
-            <!-- <div class="user_con_item" @click="goPrivacy()" v-fb="{ cls: 'my_touchfeedback' }">
+            <div
+              class="user_con_item"
+              @click="goPrivacy()"
+              v-fb="{ cls: 'my_touchfeedback' }"
+            >
               <div class="con_item_l">
-                <img src="../../assets/images/per_icon_agreement@3x.png" alt />
+                <!-- <img src="../../assets/images/per_list_icon_about.png" alt /> -->
                 <span>隐私协议</span>
               </div>
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
               </div>
-            </div>-->
+            </div>
             <!-- <div class="user_con_item" @click="goversioninformation()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_icon_version@3x.png" alt />
                 <span>跳转测试</span>
               </div>
               <div class="con_item_r"></div>
-            </div>-->
+            </div> -->
+            <div class="user_con_item">
+              <div class="con_item_l">
+                <span>版本</span>
+              </div>
+              <div class="con_item_r"><i></i>1.3.1.154</div>
+            </div>
           </div>
           <div>
             <van-button
@@ -190,11 +200,11 @@ export default {
       loading: false,
       finished: false,
       title: "",
-      active: 4,
+      active: 2,
       isLoading: false,
       show: false,
       gongxianzhi: 0,
-      num:0,
+      num: 0,
       all_income: 0,
       system: "",
       flag: false
@@ -380,7 +390,7 @@ export default {
     gojifen() {
       setTimeout(() => {
         this.$router.push({
-          path: "/my_scores",
+          path: "/about_us",
           query: { income: this.all_income }
         });
       }, 200);
@@ -449,7 +459,7 @@ export default {
               log_token: res.data.token_info.token
             });
             this.gongxianzhi = res.data.cp_sign_value;
-            this.num=res.data.cp_sign_value;
+            this.num = res.data.cp_sign_value;
             this.show = true;
             this.flag = true;
             setTimeout(() => {
@@ -679,7 +689,7 @@ export default {
         height: 0.88rem;
         font-size: 0.28rem;
         background: #ffffff;
-        // border-bottom: 0.01rem solid #f3f3f3;
+        border-bottom: 0.01rem solid #f3f3f3;
         padding: 0 0.5rem;
         color: #424b66;
         display: flex;
@@ -704,6 +714,18 @@ export default {
             padding-left: 0.1rem;
           }
         }
+        .con_item_r {
+          i {
+            display: inline-block;
+            width: 0.1rem;
+            height: 0.1rem;
+            border-radius: 50%;
+            background: red;
+            margin-right: 0.1rem;
+            line-height: 0.9rem;
+            margin-bottom: 0.02rem;
+          }
+        }
         button {
           width: 1.52rem;
           height: 0.48rem;
@@ -711,7 +733,7 @@ export default {
           border-radius: 0.42rem;
           background-color: #f2f2f2;
           border: 1px solid rgb(255, 255, 255);
-          white-space:nowrap;
+          white-space: nowrap;
         }
       }
       .user_con_item:nth-child(1) {
@@ -751,7 +773,7 @@ export default {
           }
         }
         .con_item_r {
-          width: 40%;
+          width: 70%;
           text-align: left;
           p {
             height: 0.6rem;
@@ -780,7 +802,7 @@ export default {
             text-align: left;
             color: #999999;
             img {
-              width: 10%;
+              width: 5%;
             }
           }
         }
@@ -792,6 +814,7 @@ export default {
       }
       .user_con_item:nth-child(2) {
         height: auto;
+        margin-bottom: 0.5rem;
         .user_con_item_border {
           width: 100%;
           margin: auto;

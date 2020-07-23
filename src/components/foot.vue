@@ -27,23 +27,25 @@ export default {
       currIndex: 0,
       leftshow: true,
       tabbars: [
-        {
-          name: "dynamic_node",
-          title: "节点",
-          normal: require("../assets/images/Tab_jiedian.svg"),
-          active: require("../assets/images/Tab_jiedian_pre.svg")
-        },
-        {
-          name: "monitor_details",
-          title: "监控",
-          normal: require("../assets/images/Tab_jiankong.svg"),
-          active: require("../assets/images/Tab_jiankong_pre.svg")
-        },
+        // {
+        //   name: "dynamic_node",
+        //   title: "节点",
+        //   normal: require("../assets/images/Tab_jiedian.svg"),
+        //   active: require("../assets/images/Tab_jiedian_pre.svg")
+        // },
+        // {
+        //   name: "monitor_details",
+        //   title: "监控",
+        //   normal: require("../assets/images/Tab_jiankong.svg"),
+        //   active: require("../assets/images/Tab_jiankong_pre.svg")
+        // },
         {
           name: "management",
-          // title: "西柚机",
-          normal: require("../assets/images/Tab_xiyouji.svg"),
-          active: require("../assets/images/Tab_xiyouji.svg")
+          title: "西柚机",
+          // normal: require("../assets/images/Tab_xiyouji.svg"),
+          // active: require("../assets/images/Tab_xiyouji.svg")
+           normal: require("../assets/images/Tab_jiedian.svg"),
+          active: require("../assets/images/Tab_jiedian_pre.svg")
         },
         {
           // name: "minemachine",

@@ -19,7 +19,7 @@ import { Toast, Dialog, Search } from "vant";
 export default {
   data() {
     return {
-      active: 2,
+      active: 0,
       value: ""
     };
   },

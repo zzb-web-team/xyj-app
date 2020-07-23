@@ -131,7 +131,7 @@ import { Toast, Dialog } from "vant";
 export default {
   data() {
     return {
-      active: 3,
+      active: 1,
       all_income: 0,
       last_income: 0,
       weak_income: 0,
@@ -444,6 +444,7 @@ export default {
     onClickRight() {
       this.$router.push({
         path: "/ranking"
+        // path: "/allranking"
       });
     },
     go_all_income_list() {

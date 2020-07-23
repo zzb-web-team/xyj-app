@@ -1,12 +1,12 @@
 <template>
   <div class="about_us">
-    <navBar title="关于我们"></navBar>
+    <navBar title="收益账户"></navBar>
     <div class="about_us_body">
-      <van-cell is-link @click="goprivacy" v-fb="{ cls: 'my_touchfeedback' }">隐私政策</van-cell>
-      <van-cell is-link @click="goUserAgreement" v-fb="{ cls: 'my_touchfeedback' }">用户协议</van-cell>
-      <van-cell title="版本" class="ves">
-        <i></i>1.3.1.153
-      </van-cell>
+      <van-cell is-link @click="goprivacy" v-fb="{ cls: 'my_touchfeedback' }">西柚机收益账户</van-cell>
+      <van-cell is-link @click="goUserAgreement" v-fb="{ cls: 'my_touchfeedback' }">节点收益账户</van-cell>
+      <!-- <van-cell title="版本" class="ves">
+        <i></i>1.3.1.154
+      </van-cell> -->
     </div>
   </div>
 </template>
@@ -21,12 +21,12 @@ export default {
   methods: {
     goprivacy() {
       setTimeout(() => {
-        this.$router.push({ path: "/privacy" });
+        this.$router.push({ path: "/my_scores" });
       }, 200);
     },
     goUserAgreement() {
       setTimeout(() => {
-        this.$router.push({ path: "/UserAgreement" });
+        this.$router.push({ path: "/node_scores" });
       }, 200);
     }
   },

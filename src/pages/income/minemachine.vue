@@ -1,6 +1,21 @@
 <template>
   <div class="container">
-    <navBar :right-text="title"></navBar>
+    <!-- <navBar :right-text="title"></navBar> -->
+      <van-nav-bar
+      size="0.4rem"
+      left-arrow
+      title="收益"
+      fixed
+      @click-right="onClickRight()"
+      :z-index="11"
+    >
+      <div slot="left" class="alltitleleft">
+        <!-- <van-icon name="arrow-left" color="#ffffff" /> -->
+      </div>
+      <div slot="right" class="titrights">
+        <span>排行</span>
+      </div>
+    </van-nav-bar>
     <!-- <div
       style="width:100%;height:0.8rem;position: fixed;top: 0;z-index: 0;background: linear-gradient(45deg, #745af3 10%, #5c74f3 100%);"
     ></div>-->
@@ -165,10 +180,11 @@ export default {
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
-    mea(pos) {
-      if (pos) {
-        // console.log(pos.y);
-      }
+      onClickRight() {
+      this.$router.push({
+        // path: "/ranking"
+        path: "/allranking"
+      });
     },
     //获取总受益
     getallpoc(key) {

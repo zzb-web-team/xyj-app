@@ -31,7 +31,7 @@
             <div class="monitor_income">昨日收益：{{ storage.income }}</div>
           </div>
         </div>
-        <p class="monitor_title">检测图表</p>
+        <!-- <p class="monitor_title">检测图表</p> -->
 
         <div class="monitor_btn">
           <van-button type="default" @click="xiuxiuxiu1">

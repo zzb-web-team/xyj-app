@@ -108,7 +108,7 @@ export default {
       verificationcode: "",
       showKeyboard: true,
       tag: "",
-      version: "1.3.1.153"
+      version: "1.3.1.154"
     };
   },
   components: {
@@ -377,7 +377,7 @@ export default {
                             })
                             .catch(error => {});
                           this.$router.push({
-                            path: "/dynamic_node"
+                            path: "/management"
                           });
                         } else {
                           this.rescount = 0;

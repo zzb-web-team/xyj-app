@@ -23,7 +23,7 @@
               <div class="dot" v-bind:style="{background:oldcolor}"></div>
               <span v-bind:style="{color:oldcolor}">{{ minnerstatus }}</span>
             </div>
-            <div class="device_btn" @click="go_monitor()">监控</div>
+            <!-- <div class="device_btn" @click="go_monitor()">监控</div> -->
           </div>
           <!-- <div class="device_info_img" @click="goRanking()"></div> -->
           <div class="device_info_space">
@@ -109,6 +109,10 @@
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
               <div class="con_item_r">{{ item.rom_version }}</div>
+            </div>
+             <div class="user_con_item">
+              <div class="con_item_l">CPU-ID</div>
+              <div class="con_item_r">{{ item.cpu_id }}</div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">SN</div>
