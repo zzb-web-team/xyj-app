@@ -19,7 +19,7 @@
     <!--  -->
     <div class="content">
       <!-- <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop"> -->
-      <!-- <div class="content_top">
+      <div class="content_top">
         <div class="content_top_all" @click="go_all_income_list">
           <p>
             累计收益(gfm)
@@ -37,7 +37,7 @@
             <p>近一周收益(gfm)</p>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <vuu-pull
         ref="vuuPull"
@@ -46,7 +46,7 @@
         v-on:loadBottom="loadBottom"
         :style="{ height: scrollerHeight }"
       >
-        <!-- <div class="content_body" v-if="dev_income_list.length > 0">
+        <div class="content_body" v-if="dev_income_list.length > 0">
           <div
             class="content_con"
             v-for="(item, index) in dev_income_list"
@@ -106,44 +106,8 @@
               </div>
             </div>
           </div>
-        </div> -->
-        <!-- <van-empty description="暂无数据" v-else /> -->
-        <div class="monitor_top">
-          <div class="monitor_top_left" @click="goprivacy()">
-            <p>西柚机收益</p>
-            <div class="monitor_status">
-              {{ storage.income }}<span>gfm</span>
-            </div>
-          </div>
-          <div class="monitor_top_right" @click="goUserAgreement()">
-            <p>节点收益</p>
-            <div class="monitor_income">
-              {{ storage.jifen }}<span>积分</span>
-            </div>
-          </div>
         </div>
-        <div class="income_con_btn">
-          <van-dropdown-menu>
-            <van-dropdown-item
-              v-model="value11"
-              :options="option1"
-              @change="changegrow"
-            />
-          </van-dropdown-menu>
-          <van-tabs
-            type="card"
-            :active="tabactive"
-            class="bandwidth"
-            @change="up_down"
-          >
-            <van-tab title="西柚机收益" name="a">
-              <div id="myChart_xiyou" style="width:100%; height:5rem;"></div>
-            </van-tab>
-            <van-tab title="节点收益" name="b">
-              <div id="myChart_node" style="width: 100%;height:5rem"></div>
-            </van-tab>
-          </van-tabs>
-        </div>
+        <van-empty description="暂无数据" v-else />
       </vuu-pull>
     </div>
     <!--  -->
@@ -163,19 +127,16 @@ import {
   isbindinglist,
   getdevhistoricalname
 } from "../../common/js/api";
-import { upodateTime } from "../../common/js/date";
 import { Toast, Dialog } from "vant";
-import echarts from "echarts";
 export default {
   data() {
     return {
       active: 1,
-      tabactive: "a",
       all_income: 0,
       last_income: 0,
       weak_income: 0,
       pagenum: 0,
-      allpage: 1,
+      allpage:1,
       pullOptions: {
         isBottomRefresh: true,
         isTopRefresh: true,
@@ -186,23 +147,53 @@ export default {
         },
         bottomCloseElMove: false //关闭上拉加载
       },
-      dev_income_list: [],
+      dev_income_list: [
+        // {
+        //   devname: "我的西柚机1",
+        //   total_profit: 6334,
+        //   total_com_power: 56,
+        //   dev_sn: 0
+        // },
+        // {
+        //   devname: "我的西柚机2",
+        //   total_profit: 546,
+        //   total_com_power: 34656,
+        //   dev_sn: 1
+        // },
+        // {
+        //   devname: "我的西柚机3",
+        //   total_profit: 2745,
+        //   total_com_power: 346,
+        //   dev_sn: 2
+        // },
+        // {
+        //   devname: "我的西柚机4",
+        //   total_profit: 547,
+        //   total_com_power: 2345,
+        //   dev_sn: 3
+        // },
+        // {
+        //   devname: "我的西柚机5",
+        //   total_profit: 6334,
+        //   total_com_power: 93684,
+        //   dev_sn: 4
+        // },
+        // {
+        //   devname: "我的西柚机6",
+        //   total_profit: 15073,
+        //   total_com_power: 46,
+        //   dev_sn: 5
+        // },
+        // {
+        //   devname: "我的西柚机7",
+        //   total_profit: 45,
+        //   total_com_power: 102375,
+        //   dev_sn: 6
+        // }
+      ],
       user_dev_list: [],
       demo_minerInfo: [],
-      conval_list: [],
-      storage: {
-        income: 0,
-        jifen: 0
-      },
-      value11: 1,
-      option1: [
-        { text: "近一周", value: 0 },
-        { text: "近一个月", value: 1 },
-        { text: "近半年", value: 2 }
-      ],
-      echart_data_list_x: [],
-      echart_data_list: [],
-      echarts_data: []
+      conval_list: []
     };
   },
   computed: {
@@ -217,9 +208,9 @@ export default {
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
-        return window.innerHeight - 1.32 * (window.deviceWidth / 7.5) + "px";
+        return window.innerHeight - 3.6 * (window.deviceWidth / 7.5) + "px";
       } else {
-        return window.innerHeight - 1.32 * 50 + "px";
+        return window.innerHeight - 3.6 * 50 + "px";
       }
     }
   },
@@ -233,12 +224,7 @@ export default {
       );
     } catch (error) {}
     this.get_all_income(90);
-    // this.get_all_dev_income(0);
-    // this.$nextTick(function() {
-    //   let linechartex1 = document.getElementById("myChart_xiyou");
-    //   linechartex1.style.width = window.innerWidth + "px";
-    //   this.drawLine();
-    // });
+    this.get_all_dev_income(0);
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser", "setdevsn", "setdevstatus"]),
@@ -254,7 +240,7 @@ export default {
     },
     //上拉加载
     loadBottom() {
-      setTimeout(() => {
+       setTimeout(() => {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
           this.get_all_dev_income(this.pagenum);
@@ -265,44 +251,6 @@ export default {
           this.$refs.vuuPull.closeLoadBottom();
         }
       }, 500);
-    },
-    changegrow() {
-      let number = 7;
-      if (this.value11 == 0) {
-        number = 7;
-      } else if (this.value11 == 1) {
-        number = 30;
-      } else if (this.value11 == 2) {
-        number = 180;
-      }
-      this.get_all_income(number);
-    },
-    up_down(name, title) {
-      if (title != "节点收益") {
-        this.$nextTick(function() {
-          let linechartex1 = document.getElementById("myChart_xiyou");
-          linechartex1.style.width = window.innerWidth + "px";
-          echarts.init(linechartex1);
-          this.drawLine();
-        });
-      } else {
-        this.$nextTick(function() {
-          let linechartex2 = document.getElementById("myChart_node");
-          linechartex2.style.width = window.innerWidth + "px";
-          echarts.init(linechartex2);
-          this.drawLine("node");
-        });
-      }
-    },
-    goprivacy() {
-      setTimeout(() => {
-        this.$router.push({ path: "/my_scores" });
-      }, 200);
-    },
-    goUserAgreement() {
-      setTimeout(() => {
-        this.$router.push({ path: "/node_scores" });
-      }, 200);
     },
     get_use_dev_list() {
       let params = new Object();
@@ -366,7 +314,7 @@ export default {
             this.updateUser({
               log_token: res.data.token_info.token
             });
-            this.allpage = res.data.total_page;
+            this.allpage=res.data.total_page;
             if (params.cur_page == 0) {
               // this.dev_income_list = res.data.dev_total_profit_list;
               this.demo_minerInfo = res.data.dev_total_profit_list;
@@ -410,7 +358,7 @@ export default {
       params.login_token = token;
       params.start_time = starttime;
       params.end_time = endtimes;
-      params.query_type = 2;
+      params.query_type = 1;
       params.cur_page = 0;
       params.dev_sn = "";
       getuserdevlist(params)
@@ -422,8 +370,6 @@ export default {
             this.all_income = (res.data.user_total_profit / 100).toFixed(2);
             this.last_income = (res.data.yes_profit / 100).toFixed(2);
             this.weak_income = (res.data.one_week_profit / 100).toFixed(2);
-            this.echarts_data = res.data.user_profit_list.reverse();
-            this.up_down();
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"
@@ -522,118 +468,6 @@ export default {
         path: "/calculation_details",
         query: { item_detail: detail }
       });
-    },
-    //条形图
-    drawLine(label) {
-      let _this = this;
-      var option = {
-        color: ["#3980ff"],
-        tooltip: {
-          trigger: "axis"
-        },
-        grid: {
-          top: 30,
-          left: "2%",
-          right: "5%",
-          bottom: "3%",
-          containLabel: true
-        },
-        xAxis: [
-          {
-            // data: [
-            //   "06-01",
-            //   "06-02",
-            //   "06-03",
-            //   "06-04",
-            //   "06-05",
-            //   "06-06",
-            //   "06-07",
-            //   "06-08",
-            //   "06-09",
-            //   "06-10"
-            // ],
-            splitNumber: 8,
-            data: _this.echarts_data.map(function(item) {
-              return upodateTime(item.date_stamp, "M");
-            }),
-            silent: false,
-            splitLine: {
-              show: false
-            },
-            splitArea: {
-              show: false
-            },
-            axisTick: {
-              //坐标轴刻度相关设置
-              show: true, //是否显示坐标轴刻度。
-              alignWithLabel: true, //类目轴中在 boundaryGap 为 true 的时候有效，可以保证刻度线和标签对齐
-              inside: false, //坐标轴刻度是否朝内，默认朝外。
-              length: 5 //坐标轴刻度的长度。
-            },
-            axisLabel: {
-              margin: 2
-            }
-          }
-        ],
-        yAxis: {
-          splitArea: {
-            show: false
-          },
-          //取消网格线
-          splitLine: {
-            show: false
-          },
-          //取消坐标值
-          axisLabel: {
-            show: true
-          },
-          //取消刻度线
-          axisTick: {
-            show: true
-          },
-          //取消坐标轴
-          axisLine: {
-            show: true
-          }
-        },
-        series: [
-          {
-            type: "line",
-            // data: [15, 46, 15, 48, 16, 165, 1, 6, 34, 30],
-            data: _this.echarts_data.map(function(item) {
-              return (item.user_total_profit / 1024 / 1024).toFixed(2);
-            }),
-            large: true,
-            markLine: {
-              symbol: "none",
-              label: {
-                position: "middle", //将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
-                formatter: function(params) {
-                  return `${params.value} Mbps`;
-                }
-              },
-              data: [{ type: "max", name: "最大值" }]
-            }
-          }
-        ]
-      };
-      if (label) {
-        // 初始化echarts实例
-        let myChart_xia = this.$echarts.init(
-          document.getElementById("myChart_node")
-        );
-        //防止越界，重绘canvas
-        window.onresize = myChart_xia.resize;
-        myChart_xia.setOption(option, true); //设置option
-      } else {
-        // 初始化echarts实例
-        let myChart_shang = this.$echarts.init(
-          document.getElementById("myChart_xiyou")
-        );
-        //防止越界，重绘canvas
-        window.onresize = myChart_shang.resize;
-        myChart_shang.setOption(option, true); //设置option
-      }
     }
   },
   components: {
@@ -646,76 +480,6 @@ export default {
 /deep/.van-nav-bar {
   background: #ffffff !important;
 }
-/deep/.van-popup {
-  width: 94%;
-  padding: 3%;
-  overflow-y: scroll;
-}
-/deep/.van-dropdown-menu {
-  width: 49%;
-  justify-content: space-between;
-  background-color: #ffffff;
-  height: 0.88rem;
-  z-index: 11;
-}
-/deep/.van-dropdown-menu__item {
-  flex: none;
-  width: 2.2rem;
-  height: 0.6rem;
-  border-radius: 1rem;
-  background-color: #fff;
-  margin: auto;
-  border: 1px solid #eeeeee;
-  margin-left: 4%;
-}
-/deep/.van-dropdown-item--down {
-  top: 3.3rem !important;
-}
-/deep/.van-hairline--top-bottom::after,
-.van-hairline-unset--top-bottom::after {
-  border: none;
-}
-/deep/.van-tabs__nav--card {
-  border: #cecece solid 0.01rem;
-}
-/deep/.van-tabs__nav--card .van-tab {
-  border-right: #cecece solid 0.01rem;
-}
-/deep/.van-tabs__nav--card .van-tab.van-tab--active {
-  height: 0.56rem;
-  background: #ff6d6e;
-  border-radius: 0.1rem;
-  color: #ffffff;
-}
-/deep/.van-tab .van-ellipsis {
-  border-radius: 0.1rem;
-}
-/deep/.van-tabs__nav--card .van-tab {
-  color: #ff6d6e;
-}
-/deep/.bandwidth .van-tab {
-  width: 1.5rem;
-  font-size: 0.24rem;
-}
-/deep/.bandwidth .van-tabs__wrap {
-  // width: 75%;
-  height: 0.6rem;
-  line-height: 0.6rem;
-  display: flex;
-  justify-content: flex-end;
-  position: absolute;
-  right: 0.3rem;
-  top: -0.7rem;
-  font-size: 0.24rem;
-}
-/deep/.bandwidth .van-tabs__nav--card .van-tab.van-tab--active {
-  height: 0.6rem;
-  line-height: 0.6rem;
-}
-/deep/.bandwidth .van-ellipsis {
-  height: 0.6rem;
-  line-height: 0.6rem;
-}
 .pull-normal-top,
 .pull-normal-bottom {
   color: #333333;
@@ -725,205 +489,131 @@ export default {
   height: 100%;
   background-color: #fff;
   overflow: hidden;
-  margin-top: 0.92rem;
   .titrights {
     margin-right: 0.2rem;
     color: #666666;
   }
   .content {
-    color: #333333;
+    margin-top: 0.92rem;
+    color: #ffffff;
     font-size: 0.24rem;
     height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
-    // padding: 0 10%;
-    // background: pink;
-    .monitor_top {
-      background-color: #fff;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      margin: auto;
-      padding-top: 0.2rem;
+    .content_top {
+      width: 72%;
+      padding: 0 10%;
+      height: 3.6rem;
       text-align: left;
-      margin-bottom: 0.2rem;
-      .monitor_top_left {
-        width: 47.5%;
-        margin-left: 4%;
-        margin-right: 1%;
-        padding: 0 4%;
-        height: 1.84rem;
-        background: #ffffff url(../../assets/images/shebeibg.png) no-repeat;
-        background-size: 100% 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        p {
-          font-size: 0.28rem;
-          width: 100%;
-          margin-top: 0.26rem;
-          text-align: center;
-        }
-        .monitor_status {
-          font-size: 0.38rem;
-          margin-top: 0.4rem;
-          text-align: center;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-      }
-      .monitor_top_right {
-        width: 47.5%;
-        margin-left: 1%;
-        margin-right: 4%;
-        padding: 0 4%;
-        height: 1.84rem;
-        background: url(../../assets/images/suanlibg.png) no-repeat;
-        background-size: 100% 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        p {
-          font-size: 0.28rem;
-          width: 100%;
-          margin-top: 0.26rem;
-          text-align: center;
-        }
-        .monitor_income {
-          font-size: 0.38rem;
-          margin-top: 0.4rem;
-          text-align: center;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-      }
-    }
-    .income_con_btn {
-      background-color: #ffffff;
-      width: 100%;
+      margin: auto;
+      border-radius: 0.1rem;
+      background: url(../../assets/images/all_income.png) no-repeat;
+      background-size: 100% 100%;
       position: relative;
       z-index: 11;
-      float: left;
-      // display: flex;
-      // flex-flow: row-reverse;
-      // justify-content: space-around;
+      .content_top_all {
+        padding-top: 10%;
+        div {
+          width: 100%;
+          font-size: 0.76rem;
+          font-weight: 600;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .content_top_detail {
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+        .content_top_detail_left,
+        .content_top_detail_right {
+          width: 50%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          p {
+            font-size: 0.32rem;
+          }
+          p:nth-child(2) {
+            margin-top: 0.1rem;
+            font-size: 0.24rem;
+          }
+        }
+      }
     }
-    // .content_top {
-    //   width: 72%;
-    //   padding: 0 10%;
-    //   height: 3.6rem;
-    //   text-align: left;
-    //   margin: auto;
-    //   border-radius: 0.1rem;
-    //   background: url(../../assets/images/all_income.png) no-repeat;
-    //   background-size: 100% 100%;
-    //   position: relative;
-    //   z-index: 11;
-    //   .content_top_all {
-    //     padding-top: 10%;
-    //     div {
-    //       width: 100%;
-    //       font-size: 0.76rem;
-    //       font-weight: 600;
-    //       overflow: hidden;
-    //       text-overflow: ellipsis;
-    //       white-space: nowrap;
-    //     }
-    //   }
-    //   .content_top_detail {
-    //     display: flex;
-    //     justify-content: center;
-    //     margin-top: 0.5rem;
-    //     .content_top_detail_left,
-    //     .content_top_detail_right {
-    //       width: 50%;
-    //       overflow: hidden;
-    //       text-overflow: ellipsis;
-    //       white-space: nowrap;
-    //       p {
-    //         font-size: 0.32rem;
-    //       }
-    //       p:nth-child(2) {
-    //         margin-top: 0.1rem;
-    //         font-size: 0.24rem;
-    //       }
-    //     }
-    //   }
-    // }
-    // .content_body {
-    //   width: 100%;
-    //   overflow-x: hidden;
-    //   overflow-y: scroll;
-    //   padding-bottom: 1.5rem;
-    //   .content_con {
-    //     width: 84%;
-    //     padding: 4%;
-    //     margin: auto;
-    //     color: #333333;
-    //     border: solid 0.01rem #eeeeee;
-    //     border-radius: 0.1rem;
-    //     margin-top: 0.2rem;
-    //     text-align: left;
-    //     img {
-    //       width: 7%;
-    //     }
-    //     .content_body_top {
-    //       display: flex;
-    //       justify-content: space-between;
-    //       align-items: center;
-    //       margin-bottom: 0.2rem;
-    //       font-size: 0.28rem;
-    //       font-weight: 600;
-    //       width: 100%;
-    //       div {
-    //         width: 3rem;
-    //         img {
-    //           width: 14%;
-    //         }
-    //       }
-    //     }
-    //     .content_body_bottom {
-    //       width: 100%;
-    //       display: flex;
-    //       justify-content: space-between;
-    //       align-items: center;
-    //       .content_body_bottom_left,
-    //       .content_body_bottom_right {
-    //         width: 28.5%;
-    //         padding: 10%;
-    //         display: flex;
-    //         justify-content: space-between;
-    //         align-content: center;
-    //         border: solid 0.01rem #eeeeee;
-    //         border-radius: 0.1rem;
-    //         img {
-    //           width: 0.6rem;
-    //           height: 0.6rem;
-    //         }
-    //         .content_body_bottom_right_detail {
-    //           width: 96%;
-    //           padding-left: 4%;
-    //           overflow: hidden;
-    //           text-overflow: ellipsis;
-    //           white-space: nowrap;
-    //           p {
-    //             font-style: 0.26rem;
-    //             color: #666666;
-    //           }
-    //           p:nth-child(2) {
-    //             font-weight: 600;
-    //             color: #333333;
-    //             span {
-    //               font-size: 0.22rem;
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    .content_body {
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding-bottom: 1.5rem;
+      .content_con {
+        width: 84%;
+        padding: 4%;
+        margin: auto;
+        color: #333333;
+        border: solid 0.01rem #eeeeee;
+        border-radius: 0.1rem;
+        margin-top: 0.2rem;
+        text-align: left;
+        img {
+          width: 7%;
+        }
+        .content_body_top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.2rem;
+          font-size: 0.28rem;
+          font-weight: 600;
+          width: 100%;
+          div {
+            width: 3rem;
+            img {
+              width: 14%;
+            }
+          }
+        }
+        .content_body_bottom {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .content_body_bottom_left,
+          .content_body_bottom_right {
+            width: 28.5%;
+            padding: 10%;
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
+            border: solid 0.01rem #eeeeee;
+            border-radius: 0.1rem;
+            img {
+              width: 0.6rem;
+              height: 0.6rem;
+            }
+            .content_body_bottom_right_detail {
+              width: 96%;
+              padding-left: 4%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              p {
+                font-style: 0.26rem;
+                color: #666666;
+              }
+              p:nth-child(2) {
+                font-weight: 600;
+                color: #333333;
+                span {
+                  font-size: 0.22rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

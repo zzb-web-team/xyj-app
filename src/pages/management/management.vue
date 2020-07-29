@@ -305,7 +305,8 @@ export default {
                   } else {
                     this.zan_minerInfo.push(...this.devlist); //数组拼接
                   }
-                  this.get_con();
+                  this.minerInfo= this.zan_minerInfo;
+                  // this.get_con();
                   if (this.zan_minerInfo.length <= 0) {
                     this.noint = true;
                   } else {
