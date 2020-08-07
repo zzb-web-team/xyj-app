@@ -13,7 +13,7 @@
         <span>返回</span>
       </div>
     </van-nav-bar> -->
- <navBar>
+    <navBar>
       <van-icon name="search" slot="right" />
     </navBar>
     <div
@@ -21,7 +21,12 @@
     ></div>
 
     <div class="xiala">
-      <Scroll ref="myscroller" :autoUpdate="true" :listenScroll="true" @pullingDown="onRefresh">
+      <Scroll
+        ref="myscroller"
+        :autoUpdate="true"
+        :listenScroll="true"
+        @pullingDown="onRefresh"
+      >
         <!-- 网络异常 -->
         <div class="refresh" v-show="refresh">
           <div
@@ -33,7 +38,16 @@
           </div>
         </div>
         <div class="ranking" v-show="!refresh">
-          <van-tabs v-model="active_ranking"  @click="onClick">
+          <van-tabs v-model="active_ranking" type="card" @click="onClick">
+            <div class="top">
+              <div class="topimg">
+                <div class="ranking_title">收益排行</div>
+                <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
+              </div>
+              <div class="ranking_img">
+                <!-- <img src="../../assets/images/earnings_bg1_trophy.png" /> -->
+              </div>
+            </div>
             <van-tab title="西柚机收益排行">
               <div class="nointerval" v-show="noint">
                 <img src="../../assets/images/paiming.png" alt />
@@ -42,7 +56,7 @@
               <div class="ranking_con" v-show="!noint">
                 <div class="ranking_con_title">
                   <div class="tltle_l">
-                    <b>名次</b>
+                    <b>名次</b>-
                   </div>
                   <div class="title_n">
                     <b>西柚机收益</b>
@@ -54,28 +68,30 @@
                     <b>用户</b>
                   </div>
                 </div>
-                <div class="ranking_item" v-for="(item,index) in rankLists" v-bind:key="index">
+                <div
+                  class="ranking_item"
+                  v-for="(item, index) in rankLists"
+                  v-bind:key="index"
+                >
                   <div
                     class="ranking_item_l"
-                    :class="{'ranking_item_l1':index==0,
-                'ranking_item_l2':index==1,
-                'ranking_item_l3':index==2}"
+                    :class="{
+                      ranking_item_l1: index == 0,
+                      ranking_item_l2: index == 1,
+                      ranking_item_l3: index == 2
+                    }"
                   >
-                    <b>{{(index+1)|screen}}</b>
+                    <b>{{ (index + 1) | screen }}</b>
                   </div>
-                  <div class="ranking_item_n">
-                    {{item.profit_rank}} gfm
+                  <div class="ranking_item_n">{{ item.profit_rank }} gfm</div>
+                  <div class="ranking_item_r">
+                    <b>{{ item.bind_num }}</b>
                   </div>
-                  <div
-                    class="ranking_item_r"
-                  >
-                    <b>{{item.bind_num}}</b>
-                  </div>
-                  <div class="ranking_item_m">{{item.user_tel|newtel}}</div>
+                  <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
                 </div>
                 <div class="ranking_time">
                   <img src="../../assets/images/home_icon_notice.png" alt />
-                  统计于：{{token_gen_ts}}
+                  统计于：{{ token_gen_ts }}
                 </div>
               </div>
             </van-tab>
@@ -99,26 +115,30 @@
                     <b>用户</b>
                   </div>
                 </div>
-                <div class="ranking_item" v-for="(item,index) in rankList" v-bind:key="index">
+                <div
+                  class="ranking_item"
+                  v-for="(item, index) in rankList"
+                  v-bind:key="index"
+                >
                   <div
                     class="ranking_item_l"
-                    :class="{'ranking_item_l1':index==0,'ranking_item_l2':index==1,'ranking_item_l3':index==2}"
+                    :class="{
+                      ranking_item_l1: index == 0,
+                      ranking_item_l2: index == 1,
+                      ranking_item_l3: index == 2
+                    }"
                   >
-                    <span>{{(index+1)|screen}}</span>
+                    <span>{{ (index + 1) | screen }}</span>
                   </div>
-                  <div class="ranking_item_n">
-                      {{item.node_income}} 积分
+                  <div class="ranking_item_n">{{ item.node_income }} 积分</div>
+                  <div class="ranking_item_r">
+                    <b>{{ item.bind_rank }}</b>
                   </div>
-                  <div
-                    class="ranking_item_r"
-                  >
-                    <b>{{item.bind_rank}}</b>
-                  </div>
-                  <div class="ranking_item_m">{{item.user_tel|newtel}}</div>
+                  <div class="ranking_item_m">{{ item.user_tel | newtel }}</div>
                 </div>
                 <div class="ranking_time">
                   <img src="../../assets/images/home_icon_notice.png" alt />
-                  统计于：{{token_gen_ts}}
+                  统计于：{{ token_gen_ts }}
                 </div>
               </div>
             </van-tab>
@@ -184,7 +204,7 @@ export default {
     }
   },
 
-    components: {
+  components: {
     navBar: navBar
   },
   mounted() {
@@ -195,10 +215,10 @@ export default {
     onClickLeft() {
       this.$router.back(-1);
     },
-     onClick(name, title) {
-      if(title=='西柚机收益排行'){
+    onClick(name, title) {
+      if (title == "西柚机收益排行") {
         this.pocrank();
-      }else{
+      } else {
         this.numrank();
       }
     },
@@ -221,7 +241,9 @@ export default {
               if (res.err_code == 0) {
                 this.refresh = false;
                 this.rankLists = res.data.profit_rank;
-                this.rankLists.sort((a,b)=>{ return b.profit_rank-a.profit_rank})//降序
+                this.rankLists.sort((a, b) => {
+                  return b.profit_rank - a.profit_rank;
+                }); //降序
                 if (this.rankLists.length <= 0) {
                   this.noints = true;
                 } else {
@@ -286,7 +308,9 @@ export default {
           this.$loading.hide();
           if (res.status == 0) {
             this.rankList = res.data.bind_rank;
-             this.rankList.sort((a,b)=>{ return b.bind_rank-a.bind_rank})//降序
+            this.rankList.sort((a, b) => {
+              return b.bind_rank - a.bind_rank;
+            }); //降序
             if (this.rankList.length <= 0) {
               this.noint = true;
             } else {
@@ -350,7 +374,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped >
+<style lang="less" scoped>
 /deep/.van-nav-bar {
   z-index: 2 !important;
   color: #fff;
@@ -365,10 +389,10 @@ export default {
   // color: #ffffff;
   color: #000000;
 }
-/deep/.van-tabs__wrap{
+/deep/.van-tabs__wrap {
   background-color: #fff;
 }
-/deep/.van-tabs__nav--line{
+/deep/.van-tabs__nav--line {
   width: 75%;
   margin: auto;
   border: 0.01rem #eeeeee solid;
@@ -385,7 +409,7 @@ export default {
 
   .xiala {
     height: 100%;
-    margin-top:0.82rem;
+    margin-top: 0.82rem;
     .refresh {
       height: 100%;
       width: 100%;
@@ -408,13 +432,22 @@ export default {
     height: auto;
     overflow: hidden;
     margin: 0 auto;
+    // .top {
+    //   height: 3rem;
+    //   display: flex;
+    //   flex-direction: row;
+    //   align-items: flex-end;
+    //   background-image: url(../../assets/images/paihang_bgc.png);
+    //   background-size: 100% 100%;
+    //   margin-top: 0.1rem;
+    // }
     .ranking_con {
       width: 100%;
       height: 100%;
       background: #ffffff;
       // border-radius: 0.12rem;
       margin: 0 auto;
-      // margin-top: 0.2rem;
+      margin-top: 0.2rem;
     }
     .ranking_time {
       width: 100%;
@@ -432,10 +465,11 @@ export default {
       width: 95%;
       height: 0.6rem;
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
       font-size: 0.34rem;
       font-weight: bold;
+      text-align: center;
       color: #000;
       margin: 0 auto;
     }
@@ -449,22 +483,22 @@ export default {
       box-sizing: border-box;
       color: #979797;
       text-align: left;
-       box-sizing:border-box;
+      box-sizing: border-box;
       padding-right: 0.5rem;
       .tltle_l {
         width: 20%;
         text-align: center;
       }
       .tltle_m {
-         width: 25%;
+        width: 25%;
         text-align: center;
       }
-      .title_n{
-          width: 25%;
+      .title_n {
+        width: 25%;
         text-align: center;
       }
       .tltle_r {
-          width: 30%;
+        width: 30%;
         text-align: center;
       }
     }
@@ -477,7 +511,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
       color: #000;
-      box-sizing:border-box;
+      box-sizing: border-box;
       padding-right: 0.5rem;
       .ranking_item_l {
         width: 20%;

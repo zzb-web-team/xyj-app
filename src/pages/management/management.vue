@@ -76,7 +76,11 @@
             v-bind:key="index"
             v-show="item.dev_bind_state == 1"
           >-->
-          <div class="ranking_con" v-for="(item, index) in minerInfo" v-bind:key="index">
+          <div
+            class="ranking_con"
+            v-for="(item, index) in minerInfo"
+            v-bind:key="index"
+          >
             <div
               class="ranking_con_item"
               v-bind:sn="item.dev_sn"
@@ -84,17 +88,24 @@
               v-fb="{ cls: 'my_touchfeedback' }"
             >
               <div class="con_item_l">
-                <div class="item_l_top">
-                  <div class="item_l_name">{{ item.dev_name }}</div>
-                  <div class="dot" v-bind:style="{ background: item.bgccolor }"></div>
-                  <span v-bind:style="{ color: item.spancolor }">
-                    {{
-                    item.equipment
-                    }}
-                  </span>
+                <div class="con_item_left_img">
+                  <img src="../../assets//images/income_dev_name.png" alt="" v-show="item.equipment=='在线'" />
+                  <img src="../../assets//images/income_dev_name_hui.png" v-show="item.equipment=='离线'" alt="">
                 </div>
-                <div class="item_l_No">SN:{{ item.dev_sn }}</div>
-                <div class="item_l_cpu">CPU-ID:{{ item.cpu_id }}</div>
+                <div>
+                  <div class="item_l_top">
+                    <div class="item_l_name">{{ item.dev_name }}</div>
+                    <!-- <div
+                    class="dot"
+                    v-bind:style="{ background: item.bgccolor }"
+                  ></div> -->
+                    <span v-bind:style="{ color: item.spancolor }">
+                      {{ item.equipment }}
+                    </span>
+                  </div>
+                  <div class="item_l_No">SN:{{ item.dev_sn }}</div>
+                  <div class="item_l_cpu">CPU-ID:{{ item.cpu_id }}</div>
+                </div>
               </div>
               <div class="con_item_r">
                 <!-- <div class="item_center">
@@ -305,7 +316,7 @@ export default {
                   } else {
                     this.zan_minerInfo.push(...this.devlist); //数组拼接
                   }
-                  this.minerInfo= this.zan_minerInfo;
+                  this.minerInfo = this.zan_minerInfo;
                   // this.get_con();
                   if (this.zan_minerInfo.length <= 0) {
                     this.noint = true;
@@ -662,15 +673,15 @@ body {
   }
   .ranking_con {
     width: 90%;
-    height: 1.3rem;
+    // height: 1.3rem;
     overflow: hidden;
     margin: auto;
-    margin-top: 0.3rem;
-    margin-bottom: 0.17rem;
-    box-shadow: 0 0.1rem 0.1rem 0 #6da4ff0f;
+    margin-top: 0.2rem;
+    // margin-bottom: 0.17rem;
+    box-shadow: 0 0.01rem 0.01rem 0 #03143105;
     .ranking_con_item {
       width: 100%;
-      height: 1.3rem;
+      // height: 1.3rem;
       background: #ffffff;
       border-radius: 0.1rem;
       display: flex;
@@ -679,15 +690,24 @@ body {
       align-items: center;
       color: #808080;
       margin: auto;
-      padding-left: 0.3rem;
+      padding: 0.3rem;
+       box-shadow: 0 0.01rem 0.01rem 0 #03143105;
     }
+
     .con_item_l {
       display: flex;
-      flex-direction: column;
+      // flex-direction: column;
       width: 55%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      .con_item_left_img {
+        width: 0.33rem;
+        margin-right: 0.2rem;
+        img {
+          width: 100%;
+        }
+      }
       .item_l_top {
         display: flex;
         flex-direction: row;
@@ -723,8 +743,8 @@ body {
         line-height: 0.52rem;
         font-size: 0.24rem;
       }
-      .item_l_cpu{
-         color: #666666;
+      .item_l_cpu {
+        color: #666666;
         text-align: left;
         line-height: 0.32rem;
         font-size: 0.24rem;

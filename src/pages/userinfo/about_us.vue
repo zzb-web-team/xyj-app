@@ -2,8 +2,15 @@
   <div class="about_us">
     <navBar title="收益账户"></navBar>
     <div class="about_us_body">
-      <van-cell is-link @click="goprivacy" v-fb="{ cls: 'my_touchfeedback' }">西柚机收益账户</van-cell>
-      <van-cell is-link @click="goUserAgreement" v-fb="{ cls: 'my_touchfeedback' }">节点收益账户</van-cell>
+      <van-cell is-link @click="goprivacy" v-fb="{ cls: 'my_touchfeedback' }"
+        >西柚机收益账户</van-cell
+      >
+      <van-cell
+        is-link
+        @click="goUserAgreement"
+        v-fb="{ cls: 'my_touchfeedback' }"
+        >节点收益账户</van-cell
+      >
       <!-- <van-cell title="版本" class="ves">
         <i></i>1.3.1.154
       </van-cell> -->
@@ -40,9 +47,11 @@ export default {
 .about_us {
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color: #f5f5f5;
   .about_us_body {
     margin-top: 0.92rem;
+    padding-top: 0.33rem;
+    background-color: #f5f5f5;
     .ves {
       .van-cell__title {
         text-align: left;

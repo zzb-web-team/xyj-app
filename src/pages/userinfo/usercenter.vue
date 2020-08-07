@@ -49,7 +49,7 @@
               v-fb="{ cls: 'my_touchfeedback' }"
             >
               <div class="con_item_l">
-                <!-- <img src="../../assets/images/per_list_icon_toolbox.png" alt /> -->
+                <img src="../../assets/images/per_list_icon_toolbox.png" alt />
                 <span>工具箱</span>
               </div>
               <div class="con_item_r">
@@ -58,7 +58,7 @@
             </div>
             <div class="user_con_item" @click="gojifen()">
               <div class="con_item_l">
-                <!-- <img src="../../assets/images/per_list_icon_integral.png" alt /> -->
+                <img src="../../assets/images/per_list_icon_integral.png" alt />
                 <span>收益账户</span>
               </div>
               <div class="con_item_r">
@@ -67,7 +67,7 @@
             </div>
             <div class="user_con_item" @click="gohelp()">
               <div class="con_item_l">
-                <!-- <img src="../../assets/images/per_list_icon_help.png" alt /> -->
+                <img src="../../assets/images/per_list_icon_help.png" alt />
                 <span>帮助中心</span>
               </div>
               <div class="con_item_r">
@@ -120,8 +120,8 @@
               v-fb="{ cls: 'my_touchfeedback' }"
             >
               <div class="con_item_l">
-                <!-- <img src="../../assets/images/per_list_icon_about.png" alt /> -->
-                <span>隐私协议</span>
+                <img src="../../assets/images/per_list_icon_about.png" alt />
+                <span>隐私政策</span>
               </div>
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
@@ -136,6 +136,7 @@
             </div> -->
             <div class="user_con_item">
               <div class="con_item_l">
+                <img src="../../assets/images/per_list_icon_version.png" alt />
                 <span>版本</span>
               </div>
               <div class="con_item_r"><i></i>1.3.1.154</div>
@@ -696,7 +697,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        overflow: hidden;
+        // overflow: hidden;
         img {
           width: 0.12rem;
           height: 0.24rem;
@@ -739,12 +740,7 @@ export default {
       .user_con_item:nth-child(1) {
         width: 100%;
         height: 2rem;
-        // box-shadow: 0 5px 5px #e6e6e6;
-        // background: linear-gradient(
-        //   90deg,
-        //   rgba(116, 90, 243, 1) 10%,
-        //   rgba(92, 116, 243, 1) 100%
-        // );
+        box-shadow: 0 0.1rem 0.3rem 0 #06275c0f;
         border: none;
         button {
           // width: 1.62rem;
@@ -814,7 +810,13 @@ export default {
       }
       .user_con_item:nth-child(2) {
         height: auto;
-        margin-bottom: 0.5rem;
+        // margin-bottom: 0.5rem;
+        margin-top: 0.3rem;
+        .con_item_l {
+          img {
+            width: 25%;
+          }
+        }
         .user_con_item_border {
           width: 100%;
           margin: auto;
@@ -837,8 +839,8 @@ export default {
             text-align: left;
             img {
               margin-right: 0.1rem;
-              width: 0.4rem;
-              height: 0.4rem;
+              width: 25%;
+              height: 45%;
             }
             p {
               color: #333333;
@@ -871,6 +873,18 @@ export default {
           }
         }
       }
+      .user_con_item:last-child {
+        .con_item_l {
+          img {
+            width: 27%;
+          }
+
+        }
+        .con_item_r{
+            color: #8f8f8f;
+            font-size: 0.28rem;
+          }
+      }
     }
   }
   .out_login {
@@ -879,13 +893,13 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 0.28rem;
-    color: #252834;
+    font-size: 0.24rem;
+    color: #666666;
     margin: auto;
     margin-top: 2.8rem;
     border: none;
-    background: rgba(247, 247, 247, 1);
-    border-radius: 0.1rem;
+    background: #f9f9f9;
+    border-radius: 0.44rem;
   }
   .wrapper {
     display: flex;

@@ -28,6 +28,8 @@ import income_overview from "@/pages/income/income_overview";
 import all_income_list from "@/pages/income/all_income_list";
 import income_list from "@/pages/income/income_list";
 import all_income_detail from "@/pages/income/all_income_detail";
+import node_income_list from "@/pages/income/node_income_list";
+import xiyouji_income_list from "@/pages/income/xiyouji_income_list";
 
 import management from "@/pages/management/management";
 import managementinfo from "@/pages/management/managementinfo";
@@ -165,6 +167,22 @@ const routes = [{
         path: "/income_list",
         name: "income_list",
         component: income_list,
+        meta: {
+            index: 6
+        }
+    },
+    {
+        path: "/node_income_list",
+        name: "node_income_list",
+        component: node_income_list,
+        meta: {
+            index: 6
+        }
+    },
+    {
+        path: "/xiyouji_income_list",
+        name: "xiyouji_income_list",
+        component: xiyouji_income_list,
         meta: {
             index: 6
         }

@@ -296,12 +296,12 @@ export default {
     },
     goprivacy() {
       setTimeout(() => {
-        this.$router.push({ path: "/my_scores" });
+        this.$router.push({ path: "/xiyouji_income_list" });
       }, 200);
     },
     goUserAgreement() {
       setTimeout(() => {
-        this.$router.push({ path: "/node_scores" });
+        this.$router.push({ path: "/node_income_list" });
       }, 200);
     },
     get_use_dev_list() {

@@ -436,7 +436,7 @@ export default {
 }
 /deep/.van-dropdown-menu {
   justify-content: space-between;
-  background-color: #f8fafb;
+  background-color: #F5F5F5;
   height: 1.26rem;
   z-index: 11;
 }
@@ -493,7 +493,7 @@ export default {
     .income_con_top {
       width: 100%;
       height: 17.5%;
-      background: url(../../assets/images/jifen_bgc.png) no-repeat;
+      background: url(../../assets/images/shouyi_bgc.png) no-repeat;
       background-size: 100% 100%;
       background-position: top;
       position: relative;

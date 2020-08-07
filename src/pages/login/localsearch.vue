@@ -10,7 +10,7 @@
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#333333" />
-        <span></span>
+        <span style="margin-left: -0.1rem;">返回</span>
       </div>
     </van-nav-bar>
     <!--  -->
@@ -37,13 +37,13 @@
             <span class="con_name con_name_right">{{ item.version }}</span>
           </div>
         </div>
+        <p class="title_cpuid">
+          <span class="title_name">CPU-ID:</span>
+          {{ item.cpu_id }}
+        </p>
         <p>
           <span class="title_name">MAC地址:</span>
           {{ item.mac }}
-        </p>
-        <p class="title_cpuid">
-           <span class="title_name">CPU-ID:</span>
-          {{ item.cpu_id }}
         </p>
       </div>
     </div>
@@ -63,18 +63,30 @@ export default {
   data() {
     return {
       listarr: [
-        // { sn: "d1sffafaa956165", mac: "mlmciemdsaioe468", version: "1.3.3.1" },
-        // { sn: "fd1fdsaf651", mac: "mlmciemaiohtye468", version: "1.3.3.1" },
-        // { sn: "4ge65r1g6", mac: "mlmciemaszioe468", version: "1.3.3.1" },
-        // { sn: "f1a5sdf6415f", mac: "mlmciemaioe468", version: "1.3.3.1" },
-        // { sn: "f1ssfsd651", mac: "mlmdsbcidsemaioe468", version: "1.3.3.1" },
-        // { sn: "d2asger651", mac: "mlmciemaioe468", version: "1.3.3.1" },
-        // { sn: "f1adhd31", mac: "mlmciemaioe468", version: "1.3.3.1" },
-        // { sn: "f16hrssa51g5", mac: "mlmciemzxaioe468", version: "1.3.3.1" },
-        // { sn: "g1a1g54r", mac: "mlmciemazxbioe468", version: "1.3.3.1" },
-        // { sn: "g5adzgfd4e5w", mac: "mlmciemaioe468", version: "1.3.3.1" },
-        // { sn: "g1a65we6", mac: "mlmciemavsioe468", version: "1.3.3.1" },
-        // { sn: "fg1a5e", mac: "mlmciemsaaioe468", version: "1.3.3.1" }
+        // {
+        //   sn: "d1sffafaa956165",
+        //   mac: "mlmciemdsaioe468",
+        //   version: "1.3.3.1",
+        //   cpu_id: "1616516516"
+        // },
+        // {
+        //   sn: "fd1fdsaf651",
+        //   mac: "mlmciemaiohtye468",
+        //   version: "1.3.3.1",
+        //   cpu_id: "1616516516"
+        // },
+        // {
+        //   sn: "4ge65r1g6",
+        //   mac: "mlmciemaszioe468",
+        //   version: "1.3.3.1",
+        //   cpu_id: "1616516516"
+        // },
+        // {
+        //   sn: "f1a5sdf6415f",
+        //   mac: "mlmciemaioe468",
+        //   version: "1.3.3.1",
+        //   cpu_id: "1616516516"
+        // }
       ],
       dev_id_list: [],
       num: 0
@@ -141,7 +153,6 @@ export default {
   text-align: left;
   padding-left: 0.3rem;
   font-size: 0.3rem;
-  font-weight: 600;
   color: #000;
   margin: 1rem 0 0.06rem 0;
 }
@@ -150,21 +161,23 @@ export default {
   height: 100%;
   margin: 0 auto;
   overflow: hidden;
-  background: #f8f8f8;
+  background: #f8fafb;
 
   #content {
     overflow: auto;
     height: 9.9rem;
     -webkit-overflow-scrolling: touch; /* liuhx:可以把这整行注释掉对比差别 */
     .dev {
-      padding: 0 0.2rem;
+      padding: 0.2rem 0.2rem;
       width: 96%;
       background: #ffffff;
       border-radius: 0.12rem;
       box-sizing: border-box;
       margin: 0 auto;
       margin-top: 0.15rem;
-      box-shadow: 0px 0px 18px 0px rgba(232, 232, 232, 1);
+      background: #ffffff;
+      box-shadow: 0px 10px 30px 0px rgba(6, 39, 92, 0.06);
+      border-radius: 0.2rem;
       .list_top {
         display: flex;
         justify-content: space-between;
@@ -178,14 +191,13 @@ export default {
           width: 100%;
         }
         .title_name {
-          font-weight: 600;
           font-size: 0.3rem;
-          color: #737374;
+          color: #333333;
         }
 
         .con_name {
           display: inline-block;
-          color: #43577b;
+          color: #6e7995;
           width: 3rem;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -200,17 +212,16 @@ export default {
         width: 100%;
         // height: 0.6rem;
         text-align: left;
-
         color: #43577b;
         span {
-          font-weight: 600;
           font-size: 0.3rem;
-          color: #737374;
+          color: #333333;
         }
       }
-      .title_cpuid{
-          margin-bottom: 0.1rem;
-        }
+      .title_cpuid {
+        margin-bottom: 0.1rem;
+        color: #6e7995;
+      }
     }
   }
   .introduction_start {
