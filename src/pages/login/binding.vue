@@ -130,9 +130,9 @@ export default {
       // }, 6000);
     },
     getMinerInfolist: function(data) {
-      this.$router.push({
-        path: "/searchbinding" //没有搜索到设备就去扫码搜索界面
-      });
+      // this.$router.push({
+      //   path: "/searchbinding" //没有搜索到设备就去扫码搜索界面
+      // });
       let nowarr = JSON.parse(data);
       Toast.clear();
       if (nowarr.length <= 0) {
