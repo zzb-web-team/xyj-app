@@ -20,8 +20,8 @@
         >
           <div class="device_info_left">
             <div class="device_dot">
-              <div class="dot" v-bind:style="{background:oldcolor}"></div>
-              <span v-bind:style="{color:oldcolor}">{{ minnerstatus }}</span>
+              <div class="dot" v-bind:style="{ background: oldcolor }"></div>
+              <span v-bind:style="{ color: oldcolor }">{{ minnerstatus }}</span>
             </div>
             <!-- <div class="device_btn" @click="go_monitor()">监控</div> -->
           </div>
@@ -40,11 +40,9 @@
             />
 
             <div class="device_already">
-              {{
-              ((item.total_cap - item.free_cap) / 1024 / 1024 / 1024).toFixed(
-              2
-              )
-              }}Gb/{{ (item.total_cap / 1024 / 1024 / 1024).toFixed(2) }}Gb
+              {{ (item.total_cap - item.free_cap) | bkb }}/{{
+                item.total_cap | bkb
+              }}
             </div>
           </div>
           <div class="device_bandwidth">
@@ -88,7 +86,11 @@
               <div class="con_item_l">设备名称</div>
               <div class="con_item_r" v-if="setActive" @click="openSetname()">
                 <span>{{ device_name }}</span>
-                <img src="../../assets/images/evenmore.png" alt @click="openSetname()" />
+                <img
+                  src="../../assets/images/evenmore.png"
+                  alt
+                  @click="openSetname()"
+                />
               </div>
               <div class="con_item_r" v-else>
                 <input
@@ -104,13 +106,15 @@
             <div class="user_con_item">
               <div class="con_item_l">设备型号</div>
               <!-- <div class="con_item_r">{{item.dev_model}}</div> -->
-              <div class="con_item_r">{{ item.dev_type == 1 ? "RK3328" : "AMS805" }}</div>
+              <div class="con_item_r">
+                {{ item.dev_type == 1 ? "RK3328" : "AMS805" }}
+              </div>
             </div>
             <div class="user_con_item">
               <div class="con_item_l">ROM</div>
               <div class="con_item_r">{{ item.rom_version }}</div>
             </div>
-             <div class="user_con_item">
+            <div class="user_con_item">
               <div class="con_item_l">CPU-ID</div>
               <div class="con_item_r">{{ item.cpu_id }}</div>
             </div>
@@ -166,6 +170,7 @@ export default {
       ],
       extrainfo: { ctrl_type: 1, command_msg: "reboot now!" },
       currentRate: 0,
+      free_cap: 0,
       setActive: true,
       show: false,
       devsta: false,
@@ -175,7 +180,15 @@ export default {
       dev_sn: ""
     };
   },
-
+  filters: {
+    bkb(num) {
+      if (num == 0) return "0 B";
+      var k = 1024, // or 1000
+        sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+        i = Math.floor(Math.log(num) / Math.log(k));
+      return (num / Math.pow(k, i)).toFixed(2) + " " + sizes[i];
+    }
+  },
   mounted() {
     this.scan(0);
     this.band_width();
@@ -191,7 +204,8 @@ export default {
       devsn: state => state.management.devsn
     }),
     text() {
-      return this.currentRate.toFixed(1) + "%";
+      return this.bytesToSize(this.free_cap);
+      // return this.free_cap.toFixed(2) + "GB";
     }
   },
   methods: {
@@ -264,12 +278,14 @@ export default {
                 this.dev_sn = res.data.dev_info_list[0].dev_sn;
                 if (this.minerInfoArr[0].total_cap == 0) {
                   this.currentRate = 0.0;
+                  this.free_cap = 0.0;
                 } else {
                   this.currentRate =
                     (
                       res.data.dev_info_list[0].free_cap /
                       res.data.dev_info_list[0].total_cap
                     ).toFixed(4) * 100;
+                  this.free_cap = res.data.dev_info_list[0].free_cap;
                 }
               } else {
                 this.rescount = 0;
@@ -340,16 +356,8 @@ export default {
           console.log(res);
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
-            this.up_bandwidth = (
-              res.data.dev_info_list[0].up_bandwidth /
-              1024 /
-              1024
-            ).toFixed(2);
-            this.down_bandwidth = (
-              res.data.dev_info_list[0].down_bandwidth /
-              1024 /
-              1024
-            ).toFixed(2);
+            this.up_bandwidth = (res.data.dev_info_list[0].up_bandwidth /1024 /1024).toFixed(2);
+            this.down_bandwidth = (res.data.dev_info_list[0].down_bandwidth /1024 /1024).toFixed(2);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -663,6 +671,14 @@ export default {
         });
       }
     },
+    bytesToSize(bytes) {
+      if (bytes == 0) return "0 B";
+      var k = 1024, // or 1024
+        sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      return (bytes / Math.pow(k, i)).toFixed(2) + " " + sizes[i];
+    },
     resetDiv() {
       //ios 兼容，input失去焦点后界面上移不恢复的问题
       setTimeout(() => {
@@ -772,9 +788,10 @@ export default {
       background-color: #fff;
       /deep/.van-circle__text {
         color: #000000;
-        font-size: 0.9rem;
+        font-size: 0.6rem;
         position: absolute;
         top: 1.7rem;
+        white-space: nowrap;
       }
       .device_top {
         width: 1rem;

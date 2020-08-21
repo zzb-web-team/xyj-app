@@ -705,7 +705,7 @@ body {
         width: 0.33rem;
         margin-right: 0.2rem;
         img {
-          width: 100%;
+          width: 0.3rem;
         }
       }
       .item_l_top {

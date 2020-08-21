@@ -233,6 +233,7 @@ export default {
       );
     } catch (error) {}
     this.get_all_income(90);
+    this.get_all_income(29, 2);
     // this.get_all_dev_income(0);
     // this.$nextTick(function() {
     //   let linechartex1 = document.getElementById("myChart_xiyou");
@@ -246,7 +247,8 @@ export default {
     loadTop() {
       setTimeout(() => {
         this.get_all_income(90);
-        this.get_all_dev_income(0);
+         this.get_all_income(29, 2);
+        // this.get_all_dev_income(0);
         if (this.$refs.vuuPull.closeLoadTop) {
           this.$refs.vuuPull.closeLoadTop();
         }
@@ -257,7 +259,7 @@ export default {
       setTimeout(() => {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
-          this.get_all_dev_income(this.pagenum);
+          // this.get_all_dev_income(this.pagenum);
         } else {
           this.$refs.vuuPull.closeLoadBottom();
         }
@@ -275,7 +277,7 @@ export default {
       } else if (this.value11 == 2) {
         number = 180;
       }
-      this.get_all_income(number);
+      this.get_all_income(number,2);
     },
     up_down(name, title) {
       if (title != "节点收益") {
@@ -307,9 +309,7 @@ export default {
     get_use_dev_list() {
       let params = new Object();
       let nowtime = new Date(new Date().toLocaleDateString());
-      let starttime = nowtime.setTime(
-        nowtime.getTime() - 3600 * 1000 * 24 * 90
-      );
+      let starttime = nowtime.setTime(nowtime.getTime() - 3600 * 1000 * 24 * 90 );
       params.login_token = this.log_token;
       params.start_ts = starttime / 1000;
       params.end_ts = Date.parse(new Date()) / 1000;
@@ -401,7 +401,7 @@ export default {
         .catch(error => {});
     },
     //获取总收益
-    get_all_income(num) {
+    get_all_income(num, type) {
       let params = new Object();
       let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
       let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
@@ -410,20 +410,32 @@ export default {
       params.login_token = token;
       params.start_time = starttime;
       params.end_time = endtimes;
-      params.query_type = 2;
+
       params.cur_page = 0;
       params.dev_sn = "";
+      if (type) {
+        params.query_type = 2;
+      } else {
+        params.query_type = 1;
+      }
       getuserdevlist(params)
         .then(res => {
           if (res.status == 0) {
-            this.updateUser({
-              log_token: res.data.token_info.token
-            });
-            this.all_income = (res.data.user_total_profit / 100).toFixed(2);
-            this.last_income = (res.data.yes_profit / 100).toFixed(2);
-            this.weak_income = (res.data.one_week_profit / 100).toFixed(2);
-            this.echarts_data = res.data.user_profit_list.reverse();
-            this.up_down();
+            // this.all_income = (res.data.user_total_profit / 100).toFixed(2);
+            // this.last_income = (res.data.yes_profit / 100).toFixed(2);
+            // this.weak_income = (res.data.one_week_profit / 100).toFixed(2);
+            // this.echarts_data = res.data.user_profit_list.reverse();
+            // this.updateUser({
+            //   log_token: res.data.token_info.token
+            // });
+            if (type) {
+               this.echarts_data = res.data.user_profit_list.reverse();
+              this.up_down();
+            } else {
+              this.storage.income = (res.data.user_total_profit / 100).toFixed(
+                2
+              );
+            }
           } else if (res.status == -17) {
             Dialog.alert({
               message: "账号在其它地方登录，请重新登录"

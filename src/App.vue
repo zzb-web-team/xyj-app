@@ -122,7 +122,7 @@ export default {
   transform: translate(-100% 0);
 } */
 .slide-left-enter-active {
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 .slide-left-enter {
   transform: translateX(100%);
@@ -134,7 +134,7 @@ export default {
 }
 
 .slide-right-enter-active {
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 .slide-right-enter {
   transform: translateX(-100%);

@@ -391,7 +391,7 @@ export default {
                 this.devnameokArr[num] = true;
                 this.devnameokArr = this.devnameokArr.concat([]);
               } else if (res.err_code == 210) {
-                Toast.success("当前设备名称已被占用，请换一个名称");
+                Toast.fail("当前设备名称已被占用，请换一个名称");
               } else {
                 const sta = err[res.err_code]
                   ? this.$t(err[res.err_code])

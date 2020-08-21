@@ -6,7 +6,7 @@
       fixed
       @click-left="onClickLeft"
     ></navBar> -->
-     <van-nav-bar
+    <van-nav-bar
       size="0.4rem"
       left-arrow
       fixed
@@ -53,29 +53,29 @@
           v-on:loadBottom="loadBottom"
           :style="{ height: scrollerHeight }"
         >
-        <div class="incon_con_body" v-if="income_list.length > 0">
-          <div
-            class="incon_con_body_item"
-            v-for="(item, index) in income_list"
-            :key="index"
-          >
-            <div class="incon_con_body_left">
-              <p>{{ item.dev_name}}</p>
-              <p>
-                {{ item.profit_type == 1 ? "+" : "-"
-                }}{{ (item.dev_profit / 100).toFixed(2) }}gfm
-              </p>
-            </div>
-            <div class="incon_con_body_right">
-              <div>
-                <p>连续在线{{ item.online_time}}小时</p>
-                <p>{{ item.time_stamp | formatDate }}</p>
+          <div class="incon_con_body" v-if="income_list.length > 0">
+            <div
+              class="incon_con_body_item"
+              v-for="(item, index) in income_list"
+              :key="index"
+            >
+              <div class="incon_con_body_left">
+                <p>{{ item.dev_name }}</p>
+                <p>
+                  {{ item.profit_type == 1 ? "+" : "-"
+                  }}{{ (item.dev_profit / 100).toFixed(2) }}gfm
+                </p>
               </div>
-              <!-- <van-icon name="arrow" /> -->
+              <div class="incon_con_body_right">
+                <div>
+                  <p>连续在线{{ item.v210_online_time }}小时</p>
+                  <p>{{ item.date_stamp | formatDate }}</p>
+                </div>
+                <!-- <van-icon name="arrow" /> -->
+              </div>
             </div>
           </div>
-        </div>
-      <van-empty image="search" description="暂无数据" v-else />
+          <van-empty image="search" description="暂无数据" v-else />
         </vuu-pull>
       </div>
       <!-- <van-empty description="暂无数据" v-else /> -->
@@ -107,18 +107,18 @@ export default {
       showdev: false,
       dev_show: false,
       income_list: [
-        // {
-        //   dev_profit: 165,
-        //   time_stamp: 1588694400,
-        //   com_power: 56,
-        //   dev_name:'我的西柚机',
-        //   online_time:165,
-        // }
+        {
+          dev_profit: 15,
+          time_stamp: 1588694400,
+          com_power: 56,
+          dev_name: "我的西柚机",
+          online_time: 165
+        }
       ],
       value11: 0,
       value22: 0,
       option1: [
-        { text: "全部", value: 0 }
+        // { text: "全部", value: 0 }
         // { text: "我的西柚机2", shouyi: 546, suanli: 34656, value: 1 },
         // { text: "我的西柚机3", shouyi: 2745, suanli: 346, value: 2 },
         // { text: "我的西柚机4", shouyi: 547, suanli: 2345, value: 3 },
@@ -178,7 +178,6 @@ export default {
   watch: {
     income_list: {
       handler(newName, oldName) {
-        console.log(newName, oldName);
         this.income_list = newName;
       },
       deep: true
@@ -217,18 +216,19 @@ export default {
       );
     } catch (error) {}
     let date = new Date();
-    this.value22 = date.getMonth() + 1;
-    this.value11 = this.$route.query.allshou.dev_sn;
-    this.devname = this.$route.query.allshou.dev_name;
-    this.changetime();
-    //this.get_use_dev_list();
+    let endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+    let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
+    let starttime = endtimes - 90 * 24 * 3600; //获取7天的时间戳
+    this.starttime = starttime;
+    this.endtime = endtimes;
+    this.get_use_dev_list();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
     //下拉刷新
     loadTop() {
       setTimeout(() => {
-        //this.get_use_dev_list();
+        this.get_use_dev_list();
         if (this.value11 == 0) {
           // this.get_all_income(0);
           this.get_income_list(0);
@@ -261,6 +261,48 @@ export default {
         }
       }, 500);
     },
+    //获取用户设备列表
+    get_use_dev_list() {
+      let params = new Object();
+      params.login_token = this.log_token;
+      isbindinglist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.updateUser({ log_token: res.token_info.login_token });
+            res.data.bind_devinfo_list.forEach(item => {
+              let devobj = new Object();
+              devobj.text = item.dev_name;
+              devobj.value = item.dev_sn;
+              this.option1.push(devobj);
+            });
+            this.value22 = res.data.bind_devinfo_list[0].dev_sn;
+            // this.get_dev_income(0);
+            this.get_dev_income_day(0);
+          } else if (res.status == -17) {
+            this.rescount = 0;
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            this.rescount = 0;
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {
+          // console.log(error);
+        });
+    },
     //获取单台设备每日收益列表
     get_dev_income_day(page) {
       let params = new Object();
@@ -268,7 +310,7 @@ export default {
       params.start_time = this.starttime;
       params.end_time = this.endtime;
       params.cur_page = page;
-      params.dev_sn = this.value11;
+      params.dev_sn = this.value22;
       devrevenue(params)
         .then(res => {
           if (res.status == 0) {
@@ -428,8 +470,8 @@ export default {
     onClickLeft() {
       this.$router.go(-1);
     },
-     onClickRight() {
-       this.$router.push({ path: "/my_scores" });
+    onClickRight() {
+      this.$router.push({ path: "/my_scores" });
     },
     changedev() {
       this.income_list = [];
@@ -442,31 +484,32 @@ export default {
       }
     },
     changetime() {
-      var _this = this;
-      var date = new Date();
-      var y = date.getFullYear();
-      var m = date.getMonth();
-      console.log(m);
-      var timestamp =
-        new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
-      function computeTime(year, month) {
-        if (month == 0) {
-          _this.starttime = new Date(year, month, 1).getTime() / 1000;
-          _this.endtime = timestamp - 1;
-        } else {
-          _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-          _this.endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
-        }
-      }
-      computeTime(y, this.value22);
-      this.income_list = [];
-      if (this.value11 == 0) {
-        // this.get_all_income(0);
-        this.get_income_list(0);
-      } else {
-        this.get_dev_income(0);
-        this.get_dev_income_day(0);
-      }
+      this.get_dev_income_day(0);
+      // var _this = this;
+      // var date = new Date();
+      // var y = date.getFullYear();
+      // var m = date.getMonth();
+      // console.log(m);
+      // var timestamp =
+      //   new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
+      // function computeTime(year, month) {
+      //   if (month == 0) {
+      //     _this.starttime = new Date(year, month, 1).getTime() / 1000;
+      //     _this.endtime = timestamp - 1;
+      //   } else {
+      //     _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
+      //     _this.endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
+      //   }
+      // }
+      // computeTime(y, this.value22);
+      // this.income_list = [];
+      // if (this.value11 == 0) {
+      //   // this.get_all_income(0);
+      //   this.get_income_list(0);
+      // } else {
+      //   this.get_dev_income(0);
+      //   this.get_dev_income_day(0);
+      // }
     },
     //取消按钮
     onCancel_dev() {
@@ -479,7 +522,7 @@ export default {
       params.start_time = this.starttime;
       params.end_time = this.endtime;
       params.cur_page = pagenum;
-      params.dev_sn = this.value11;
+      params.dev_sn = this.value22;
       devinformation(params)
         .then(res => {
           if (res.status == 0) {
@@ -489,20 +532,19 @@ export default {
               let value = item;
               obje[key] = value;
             });
-            console.log(obje);
             this.slcsi.forEach((item, index) => {
               let item_tiem = this.eachTime(item.date_stamp);
-              console.log(item_tiem);
+              item.dev_name = res.data.dev_name;
               if (obje[item_tiem]) {
                 item.down_bandwidth = obje[item_tiem].down_bandwidth;
                 item.free_cap = obje[item_tiem].free_cap;
                 item.online_time = obje[item_tiem].online_time;
                 item.total_cap = obje[item_tiem].total_cap;
                 item.up_bandwidth = obje[item_tiem].up_bandwidth;
+                item.v210_online_time = obje[item_tiem].v210_online_time;
               }
             });
             this.income_list = this.slcsi;
-            console.log(this.slcsi);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -631,7 +673,6 @@ export default {
       padding-top: 1rem;
       p {
         color: #fff;
-
       }
       .dev_num {
         font-size: 0.6rem;
@@ -645,9 +686,8 @@ export default {
       z-index: 11;
       display: flex;
       flex-flow: row-reverse;
-
     }
-        .incon_con_body {
+    .incon_con_body {
       overflow-x: hidden;
       overflow-y: scroll;
       .incon_con_body_item {
@@ -674,8 +714,8 @@ export default {
           }
           p {
             margin: 0.1rem 0;
-             color: #666666;
-             font-size: 0.24rem;
+            color: #666666;
+            font-size: 0.24rem;
           }
         }
       }
