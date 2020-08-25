@@ -62,13 +62,14 @@
               <div class="incon_con_body_left">
                 <p>{{ item.dev_name }}</p>
                 <p>
-                  {{ item.profit_type == 1 ? "+" : "-"
-                  }}{{ (item.dev_profit / 100).toFixed(2) }}gfm
+                  <!-- {{ item.profit_type == 1 ? "+" : "-"
+                  }} -->
+                  {{ (item.dev_profit / 100).toFixed(2) }}gfm
                 </p>
               </div>
               <div class="incon_con_body_right">
                 <div>
-                  <p>连续在线{{ item.v210_online_time }}小时</p>
+                  <p>连续在线{{ item.v210_online_time|getDuration }}</p>
                   <p>{{ item.date_stamp | formatDate }}</p>
                 </div>
                 <!-- <van-icon name="arrow" /> -->
@@ -173,7 +174,41 @@ export default {
         let date = new Date(time);
         return formatDate(date, "yyyy-MM-dd");
       }
-    }
+    },
+    getDuration(value) {
+			if (value <= 0) return 0 + '秒';
+			let theTime = parseInt(value); // 需要转换的时间秒
+			let theTime1 = 0; // 分
+			let theTime2 = 0; // 小时
+			let theTime3 = 0; // 天
+			if (theTime > 60) {
+				theTime1 = parseInt(theTime / 60);
+				theTime = parseInt(theTime % 60);
+				if (theTime1 > 60) {
+					theTime2 = parseInt(theTime1 / 60);
+					theTime1 = parseInt(theTime1 % 60);
+					if (theTime2 > 24) {
+						//大于24小时
+						theTime3 = parseInt(theTime2 / 24);
+						theTime2 = parseInt(theTime2 % 24);
+					}
+				}
+			}
+			let result = '';
+			if (theTime > 0) {
+				result = '' + parseInt(theTime) + '秒';
+			}
+			if (theTime1 > 0) {
+				result = '' + parseInt(theTime1) + '分钟' + result;
+			}
+			if (theTime2 > 0) {
+				result = '' + parseInt(theTime2) + '小时' + result;
+			}
+			if (theTime3 > 0) {
+				result = '' + parseInt(theTime3) + '天' + result;
+			}
+			return result;
+		},
   },
   watch: {
     income_list: {
