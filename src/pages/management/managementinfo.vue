@@ -344,8 +344,8 @@ export default {
     band_width() {
       let params = new Object();
       let starttime =
-        new Date(new Date().toLocaleDateString()).getTime() / 1000 - 86400;
-      let endtime = starttime + 86399;
+        new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      let endtime = parseInt((new Date()).getTime()/1000);
       params.login_token = this.log_token;
       params.start_time = starttime;
       params.end_time = endtime;

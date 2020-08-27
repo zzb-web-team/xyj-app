@@ -108,7 +108,7 @@ export default {
       verificationcode: "",
       showKeyboard: true,
       tag: "",
-      version: "1.3.1.156"
+      version: "1.3.1.157"
     };
   },
   components: {
