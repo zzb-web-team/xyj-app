@@ -613,7 +613,7 @@ export default {
             type: "line",
             // data: [15, 46, 15, 48, 16, 165, 1, 6, 34, 30],
             data: _this.echarts_data.map(function(item) {
-              return (item.user_total_profit / 1024 / 1024).toFixed(2);
+              return (item.user_total_profit / 100).toFixed(2);
             }),
             large: true,
             markLine: {
@@ -621,7 +621,7 @@ export default {
               label: {
                 position: "middle", //将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
                 formatter: function(params) {
-                  return `${params.value} Mbps`;
+                  return `${params.value}`;
                 }
               },
               data: [{ type: "max", name: "最大值" }]
