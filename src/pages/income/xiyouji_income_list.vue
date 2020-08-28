@@ -258,7 +258,7 @@ export default {
     let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳（当天零点）
     let starttime = endtimes - 90 * 24 * 3600; //获取7天的时间戳
     this.starttime = starttime;
-    this.endtime = endtimes;
+    this.endtime = endtime;
     this.get_use_dev_list();
   },
   methods: {

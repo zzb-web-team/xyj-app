@@ -381,8 +381,9 @@ export default {
     changetime() {
       if (this.value22 == 0) {
         let querydate = 90;
-        this.endtime = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
-        this.starttime = this.endtime - querydate * 24 * 3600; //获取前九十天的时间戳
+        this.endtime= Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+        let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
+        this.starttime = endtimes - querydate * 24 * 3600; //获取前九十天的时间戳
       } else {
         var _this = this;
         var date = new Date();

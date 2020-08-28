@@ -409,7 +409,7 @@ export default {
       let token = this.log_token;
       params.login_token = token;
       params.start_time = starttime;
-      params.end_time = endtimes;
+      params.end_time = endtime;
 
       params.cur_page = 0;
       params.dev_sn = "";
