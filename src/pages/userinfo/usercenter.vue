@@ -139,7 +139,7 @@
                 <img src="../../assets/images/per_list_icon_version.png" alt />
                 <span>版本</span>
               </div>
-              <div class="con_item_r"><i></i>1.3.1.157</div>
+              <div class="con_item_r"><i></i>1.3.2.159</div>
             </div>
           </div>
           <div>
