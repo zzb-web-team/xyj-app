@@ -288,6 +288,7 @@ export default {
           this.drawLine();
         });
       } else {
+        this.get_all_income(number,2);
         this.$nextTick(function() {
           let linechartex2 = document.getElementById("myChart_node");
           linechartex2.style.width = window.innerWidth + "px";
@@ -509,8 +510,8 @@ export default {
 
     onClickRight() {
       this.$router.push({
-        path: "/ranking"
-        // path: "/allranking"
+        // path: "/ranking"
+        path: "/allranking"
       });
     },
     go_all_income_list() {

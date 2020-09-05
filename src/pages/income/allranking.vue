@@ -41,7 +41,7 @@
           <van-tabs v-model="active_ranking" type="card" @click="onClick">
             <div class="top">
               <div class="topimg">
-                <div class="ranking_title">收益排行</div>
+                <!-- <div class="ranking_title">收益排行</div> -->
                 <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
               </div>
               <div class="ranking_img">
@@ -55,9 +55,7 @@
               </div>
               <div class="ranking_con" v-show="!noint">
                 <div class="ranking_con_title">
-                  <div class="tltle_l">
-                    <b>名次</b>-
-                  </div>
+                  <div class="tltle_l"><b>名次</b>-</div>
                   <div class="title_n">
                     <b>西柚机收益</b>
                   </div>
@@ -130,7 +128,7 @@
                   >
                     <span>{{ (index + 1) | screen }}</span>
                   </div>
-                  <div class="ranking_item_n">{{ item.node_income }} 积分</div>
+                  <div class="ranking_item_n">{{ item.node_income |set_node_income}} 积分</div>
                   <div class="ranking_item_r">
                     <b>{{ item.bind_rank }}</b>
                   </div>
@@ -200,6 +198,13 @@ export default {
         return val;
       } else if (val > 0 && val <= 9) {
         return "0" + val;
+      }
+    },
+    set_node_income(data){
+      if(data){
+        return data;
+      }else{
+        return 0;
       }
     }
   },
@@ -398,6 +403,19 @@ export default {
   border: 0.01rem #eeeeee solid;
   border-radius: 0.15rem;
 }
+/deep/.van-tabs__nav--card {
+  border: none;
+}
+/deep/.van-tabs__nav--card .van-tab {
+  color: #3980ff;
+}
+/deep/.van-tabs__nav--card .van-tab.van-tab--active {
+  background: #3980ff;
+  color: #ffffff;
+}
+/deep/.van-tabs__nav--card .van-tab {
+  border: 1px solid #3980ff;
+}
 
 .container {
   width: 100%;
@@ -409,7 +427,7 @@ export default {
 
   .xiala {
     height: 100%;
-    margin-top: 0.82rem;
+    margin-top: 0.92rem;
     .refresh {
       height: 100%;
       width: 100%;

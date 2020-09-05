@@ -314,7 +314,7 @@ export default {
               this.option1.push(devobj);
             });
             this.value22 = res.data.bind_devinfo_list[0].dev_sn;
-            // this.get_dev_income(0);
+            this.get_dev_income(0);
             this.get_dev_income_day(0);
           } else if (res.status == -17) {
             this.rescount = 0;
@@ -398,12 +398,16 @@ export default {
             if (params.cur_page == 0) {
               this.income_list = [];
             }
-            res.data.user_profit_list.forEach((item, index) => {
-              let dev_obj = new Object();
-              dev_obj.dev_profit = item.user_total_profit;
-              dev_obj.date_stamp = item.date_stamp;
-              this.income_list.push(dev_obj);
-            });
+            if (res.data.user_profit_list) {
+              res.data.user_profit_list.forEach((item, index) => {
+                let dev_obj = new Object();
+                dev_obj.dev_profit = item.user_total_profit;
+                dev_obj.date_stamp = item.date_stamp;
+                this.income_list.push(dev_obj);
+              });
+            } else {
+              this.income_list = [];
+            }
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -434,7 +438,7 @@ export default {
       params.cur_page = page;
       params.start_time = this.starttime;
       params.end_time = this.endtime;
-      params.dev_sn = this.value11;
+      params.dev_sn = this.value22;
       query_node_total_profit_info(params)
         .then(res => {
           if (res.status == 0) {
@@ -523,6 +527,7 @@ export default {
     },
     changetime() {
       this.get_dev_income_day(0);
+      this.get_dev_income(0);
       // var _this = this;
       // var date = new Date();
       // var y = date.getFullYear();
@@ -565,23 +570,27 @@ export default {
         .then(res => {
           if (res.status == 0) {
             let obje = {};
-            res.data.dev_info_list.forEach((item, index) => {
-              let key = this.eachTime(item.date_stamp);
-              let value = item;
-              obje[key] = value;
-            });
-            this.slcsi.forEach((item, index) => {
-              let item_tiem = this.eachTime(item.date_stamp);
-              item.dev_name = res.data.dev_name;
-              if (obje[item_tiem]) {
-                item.down_bandwidth = obje[item_tiem].down_bandwidth;
-                item.free_cap = obje[item_tiem].free_cap;
-                item.online_time = obje[item_tiem].online_time;
-                item.total_cap = obje[item_tiem].total_cap;
-                item.up_bandwidth = obje[item_tiem].up_bandwidth;
-                item.v210_online_time = obje[item_tiem].v210_online_time;
-              }
-            });
+            if(res.data.dev_info_list){
+              res.data.dev_info_list.forEach((item, index) => {
+                let key = this.eachTime(item.date_stamp);
+                let value = item;
+                obje[key] = value;
+              });
+              this.slcsi.forEach((item, index) => {
+                let item_tiem = this.eachTime(item.date_stamp);
+                item.dev_name = res.data.dev_name;
+                if (obje[item_tiem]) {
+                  item.down_bandwidth = obje[item_tiem].down_bandwidth;
+                  item.free_cap = obje[item_tiem].free_cap;
+                  item.online_time = obje[item_tiem].online_time;
+                  item.total_cap = obje[item_tiem].total_cap;
+                  item.up_bandwidth = obje[item_tiem].up_bandwidth;
+                  item.v210_online_time = obje[item_tiem].v210_online_time;
+                }
+              });
+            }else{
+              this.slcsi=[];
+            }
             this.income_list = this.slcsi;
           } else if (res.status == -17) {
             this.rescount = 0;

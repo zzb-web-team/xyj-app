@@ -61,7 +61,7 @@ export default {
           value = value.toString() + "0";
         }
         return value;
-        
+
       }
     }
   },

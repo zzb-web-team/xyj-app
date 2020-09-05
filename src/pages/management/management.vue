@@ -89,8 +89,16 @@
             >
               <div class="con_item_l">
                 <div class="con_item_left_img">
-                  <img src="../../assets//images/income_dev_name.png" alt="" v-show="item.equipment=='在线'" />
-                  <img src="../../assets//images/income_dev_name_hui.png" v-show="item.equipment=='离线'" alt="">
+                  <img
+                    src="../../assets//images/income_dev_name.png"
+                    alt=""
+                    v-show="item.equipment == '在线'"
+                  />
+                  <img
+                    src="../../assets//images/income_dev_name_hui.png"
+                    v-show="item.equipment == '离线'"
+                    alt=""
+                  />
                 </div>
                 <div>
                   <div class="item_l_top">
@@ -508,7 +516,12 @@ export default {
     },
     //绑定新西柚机
     goBind() {
-      this.$router.push({ path: "/binding" });
+      this.$router.push({
+        path: "/binding",
+        query: {
+          from_name: "management"
+        }
+      });
     },
     //排行榜
     goRanking() {
@@ -516,7 +529,12 @@ export default {
       this.$router.push({ path: "/search_dev" });
     },
     onClickRight() {
-      this.$router.push({ path: "/binding" });
+      this.$router.push({
+        path: "/binding",
+        query: {
+          from_name: "management"
+        }
+      });
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -691,7 +709,7 @@ body {
       color: #808080;
       margin: auto;
       padding: 0.3rem;
-       box-shadow: 0 0.01rem 0.01rem 0 #03143105;
+      box-shadow: 0 0.01rem 0.01rem 0 #03143105;
     }
 
     .con_item_l {

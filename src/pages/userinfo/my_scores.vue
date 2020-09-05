@@ -17,10 +17,9 @@
       </div>
     </van-nav-bar>
     <!--  -->
-    <div class="income_con" >
+    <div class="income_con">
       <div class="income_con_top">
-        <p>积分()</p>
-        <p class="dev_num">{{ total_revenue }}</p>
+        <p class="dev_num">{{ total_revenue }} <span>gfm</span> </p>
       </div>
 
       <div class="income_con_btn">
@@ -67,10 +66,9 @@
             </div>
           </div>
         </div>
-      <van-empty image="search" description="暂无数据" v-else />
+        <van-empty image="search" description="暂无数据" v-else />
       </vuu-pull>
     </div>
-
   </div>
 </template>
 
@@ -79,7 +77,8 @@ import { formatDate, transformTime } from "../../common/js/date.js";
 import {
   authorization,
   redeems,
-  query_user_node_exchange_list
+  query_user_node_exchange_list,
+  getuserdevlist
 } from "../../common/js/api";
 import { TabbarItem, Toast, PullRefresh, Dialog, NavBar } from "vant";
 import { mapState, mapMutations } from "vuex";
@@ -129,7 +128,7 @@ export default {
         },
         bottomPull: {
           loadingIcon: loadind,
-          triggerWord:"加载更多"
+          triggerWord: "加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -213,6 +212,41 @@ export default {
           this.$refs.vuuPull.closeLoadBottom();
         }
       }, 500);
+    },
+    //获取总收益
+    get_all_income() {
+      let params = new Object();
+      let token = this.log_token;
+      params.login_token = token;
+      params.start_time = this.starttime;
+      params.end_time = this.endtime;
+      params.cur_page = 0;
+      params.dev_sn = "";
+      params.query_type = 1;
+      getuserdevlist(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.total_revenue = (res.data.user_total_profit / 100).toFixed(2);
+          } else if (res.status == -17) {
+            Dialog.alert({
+              message: "账号在其它地方登录，请重新登录"
+            }).then(() => {
+              this.clearUser();
+              this.$router.push({ path: "/login" });
+            });
+          } else if (res.status == -13) {
+            if (res.err_code == 424) {
+              Toast({
+                message: "您的账户已被冻结，请联系相关工作人员",
+                duration: 3000
+              });
+              setTimeout(() => {
+                this.$router.push({ path: "/login" });
+              }, 3000);
+            }
+          }
+        })
+        .catch(error => {});
     },
     //积分收支记录
     redemptionrecord(pages) {
@@ -381,7 +415,7 @@ export default {
     changetime() {
       if (this.value22 == 0) {
         let querydate = 90;
-        this.endtime= Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+        this.endtime = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
         let endtimes = Date.parse(new Date().toLocaleDateString()) / 1000; //获取当前年月日时间戳
         this.starttime = endtimes - querydate * 24 * 3600; //获取前九十天的时间戳
       } else {
@@ -396,6 +430,7 @@ export default {
       }
       this.income_list = [];
       this.redemptionrecord(0);
+      this.get_all_income();
     },
     changegrow() {
       this.income_list = [];
@@ -437,7 +472,7 @@ export default {
 }
 /deep/.van-dropdown-menu {
   justify-content: space-between;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   height: 1.26rem;
   z-index: 11;
 }
@@ -507,6 +542,9 @@ export default {
         font-size: 0.6rem;
         font-weight: bold;
         padding-bottom: 0.2rem;
+        span{
+          font-size: 0.3rem;
+        }
       }
     }
     .income_con_btn {
