@@ -345,7 +345,7 @@ export default {
       let params = new Object();
       let starttime =
         new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      let endtime = parseInt((new Date()).getTime()/1000);
+      let endtime = parseInt(new Date().getTime() / 1000);
       params.login_token = this.log_token;
       params.start_time = starttime;
       params.end_time = endtime;
@@ -356,8 +356,16 @@ export default {
           console.log(res);
           if (res.status == 0) {
             this.updateUser({ log_token: res.data.token_info.token });
-            this.up_bandwidth = (res.data.dev_info_list[0].up_bandwidth /1024 /1024).toFixed(2);
-            this.down_bandwidth = (res.data.dev_info_list[0].down_bandwidth /1024 /1024).toFixed(2);
+            this.up_bandwidth = (
+              res.data.dev_info_list[0].up_bandwidth /
+              1024 /
+              1024
+            ).toFixed(2);
+            this.down_bandwidth = (
+              res.data.dev_info_list[0].down_bandwidth /
+              1024 /
+              1024
+            ).toFixed(2);
           } else if (res.status == -17) {
             this.rescount = 0;
             Dialog.alert({
@@ -666,8 +674,8 @@ export default {
         Toast("无法连接网络，请检查网络状态");
       } else {
         this.$router.push({
-          path: "/income_list",
-          query: { allshou: item }
+          // path: "/income_list",
+          path: "/xiyouji_income_list"
         });
       }
     },

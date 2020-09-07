@@ -227,7 +227,8 @@ export default {
       phone_number: state => state.user.phone_number,
       user_name: state => state.user.user_name,
       user_sex: state => state.user.user_sex,
-      charge_psd: state => state.user.charge_psd
+      charge_psd: state => state.user.charge_psd,
+      devsn: state => state.management.devsn
     }),
     scrollerHeight: function() {
       if (window.innerWidth > 375) {
@@ -313,7 +314,11 @@ export default {
               devobj.value = item.dev_sn;
               this.option1.push(devobj);
             });
-            this.value22 = res.data.bind_devinfo_list[0].dev_sn;
+            if (this.devsn) {
+              this.value22 = this.devsn;
+            } else {
+              this.value22 = res.data.bind_devinfo_list[0].dev_sn;
+            }
             this.get_dev_income(0);
             this.get_dev_income_day(0);
           } else if (res.status == -17) {
@@ -570,7 +575,7 @@ export default {
         .then(res => {
           if (res.status == 0) {
             let obje = {};
-            if(res.data.dev_info_list){
+            if (res.data.dev_info_list) {
               res.data.dev_info_list.forEach((item, index) => {
                 let key = this.eachTime(item.date_stamp);
                 let value = item;
@@ -588,8 +593,8 @@ export default {
                   item.v210_online_time = obje[item_tiem].v210_online_time;
                 }
               });
-            }else{
-              this.slcsi=[];
+            } else {
+              this.slcsi = [];
             }
             this.income_list = this.slcsi;
           } else if (res.status == -17) {

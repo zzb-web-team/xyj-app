@@ -46,7 +46,7 @@
               :name="index"
               :value="item.date_stamp | formatDate"
             >
-              <div class="income_bottom_top">
+              <!-- <div class="income_bottom_top">
                 <span></span>
                 <p>{{ devname }}</p>
               </div>
@@ -78,7 +78,7 @@
               <div class="income_bottom_bot">
                 <div>算力：{{ item.com_power }}</div>
                 <div>在线时长：{{ (item.online_time / 3600).toFixed(2) }}h</div>
-              </div>
+              </div> -->
             </van-collapse-item>
           </van-collapse>
         </vuu-pull>
@@ -160,7 +160,7 @@ export default {
         },
         bottomPull: {
           loadingIcon: loadind,
-          triggerWord:"加载更多"
+          triggerWord: "加载更多"
         },
         bottomCloseElMove: false //关闭上拉加载
       }
@@ -450,12 +450,20 @@ export default {
       var timestamp =
         new Date(new Date().toLocaleDateString()).getTime() / 1000; //当天零点时间戳
       function computeTime(year, month) {
-        if(month == 0){
-           _this.starttime = new Date(year, month, 1).getTime() / 1000;
-           _this.endtime = timestamp-1;
-        }else{
-           _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
-          _this.endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
+        if (month == 0) {
+          _this.starttime = new Date(year, month, 1).getTime() / 1000;
+          _this.endtime = timestamp - 1;
+        } else {
+          let endtimes = 0;
+          let m_endtime = 0;
+          _this.starttime = new Date(year, month - 1, 1).getTime() / 1000;
+          m_endtime = new Date(year, month, 0).getTime() / 1000 + 86399;
+          endtimes = Date.parse(new Date()) / 1000; //获取当前日期时间戳(精确到秒)
+          if (m_endtime > endtimes) {
+            _this.endtime = endtimes;
+          } else {
+            _this.endtime = m_endtime;
+          }
         }
       }
       computeTime(y, this.value22);
