@@ -59,7 +59,7 @@
             <div class="user_con_item" @click="gojifen()">
               <div class="con_item_l">
                 <img src="../../assets/images/per_list_icon_integral.png" alt />
-                <span>收益账户</span>
+                <span>我的收益</span>
               </div>
               <div class="con_item_r">
                 <img src="../../assets/images/evenmore.png" />
@@ -139,7 +139,7 @@
                 <img src="../../assets/images/per_list_icon_version.png" alt />
                 <span>版本</span>
               </div>
-              <div class="con_item_r"><i></i>1.3.2.160</div>
+              <div class="con_item_r"><i></i>1.3.2.161</div>
             </div>
           </div>
           <div>
@@ -391,7 +391,8 @@ export default {
     gojifen() {
       setTimeout(() => {
         this.$router.push({
-          path: "/about_us",
+          // path: "/about_us",
+          path: "/my_scores",
           query: { income: this.all_income }
         });
       }, 200);
@@ -878,12 +879,11 @@ export default {
           img {
             width: 27%;
           }
-
         }
-        .con_item_r{
-            color: #8f8f8f;
-            font-size: 0.28rem;
-          }
+        .con_item_r {
+          color: #8f8f8f;
+          font-size: 0.28rem;
+        }
       }
     }
   }

@@ -1,25 +1,22 @@
 <template>
   <div class="container">
-    <!-- <van-nav-bar
-      left-text="返回"
+    <van-nav-bar
+      left-text=""
       right-text
       rrow
+      fixed
       left-arrow
       @click-left="onClickLeft"
       :z-index="2000"
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#ffffff" />
-        <span>返回</span>
+        <!-- <span>返回</span> -->
       </div>
-    </van-nav-bar> -->
-    <navBar>
+    </van-nav-bar>
+    <!-- <navBar>
       <van-icon name="search" slot="right" />
-    </navBar>
-    <div
-      style="width:100%;height:0.8rem;position: fixed;top: 0;z-index:0;background: linear-gradient(45deg, #745af3 10%, #5c74f3 100%);"
-    ></div>
-
+    </navBar> -->
     <div class="xiala">
       <Scroll
         ref="myscroller"
@@ -39,14 +36,9 @@
         </div>
         <div class="ranking" v-show="!refresh">
           <van-tabs v-model="active_ranking" type="card" @click="onClick">
-            <div class="top">
-              <div class="topimg">
-                <!-- <div class="ranking_title">收益排行</div> -->
-                <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
-              </div>
-              <div class="ranking_img">
-                <!-- <img src="../../assets/images/earnings_bg1_trophy.png" /> -->
-              </div>
+            <div class="ranking_top">
+              <p class="ranking_title">{{ all_title }}</p>
+              <div class="ranking_time">统计于：{{ token_gen_ts }}</div>
             </div>
             <van-tab title="西柚机收益排行">
               <div class="nointerval" v-show="noint">
@@ -55,7 +47,7 @@
               </div>
               <div class="ranking_con" v-show="!noint">
                 <div class="ranking_con_title">
-                  <div class="tltle_l"><b>名次</b>-</div>
+                  <div class="tltle_l"><b>名次</b></div>
                   <div class="title_n">
                     <b>西柚机收益</b>
                   </div>
@@ -81,7 +73,7 @@
                   >
                     <b>{{ (index + 1) | screen }}</b>
                   </div>
-                  <div class="ranking_item_n">{{ item.profit_rank }} gfm</div>
+                  <div class="ranking_item_n">{{ item.profit_rank/100 }} gfm</div>
                   <div class="ranking_item_r">
                     <b>{{ item.bind_num }}</b>
                   </div>
@@ -103,10 +95,10 @@
                   <div class="tltle_l">
                     <b>名次</b>
                   </div>
-                  <div class="tltle_m">
+                  <div class="title_n">
                     <b>节点收益</b>
                   </div>
-                  <div class="tltle_n">
+                  <div class="tltle_m">
                     <b>节点数量</b>
                   </div>
                   <div class="tltle_r">
@@ -128,7 +120,9 @@
                   >
                     <span>{{ (index + 1) | screen }}</span>
                   </div>
-                  <div class="ranking_item_n">{{ item.node_income |set_node_income}} 积分</div>
+                  <div class="ranking_item_n">
+                    {{ item.node_income | set_node_income }} 积分
+                  </div>
                   <div class="ranking_item_r">
                     <b>{{ item.bind_rank }}</b>
                   </div>
@@ -163,6 +157,7 @@ export default {
       isLoading: false,
       refresh: false,
       active_ranking: 0,
+      all_title: "西柚机收益排行",
       rankLists: [
         // { store_ability: 12, user_tel: 13301201366 },
         // { store_ability: 1, user_tel: 18714124198 },
@@ -200,10 +195,10 @@ export default {
         return "0" + val;
       }
     },
-    set_node_income(data){
-      if(data){
+    set_node_income(data) {
+      if (data) {
         return data;
-      }else{
+      } else {
         return 0;
       }
     }
@@ -222,8 +217,10 @@ export default {
     },
     onClick(name, title) {
       if (title == "西柚机收益排行") {
+        this.all_title = "西柚机收益排行";
         this.pocrank();
       } else {
+        this.all_title = "节点收益排行";
         this.numrank();
       }
     },
@@ -383,8 +380,11 @@ export default {
 /deep/.van-nav-bar {
   z-index: 2 !important;
   color: #fff;
-  // background: linear-gradient(45deg, #4c94fe 10%, #2762fd 100%);
+  background: linear-gradient(115deg, #4c95ff 0%, #2c6afe 100%) 0;
   background-color: #fff;
+}
+/deep/.van-nav-bar__left {
+  color: #ffffff;
 }
 /deep/.van-nav-bar__title {
   font-size: 0.34rem;
@@ -395,26 +395,39 @@ export default {
   color: #000000;
 }
 /deep/.van-tabs__wrap {
-  background-color: #fff;
+  height: 2.5rem;
+  background: url(../../assets/images/jifen_bgc.png) #f2f2f2 no-repeat 0 0;
 }
 /deep/.van-tabs__nav--line {
   width: 75%;
   margin: auto;
   border: 0.01rem #eeeeee solid;
-  border-radius: 0.15rem;
+  // border-radius: 0.15rem;
 }
 /deep/.van-tabs__nav--card {
   border: none;
+  width: 70%;
+  margin: auto;
+  background: linear-gradient(115deg, #4990ff 0%, #2f70fe 100%) 0;
 }
 /deep/.van-tabs__nav--card .van-tab {
-  color: #3980ff;
+  color: #ffffff;
+  background: #3477fd;
 }
 /deep/.van-tabs__nav--card .van-tab.van-tab--active {
-  background: #3980ff;
-  color: #ffffff;
+  background: #d8eaff;
+  color: #333333;
 }
 /deep/.van-tabs__nav--card .van-tab {
-  border: 1px solid #3980ff;
+  border: none;
+  // border-radius: 0.16rem;
+}
+
+/deep/.van-tab:nth-child(1) {
+  border-radius: 0.16rem 0 0 0.16rem;
+}
+/deep/.van-tab:nth-child(2) {
+  border-radius: 0 0.16rem 0.16rem 0;
 }
 
 .container {
@@ -459,6 +472,18 @@ export default {
     //   background-size: 100% 100%;
     //   margin-top: 0.1rem;
     // }
+    .ranking_top {
+      height: 0;
+      position: relative;
+      top: -1.5rem;
+      .ranking_title {
+        color: #ffffff;
+        font-size: 0.4rem;
+      }
+      .ranking_time {
+        color: #ffffff;
+      }
+    }
     .ranking_con {
       width: 100%;
       height: 100%;
@@ -510,10 +535,12 @@ export default {
       .tltle_m {
         width: 25%;
         text-align: center;
+        margin-left: 0.5rem;
       }
       .title_n {
         width: 25%;
         text-align: center;
+        margin-left: 0.5rem;
       }
       .tltle_r {
         width: 30%;

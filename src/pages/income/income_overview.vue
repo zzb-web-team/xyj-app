@@ -18,27 +18,6 @@
     </van-nav-bar>
     <!--  -->
     <div class="content">
-      <!-- <vuu-pull ref="vuuPull" :options="pullOptions" v-on:loadTop="loadTop"> -->
-      <!-- <div class="content_top">
-        <div class="content_top_all" @click="go_all_income_list">
-          <p>
-            累计收益(gfm)
-            <van-icon name="play" />
-          </p>
-          <div>{{ all_income }}</div>
-        </div>
-        <div class="content_top_detail">
-          <div class="content_top_detail_left">
-            <p>{{ last_income }}</p>
-            <p>昨日收益(gfm)</p>
-          </div>
-          <div class="content_top_detail_right">
-            <p>{{ weak_income }}</p>
-            <p>近一周收益(gfm)</p>
-          </div>
-        </div>
-      </div> -->
-
       <vuu-pull
         ref="vuuPull"
         :options="pullOptions"
@@ -46,80 +25,25 @@
         v-on:loadBottom="loadBottom"
         :style="{ height: scrollerHeight }"
       >
-        <!-- <div class="content_body" v-if="dev_income_list.length > 0">
-          <div
-            class="content_con"
-            v-for="(item, index) in dev_income_list"
-            :key="index"
-          >
-            <div class="content_body_top" @click="go_income_list(item)">
-              <div>
-                <img
-                  v-if="item.total_com_power >= 0"
-                  src="../../assets/images/income_dev_name.png"
-                  alt
-                />
-                <img
-                  v-else
-                  src="../../assets/images/income_dev_name_hui.png"
-                  alt
-                />
-                {{ item.dev_name }}
-              </div>
-              <img src="../../assets/images/per_icon_arrow.png" alt />
-            </div>
-            <div class="content_body_bottom">
-              <div
-                class="content_body_bottom_left"
-                @click="go_income_list(item)"
-              >
-                <img src="../../assets/images/income_shouyi_new.png" alt />
-                <div class="content_body_bottom_right_detail">
-                  <p>累计收益</p>
-                  <p>
-                    {{ (item.total_profit / 100).toFixed(2) }}
-                    <span>gfm</span>
-                  </p>
-                </div>
-              </div>
-              <div
-                class="content_body_bottom_right"
-                @click="go_calculation_details(item)"
-                v-bind:style="{
-                  'pointer-events': item.total_com_power >= 0 ? 'auto' : 'none'
-                }"
-              >
-                <img
-                  v-if="item.total_com_power >= 0"
-                  src="../../assets/images/income_suanli_new.png"
-                  alt
-                />
-                <img
-                  v-else
-                  src="../../assets/images/income_suanli_new_hui.png"
-                  alt
-                />
-                <div class="content_body_bottom_right_detail">
-                  <p>算力</p>
-                  <p>{{ item.total_com_power >= 0 ? item.total_com_power : "--" }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <!-- <van-empty description="暂无数据" v-else /> -->
         <div class="monitor_top">
           <div class="monitor_top_left" @click="goprivacy()">
-            <p>西柚机收益</p>
+            <div class="monitor_top_left_img">
+              <img src="../../assets/images/xiyouji_income.png" alt="" />
+            </div>
             <div class="monitor_status">
               {{ storage.income }}<span>gfm</span>
             </div>
+            <p>西柚机收益</p>
           </div>
           <div class="monitor_top_right" @click="goUserAgreement()">
-            <p>节点收益</p>
+            <div class="monitor_top_right_img">
+              <img src="../../assets/images/node_income.png" alt="" />
+            </div>
             <div class="monitor_income">
               {{ storage.jifen }}<span>积分</span>
             </div>
+            <p>节点收益</p>
           </div>
         </div>
         <div class="income_con_btn">
@@ -132,15 +56,41 @@
           </van-dropdown-menu>
           <van-tabs
             type="card"
-            :active="tabactive"
+            v-model="activeName"
             class="bandwidth"
             @change="up_down"
           >
             <van-tab title="西柚机收益" name="a">
-              <div id="myChart_xiyou" style="width:100%; height:5rem;"></div>
+              <div
+                id="myChart_xiyou"
+                style="width:96%; height:6rem;"
+                v-show="echarts_data.length > 0"
+              ></div>
+              <div
+                v-show="echarts_data.length <= 0"
+                style="width:96%; height:6rem;margin: auto;padding-top:2rem;"
+              >
+                <img src="../../assets/images/nodata.png" alt="" />
+                <p>
+                  暂无数据
+                </p>
+              </div>
             </van-tab>
             <van-tab title="节点收益" name="b">
-              <div id="myChart_node" style="width: 100%;height:5rem"></div>
+              <div
+                id="myChart_node"
+                style="width: 96%;height:6rem"
+                v-show="echarts_data.length > 0"
+              ></div>
+              <div
+                v-show="echarts_data.length <= 0"
+                style="width:96%; height:6rem;margin: auto;padding-top:2rem;"
+              >
+                <img src="../../assets/images/nodata.png" alt="" />
+                <p>
+                  暂无数据
+                </p>
+              </div>
             </van-tab>
           </van-tabs>
         </div>
@@ -170,7 +120,7 @@ export default {
   data() {
     return {
       active: 1,
-      tabactive: "a",
+      activeName: "a",
       all_income: 0,
       last_income: 0,
       weak_income: 0,
@@ -234,7 +184,6 @@ export default {
     } catch (error) {}
     this.get_all_income(90);
     this.get_all_income(29, 2);
-    // this.get_all_dev_income(0);
     // this.$nextTick(function() {
     //   let linechartex1 = document.getElementById("myChart_xiyou");
     //   linechartex1.style.width = window.innerWidth + "px";
@@ -247,8 +196,7 @@ export default {
     loadTop() {
       setTimeout(() => {
         this.get_all_income(90);
-         this.get_all_income(29, 2);
-        // this.get_all_dev_income(0);
+        this.get_all_income(29, 2);
         if (this.$refs.vuuPull.closeLoadTop) {
           this.$refs.vuuPull.closeLoadTop();
         }
@@ -259,7 +207,6 @@ export default {
       setTimeout(() => {
         if (this.pagenum < this.allpage) {
           this.pagenum++;
-          // this.get_all_dev_income(this.pagenum);
         } else {
           this.$refs.vuuPull.closeLoadBottom();
         }
@@ -277,21 +224,21 @@ export default {
       } else if (this.value11 == 2) {
         number = 180;
       }
-      this.get_all_income(number,2);
+      if (this.activeName == "a") {
+        this.get_all_income(number, 2);
+      } else {
+        this.drawLine("node");
+      }
     },
     up_down(name, title) {
       if (title != "节点收益") {
-        this.$nextTick(function() {
-          let linechartex1 = document.getElementById("myChart_xiyou");
-          linechartex1.style.width = window.innerWidth + "px";
-          echarts.init(linechartex1);
-          this.drawLine();
-        });
+        this.changegrow();
       } else {
-        this.get_all_income(number,2);
+        this.echarts_data = [];
         this.$nextTick(function() {
           let linechartex2 = document.getElementById("myChart_node");
-          linechartex2.style.width = window.innerWidth + "px";
+          linechartex2.style.width =
+            window.innerWidth - window.innerWidth * 0.06 + "px";
           echarts.init(linechartex2);
           this.drawLine("node");
         });
@@ -306,100 +253,6 @@ export default {
       setTimeout(() => {
         this.$router.push({ path: "/node_income_list" });
       }, 200);
-    },
-    get_use_dev_list() {
-      let params = new Object();
-      let nowtime = new Date(new Date().toLocaleDateString());
-      let starttime = nowtime.setTime(nowtime.getTime() - 3600 * 1000 * 24 * 90 );
-      params.login_token = this.log_token;
-      params.start_ts = starttime / 1000;
-      params.end_ts = Date.parse(new Date()) / 1000;
-      getdevhistoricalname(params)
-        .then(res => {
-          if (res.status == 0) {
-            this.updateUser({ log_token: res.token_info.login_token });
-            let obje = new Object();
-            res.data.forEach(item => {
-              let key = item.dev_sn;
-              let value = item;
-              obje[key] = value;
-            });
-            this.demo_minerInfo.forEach(deem => {
-              let uev_sn = deem.dev_sn;
-              if (obje[uev_sn]) {
-                deem.dev_name = obje[uev_sn].dev_name;
-                this.dev_income_list.push(deem);
-              }
-            });
-            console.log(dev_income_list);
-            // this.get_con();
-          } else if (res.status == -17) {
-            Dialog.alert({
-              message: "账号在其它地方登录，请重新登录"
-            }).then(() => {
-              this.clearUser();
-              this.$router.push({ path: "/login" });
-            });
-          } else if (res.status == -13) {
-            if (res.err_code == 424) {
-              Toast({
-                message: "您的账户已被冻结，请联系相关工作人员",
-                duration: 3000
-              });
-              setTimeout(() => {
-                this.$router.push({ path: "/login" });
-              }, 3000);
-            }
-          }
-        })
-        .catch(error => {
-          // console.log(error);
-        });
-    },
-    //获取设备收益列表
-    get_all_dev_income(page) {
-      let params = new Object();
-      params.login_token = this.log_token;
-      params.cur_page = page;
-      query_node_total_profit_info(params)
-        .then(res => {
-          if (res.status == 0) {
-            this.updateUser({
-              log_token: res.data.token_info.token
-            });
-            this.allpage = res.data.total_page;
-            if (params.cur_page == 0) {
-              // this.dev_income_list = res.data.dev_total_profit_list;
-              this.demo_minerInfo = res.data.dev_total_profit_list;
-            } else {
-              // this.dev_income_list = this.dev_income_list.concat(
-              //   res.data.dev_total_profit_list
-              // );
-              this.demo_minerInfo = this.demo_minerInfo.concat(
-                res.data.dev_total_profit_list
-              );
-            }
-            this.get_use_dev_list();
-          } else if (res.status == -17) {
-            Dialog.alert({
-              message: "账号在其它地方登录，请重新登录"
-            }).then(() => {
-              this.clearUser();
-              this.$router.push({ path: "/login" });
-            });
-          } else if (res.status == -13) {
-            if (res.err_code == 424) {
-              Toast({
-                message: "您的账户已被冻结，请联系相关工作人员",
-                duration: 3000
-              });
-              setTimeout(() => {
-                this.$router.push({ path: "/login" });
-              }, 3000);
-            }
-          }
-        })
-        .catch(error => {});
     },
     //获取总收益
     get_all_income(num, type) {
@@ -422,16 +275,9 @@ export default {
       getuserdevlist(params)
         .then(res => {
           if (res.status == 0) {
-            // this.all_income = (res.data.user_total_profit / 100).toFixed(2);
-            // this.last_income = (res.data.yes_profit / 100).toFixed(2);
-            // this.weak_income = (res.data.one_week_profit / 100).toFixed(2);
-            // this.echarts_data = res.data.user_profit_list.reverse();
-            // this.updateUser({
-            //   log_token: res.data.token_info.token
-            // });
             if (type) {
-               this.echarts_data = res.data.user_profit_list.reverse();
-              this.up_down();
+              this.echarts_data = res.data.user_profit_list.reverse();
+              // this.up_down();
             } else {
               this.storage.income = (res.data.user_total_profit / 100).toFixed(
                 2
@@ -455,59 +301,16 @@ export default {
               }, 3000);
             }
           }
+          this.$nextTick(function() {
+            let linechartex1 = document.getElementById("myChart_xiyou");
+            linechartex1.style.width =
+              window.innerWidth - window.innerWidth * 0.06 + "px";
+            echarts.init(linechartex1);
+            this.drawLine();
+          });
         })
         .catch(error => {});
     },
-    //获取算力值
-    get_con(num) {
-      let params = new Object();
-      params.page = num;
-      params.login_token = this.log_token;
-      get_app_dev_con_val(params)
-        .then(res => {
-          if (res.status == 0) {
-            this.updateUser({ log_token: res.data.token_info.token });
-          }
-          if (num == 0) {
-            this.conval_list = res.data.dev_value_list;
-          } else {
-            this.conval_list = this.conval_list.concat(res.data.dev_value_list);
-          }
-          // if (res.data.dev_value_list.xxx != 0) {
-          //   this.page++;
-          //   this.get_con(this.page);
-          // }
-          let obje = {};
-          this.conval_list.forEach((item, index) => {
-            let key = item.dev_sn;
-            let value = item;
-            obje[key] = value;
-            obje[key].dev_name = "";
-          });
-          this.user_dev_list.forEach(deem => {
-            let uev_sn = deem.dev_sn;
-            if (obje[uev_sn]) {
-              obje[uev_sn].dev_name = deem.dev_name;
-            }
-          });
-          this.demo_minerInfo.forEach((adme, indexs) => {
-            let sad = adme.dev_sn;
-            if (obje[sad]) {
-              let deas = new Object();
-              deas = adme;
-              deas.cp_value = obje[sad].cp_value;
-              deas.con_value = obje[sad].con_value;
-              deas.node_grade = obje[sad].node_grade;
-              deas.dev_name = obje[sad].dev_name;
-              this.dev_income_list.push(deas);
-            }
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-
     onClickRight() {
       this.$router.push({
         // path: "/ranking"
@@ -553,18 +356,6 @@ export default {
         },
         xAxis: [
           {
-            // data: [
-            //   "06-01",
-            //   "06-02",
-            //   "06-03",
-            //   "06-04",
-            //   "06-05",
-            //   "06-06",
-            //   "06-07",
-            //   "06-08",
-            //   "06-09",
-            //   "06-10"
-            // ],
             splitNumber: 8,
             data: _this.echarts_data.map(function(item) {
               return upodateTime(item.date_stamp, "M");
@@ -637,7 +428,8 @@ export default {
         );
         //防止越界，重绘canvas
         window.onresize = myChart_xia.resize;
-        myChart_xia.setOption(option, true); //设置option
+        myChart_xia.clear();
+        myChart_xia.setOption(option); //设置option
       } else {
         // 初始化echarts实例
         let myChart_shang = this.$echarts.init(
@@ -645,7 +437,8 @@ export default {
         );
         //防止越界，重绘canvas
         window.onresize = myChart_shang.resize;
-        myChart_shang.setOption(option, true); //设置option
+        myChart_shang.clear();
+        myChart_shang.setOption(option); //设置option
       }
     }
   },
@@ -695,8 +488,8 @@ export default {
   border-right: #cecece solid 0.01rem;
 }
 /deep/.van-tabs__nav--card .van-tab.van-tab--active {
-  height: 0.56rem;
-  background: #ff6d6e;
+  height: 0.46rem;
+  background: #3477fd;
   border-radius: 0.1rem;
   color: #ffffff;
 }
@@ -704,7 +497,7 @@ export default {
   border-radius: 0.1rem;
 }
 /deep/.van-tabs__nav--card .van-tab {
-  color: #ff6d6e;
+  color: #3477fd;
 }
 /deep/.bandwidth .van-tab {
   width: 1.5rem;
@@ -720,6 +513,7 @@ export default {
   right: 0.3rem;
   top: -0.7rem;
   font-size: 0.24rem;
+  border: none;
 }
 /deep/.bandwidth .van-tabs__nav--card .van-tab.van-tab--active {
   height: 0.6rem;
@@ -750,9 +544,9 @@ export default {
     overflow-x: hidden;
     overflow-y: scroll;
     // padding: 0 10%;
-    // background: pink;
+    background: #f8fafb;
     .monitor_top {
-      background-color: #fff;
+      background-color: #f8fafb;
       color: #ffffff;
       display: flex;
       align-items: center;
@@ -760,53 +554,68 @@ export default {
       padding-top: 0.2rem;
       text-align: left;
       margin-bottom: 0.2rem;
+      justify-content: space-around;
       .monitor_top_left {
-        width: 47.5%;
-        margin-left: 4%;
-        margin-right: 1%;
-        padding: 0 4%;
-        height: 1.84rem;
-        background: #ffffff url(../../assets/images/shebeibg.png) no-repeat;
+        background: #ffffff;
+        width: 3.33rem;
+        height: 3.16rem;
+        color: black;
         background-size: 100% 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        box-sizing: border-box;
+        padding: 0.4rem 0.3rem;
+        border-radius: 0.2rem;
+        margin-right: -0.2rem;
+        .monitor_top_left_img {
+          img {
+            width: 0.8rem;
+            height: 0.8rem;
+          }
+        }
         p {
-          font-size: 0.28rem;
+          font-size: 0.24rem;
+          color: #999999;
           width: 100%;
-          margin-top: 0.26rem;
-          text-align: center;
+          margin-top: 0.1rem;
         }
         .monitor_status {
           font-size: 0.38rem;
           margin-top: 0.4rem;
-          text-align: center;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
         }
       }
       .monitor_top_right {
-        width: 47.5%;
-        margin-left: 1%;
-        margin-right: 4%;
-        padding: 0 4%;
-        height: 1.84rem;
-        background: url(../../assets/images/suanlibg.png) no-repeat;
+        background: #ffffff;
+        width: 3.33rem;
+        height: 3.16rem;
+        color: black;
         background-size: 100% 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        box-sizing: border-box;
+        padding: 0.4rem 0.3rem;
+        border-radius: 0.2rem;
+         margin-left: -0.2rem;
+        .monitor_top_right_img {
+          img {
+            width: 0.8rem;
+            height: 0.8rem;
+          }
+        }
         p {
-          font-size: 0.28rem;
+          font-size: 0.24rem;
+          color: #999999;
           width: 100%;
-          margin-top: 0.26rem;
-          text-align: center;
+          margin-top: 0.1rem;
         }
         .monitor_income {
           font-size: 0.38rem;
           margin-top: 0.4rem;
-          text-align: center;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -815,128 +624,13 @@ export default {
     }
     .income_con_btn {
       background-color: #ffffff;
-      width: 100%;
+      width: 94%;
+      height: 6.98rem;
+      margin: auto;
       position: relative;
       z-index: 11;
-      float: left;
-      // display: flex;
-      // flex-flow: row-reverse;
-      // justify-content: space-around;
+      border-radius: 0.2rem;
     }
-    // .content_top {
-    //   width: 72%;
-    //   padding: 0 10%;
-    //   height: 3.6rem;
-    //   text-align: left;
-    //   margin: auto;
-    //   border-radius: 0.1rem;
-    //   background: url(../../assets/images/all_income.png) no-repeat;
-    //   background-size: 100% 100%;
-    //   position: relative;
-    //   z-index: 11;
-    //   .content_top_all {
-    //     padding-top: 10%;
-    //     div {
-    //       width: 100%;
-    //       font-size: 0.76rem;
-    //       font-weight: 600;
-    //       overflow: hidden;
-    //       text-overflow: ellipsis;
-    //       white-space: nowrap;
-    //     }
-    //   }
-    //   .content_top_detail {
-    //     display: flex;
-    //     justify-content: center;
-    //     margin-top: 0.5rem;
-    //     .content_top_detail_left,
-    //     .content_top_detail_right {
-    //       width: 50%;
-    //       overflow: hidden;
-    //       text-overflow: ellipsis;
-    //       white-space: nowrap;
-    //       p {
-    //         font-size: 0.32rem;
-    //       }
-    //       p:nth-child(2) {
-    //         margin-top: 0.1rem;
-    //         font-size: 0.24rem;
-    //       }
-    //     }
-    //   }
-    // }
-    // .content_body {
-    //   width: 100%;
-    //   overflow-x: hidden;
-    //   overflow-y: scroll;
-    //   padding-bottom: 1.5rem;
-    //   .content_con {
-    //     width: 84%;
-    //     padding: 4%;
-    //     margin: auto;
-    //     color: #333333;
-    //     border: solid 0.01rem #eeeeee;
-    //     border-radius: 0.1rem;
-    //     margin-top: 0.2rem;
-    //     text-align: left;
-    //     img {
-    //       width: 7%;
-    //     }
-    //     .content_body_top {
-    //       display: flex;
-    //       justify-content: space-between;
-    //       align-items: center;
-    //       margin-bottom: 0.2rem;
-    //       font-size: 0.28rem;
-    //       font-weight: 600;
-    //       width: 100%;
-    //       div {
-    //         width: 3rem;
-    //         img {
-    //           width: 14%;
-    //         }
-    //       }
-    //     }
-    //     .content_body_bottom {
-    //       width: 100%;
-    //       display: flex;
-    //       justify-content: space-between;
-    //       align-items: center;
-    //       .content_body_bottom_left,
-    //       .content_body_bottom_right {
-    //         width: 28.5%;
-    //         padding: 10%;
-    //         display: flex;
-    //         justify-content: space-between;
-    //         align-content: center;
-    //         border: solid 0.01rem #eeeeee;
-    //         border-radius: 0.1rem;
-    //         img {
-    //           width: 0.6rem;
-    //           height: 0.6rem;
-    //         }
-    //         .content_body_bottom_right_detail {
-    //           width: 96%;
-    //           padding-left: 4%;
-    //           overflow: hidden;
-    //           text-overflow: ellipsis;
-    //           white-space: nowrap;
-    //           p {
-    //             font-style: 0.26rem;
-    //             color: #666666;
-    //           }
-    //           p:nth-child(2) {
-    //             font-weight: 600;
-    //             color: #333333;
-    //             span {
-    //               font-size: 0.22rem;
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
   }
 }
 </style>

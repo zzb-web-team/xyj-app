@@ -19,7 +19,9 @@
     <!--  -->
     <div class="income_con">
       <div class="income_con_top">
-        <p class="dev_num">{{ total_revenue }} <span>gfm</span> </p>
+        <p class="dev_num">
+          {{ total_revenue }} <span>{{ income_unit }}</span>
+        </p>
       </div>
 
       <div class="income_con_btn">
@@ -36,38 +38,77 @@
           />
         </van-dropdown-menu>
       </div>
+
       <!--  -->
-      <vuu-pull
-        ref="vuuPull"
-        :options="pullOptions"
-        v-on:loadTop="loadTop"
-        v-on:loadBottom="loadBottom"
-        :style="{ height: scrollerHeight }"
-      >
-        <div class="incon_con_body" v-if="income_list.length > 0">
-          <div
-            class="incon_con_body_item"
-            v-for="(item, index) in income_list"
-            :key="index"
+      <van-tabs @click="onClick">
+        <van-tab title="西柚机收益">
+          <vuu-pull
+            ref="vuuPull"
+            :options="pullOptions"
+            v-on:loadTop="loadTop"
+            v-on:loadBottom="loadBottom"
+            :style="{ height: scrollerHeight }"
           >
-            <div class="incon_con_body_left">
-              <p>
-                {{ item.profit_type == 1 ? "+" : "-"
-                }}{{ (item.cur_profit / 100).toFixed(2) }}gfm
-              </p>
-              <p>{{ (item.total_profit / 100).toFixed(2) }}gfm</p>
-            </div>
-            <div class="incon_con_body_right">
-              <div>
-                <p>{{ item.profit_type == 2 ? "兑换" : "收益" }}</p>
-                <p>{{ item.time_stamp | formatDate }}</p>
+            <div class="incon_con_body" v-if="income_list.length > 0">
+              <div class="incon_con_body_item incon_con_body_item_title">
+                <div>金额</div>
+                <div>总金额</div>
+                <div>类型</div>
+                <div>时间</div>
               </div>
-              <!-- <van-icon name="arrow" /> -->
+              <div
+                class="incon_con_body_item"
+                v-for="(item, index) in income_list"
+                :key="index"
+              >
+                <div>
+                  {{ item.profit_type == 1 ? "+" : "-"
+                  }}{{ (item.cur_profit / 100).toFixed(2) }}
+                </div>
+                <div>{{ (item.total_profit / 100).toFixed(2) }}</div>
+                <div>{{ item.profit_type == 2 ? "兑换" : "收益" }}</div>
+                <div>{{ item.time_stamp | formatDate }}</div>
+              </div>
             </div>
-          </div>
-        </div>
-        <van-empty image="search" description="暂无数据" v-else />
-      </vuu-pull>
+            <van-empty image="search" description="暂无数据" v-else />
+          </vuu-pull>
+        </van-tab>
+        <van-tab title="节点收益">
+          <vuu-pull
+            ref="vuuPull"
+            :options="pullOptions"
+            v-on:loadTop="loadTop"
+            v-on:loadBottom="loadBottom"
+            :style="{ height: scrollerHeight }"
+          >
+            <div class="incon_con_body" v-if="node_income_list.length > 0">
+              <div class="incon_con_body_item incon_con_body_item_title">
+                <div>金额</div>
+                <div>总金额</div>
+                <div>类型</div>
+                <div>时间</div>
+              </div>
+              <div
+                class="incon_con_body_item"
+                v-for="(item, index) in income_list"
+                :key="index"
+              >
+                <div>
+                  {{ item.profit_type == 1 ? "+" : "-"
+                  }}{{ (item.cur_profit / 100).toFixed(2) }}
+                </div>
+                <div>{{ (item.total_profit / 100).toFixed(2) }}</div>
+                <div>{{ item.profit_type == 2 ? "兑换" : "收益" }}</div>
+                <div>{{ item.time_stamp | formatDate }}</div>
+              </div>
+            </div>
+            <van-empty
+              image="search"
+              description="暂无数据"
+              v-else
+            /> </vuu-pull
+        ></van-tab>
+      </van-tabs>
     </div>
   </div>
 </template>
@@ -87,19 +128,21 @@ import boadind from "../../assets/images/spinwhile.gif"; //动画
 export default {
   data() {
     return {
+      income_unit: "gfm",
       total_revenue: 0,
       activeNames: ["1"],
       showdev: false,
       system: "",
       income_list: [],
-      value11: 0,
+      node_income_list: [],
+      value11: 1,
       value22: 0,
       starttime: 0,
       endtime: 0,
       pagenum: 0,
       allpage: 1,
       option1: [
-        { text: "全部", value: 0 },
+        // { text: "全部", value: 0 },
         { text: "收益", value: 1 },
         { text: "兑换", value: 2 }
       ],
@@ -212,6 +255,15 @@ export default {
           this.$refs.vuuPull.closeLoadBottom();
         }
       }, 500);
+    },
+    onClick(name, title) {
+      this.total_revenue = 0;
+      if (title == "西柚机收益") {
+        this.income_unit = "gfm";
+        this.changetime();
+      } else {
+        this.income_unit = "积分";
+      }
     },
     //获取总收益
     get_all_income() {
@@ -472,8 +524,12 @@ export default {
 }
 /deep/.van-dropdown-menu {
   justify-content: space-between;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   height: 1.26rem;
+  z-index: 11;
+}
+/deep/ .van-tabs__wrap {
+  background-color: #ffffff;
   z-index: 11;
 }
 /deep/.van-dropdown-menu__item:nth-child(1) {
@@ -514,6 +570,17 @@ export default {
 /deep/.van-empty {
   margin-top: 1rem;
 }
+/deep/.van-tabs {
+  z-index: 1;
+}
+/deep/.van-tab--active {
+  color: #1989fa;
+  background: #f5f5f5;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+/deep/[class*="van-hairline"]::after {
+  border: none;
+}
 .all_income {
   width: 100%;
   height: 100%;
@@ -542,7 +609,7 @@ export default {
         font-size: 0.6rem;
         font-weight: bold;
         padding-bottom: 0.2rem;
-        span{
+        span {
           font-size: 0.3rem;
         }
       }
@@ -561,30 +628,16 @@ export default {
         justify-content: space-between;
         padding: 0 4%;
         border-bottom: 1px solid #eeeeee;
-        .incon_con_body_left {
-          p {
-            margin: 0.1rem 0;
-            text-align: left;
-          }
-          p:nth-child(2) {
-            color: #666666;
-            font-size: 0.24rem;
-          }
+        height: 1rem;
+        background: #f5f5f5;
+      }
+      .incon_con_body_item_title {
+        div {
+          width: 25%;
+          text-align: left;
         }
-        .incon_con_body_right {
-          display: flex;
-          align-items: center;
-          text-align: right;
-          div {
-            margin-right: 0.1rem;
-          }
-          p {
-            margin: 0.1rem 0;
-          }
-          p:nth-child(2) {
-            color: #666666;
-            font-size: 0.26rem;
-          }
+        div:nth-child(4) {
+          text-align: center;
         }
       }
     }

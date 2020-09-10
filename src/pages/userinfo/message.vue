@@ -10,7 +10,7 @@
       rrow
       left-arrow
       @click-left="onClickLeft"
-      :z-index="2000"
+      :z-index="20000"
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#ffffff" />

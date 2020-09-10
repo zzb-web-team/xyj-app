@@ -427,7 +427,7 @@ export default {
       this.$router.go(-1);
     },
      onClickRight() {
-       this.$router.push({ path: "/node_scores" });
+       this.$router.push({ path: "/my_scores" });
     },
     changedev() {
       this.income_list = [];
