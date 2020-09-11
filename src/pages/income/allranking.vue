@@ -542,23 +542,31 @@ export default {
       .tltle_l {
         width: 20%;
         text-align: center;
+        font-weight: 700;
       }
       .tltle_m {
         width: 25%;
         text-align: center;
         margin-left: 0.5rem;
+        font-weight: 700;
       }
       .title_n {
         width: 25%;
         text-align: center;
         margin-left: 0.5rem;
+        font-weight: 700;
       }
       .node_title_n {
         margin-left: 0;
+        font-weight: 700;
       }
       .tltle_r {
         width: 30%;
         text-align: center;
+        font-weight: 700;
+      }
+      b {
+        font-weight: 700;
       }
     }
     .ranking_item {
