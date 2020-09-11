@@ -73,7 +73,9 @@
                   >
                     <b>{{ (index + 1) | screen }}</b>
                   </div>
-                  <div class="ranking_item_n">{{ item.profit_rank/100 }} gfm</div>
+                  <div class="ranking_item_n">
+                    {{ item.profit_rank / 100 }} gfm
+                  </div>
                   <div class="ranking_item_r">
                     <b>{{ item.bind_num }}</b>
                   </div>
@@ -95,7 +97,7 @@
                   <div class="tltle_l">
                     <b>名次</b>
                   </div>
-                  <div class="title_n">
+                  <div class="title_n node_title_n">
                     <b>节点收益</b>
                   </div>
                   <div class="tltle_m">
@@ -208,6 +210,14 @@ export default {
     navBar: navBar
   },
   mounted() {
+    try {
+      window.android.setStatusBarAndNavigationBarColor("", "#ffffff");
+    } catch (e) {}
+    try {
+      window.webkit.messageHandlers.setStatusBarAndNavigationBarColor.postMessage(
+        "#559afe,#2762fd"
+      );
+    } catch (error) {}
     this.pocrank();
   },
   methods: {
@@ -395,8 +405,9 @@ export default {
   color: #000000;
 }
 /deep/.van-tabs__wrap {
-  height: 2.5rem;
+  height: 2.5rem !important;
   background: url(../../assets/images/jifen_bgc.png) #f2f2f2 no-repeat 0 0;
+  background-size: cover; /* 将背景图片等比缩放填满整个容器 */
 }
 /deep/.van-tabs__nav--line {
   width: 75%;
@@ -541,6 +552,9 @@ export default {
         width: 25%;
         text-align: center;
         margin-left: 0.5rem;
+      }
+      .node_title_n {
+        margin-left: 0;
       }
       .tltle_r {
         width: 30%;

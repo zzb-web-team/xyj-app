@@ -59,23 +59,27 @@
           >
             <div class="incon_con_body" v-if="income_list.length > 0">
               <div class="incon_con_body_item incon_con_body_item_title">
-                <div>金额</div>
-                <div>总金额</div>
-                <div>类型</div>
-                <div>时间</div>
+                <div class="con_detail">金额</div>
+                <div class="con_total">总金额</div>
+                <div class="con_type">类型</div>
+                <div class="con_time">时间</div>
               </div>
               <div
                 class="incon_con_body_item"
                 v-for="(item, index) in income_list"
                 :key="index"
               >
-                <div>
+                <div class="con_detail">
                   {{ item.profit_type == 1 ? "+" : "-"
                   }}{{ (item.cur_profit / 100).toFixed(2) }}
                 </div>
-                <div>{{ (item.total_profit / 100).toFixed(2) }}</div>
-                <div>{{ item.profit_type == 2 ? "兑换" : "收益" }}</div>
-                <div>{{ item.time_stamp | formatDate }}</div>
+                <div class="con_total">
+                  {{ (item.total_profit / 100).toFixed(2) }}
+                </div>
+                <div class="con_type">
+                  {{ item.profit_type == 2 ? "兑换" : "收益" }}
+                </div>
+                <div class="con_time">{{ item.time_stamp | formatDate }}</div>
               </div>
             </div>
             <van-empty image="search" description="暂无数据" v-else />
@@ -91,23 +95,27 @@
           >
             <div class="incon_con_body" v-if="node_income_list.length > 0">
               <div class="incon_con_body_item incon_con_body_item_title">
-                <div>金额</div>
-                <div>总金额</div>
-                <div>类型</div>
-                <div>时间</div>
+                <div class="con_detail">金额</div>
+                <div class="con_total">总金额</div>
+                <div class="con_type">类型</div>
+                <div class="con_time">时间</div>
               </div>
               <div
                 class="incon_con_body_item"
                 v-for="(item, index) in income_list"
                 :key="index"
               >
-                <div>
+                <div class="con_detail">
                   {{ item.profit_type == 1 ? "+" : "-"
                   }}{{ (item.cur_profit / 100).toFixed(2) }}
                 </div>
-                <div>{{ (item.total_profit / 100).toFixed(2) }}</div>
-                <div>{{ item.profit_type == 2 ? "兑换" : "收益" }}</div>
-                <div>{{ item.time_stamp | formatDate }}</div>
+                <div class="con_total">
+                  {{ (item.total_profit / 100).toFixed(2) }}
+                </div>
+                <div class="con_type">
+                  {{ item.profit_type == 2 ? "兑换" : "收益" }}
+                </div>
+                <div class="con_time">{{ item.time_stamp | formatDate }}</div>
               </div>
             </div>
             <van-empty
@@ -675,13 +683,21 @@ export default {
         border-bottom: 1px solid #eeeeee;
         height: 1rem;
         background: #ffffff;
+        .con_detail {
+          width: 25%;
+        }
+        .con_total {
+          width: 25%;
+        }
+        .con_type {
+          width: 20%;
+        }
+        .con_time {
+          width: 30%;
+        }
       }
       .incon_con_body_item_title {
         div {
-          width: 25%;
-          text-align: left;
-        }
-        div:nth-child(4) {
           text-align: center;
         }
       }

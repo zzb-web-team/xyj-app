@@ -12,7 +12,7 @@
         >节点收益账户</van-cell
       >
       <!-- <van-cell title="版本" class="ves">
-        <i></i>1.3.2.162
+        <i></i>1.3.2.163
       </van-cell> -->
     </div>
   </div>
