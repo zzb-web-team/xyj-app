@@ -155,7 +155,15 @@ export default {
       activeNames: ["1"],
       showdev: false,
       system: "",
-      income_list: [],
+      income_list: [
+        // {
+        //   profit_type:1,
+        //   cur_profit:150,
+        //   total_profit:200,
+        //   profit_type:1,
+        //   time_stamp:15913403142
+        // }
+      ],
       node_income_list: [],
       value11: 1,
       value22: 0,
@@ -246,8 +254,8 @@ export default {
     this.total_revenue = this.$route.query.income;
     let date = new Date();
     this.value2 = date.getMonth() + 1;
-    this.whatBrowser();
-    this.changetime();
+    // this.whatBrowser();
+    // this.changetime();
   },
   methods: {
     ...mapMutations(["updateUser", "clearUser"]),
@@ -699,6 +707,8 @@ export default {
       .incon_con_body_item_title {
         div {
           text-align: center;
+          font-weight: 700;
+          color: #2b2b2b;
         }
       }
     }

@@ -49,10 +49,10 @@
                 <div class="ranking_con_title">
                   <div class="tltle_l"><b>名次</b></div>
                   <div class="title_n">
-                    <b>西柚机收益</b>
+                    <b>收益</b>
                   </div>
                   <div class="tltle_m">
-                    <b>西柚机数量</b>
+                    <b>数量</b>
                   </div>
                   <div class="tltle_r">
                     <b>用户</b>
@@ -98,10 +98,10 @@
                     <b>名次</b>
                   </div>
                   <div class="title_n node_title_n">
-                    <b>节点收益</b>
+                    <b>收益</b>
                   </div>
                   <div class="tltle_m">
-                    <b>节点数量</b>
+                    <b>数量</b>
                   </div>
                   <div class="tltle_r">
                     <b>用户</b>
@@ -123,7 +123,7 @@
                     <span>{{ (index + 1) | screen }}</span>
                   </div>
                   <div class="ranking_item_n">
-                    {{ item.node_income | set_node_income }} 积分
+                    {{ item.node_income | set_node_income }}
                   </div>
                   <div class="ranking_item_r">
                     <b>{{ item.bind_rank }}</b>
@@ -161,16 +161,16 @@ export default {
       active_ranking: 0,
       all_title: "西柚机收益排行",
       rankLists: [
-        // { store_ability: 12, user_tel: 13301201366 },
-        // { store_ability: 1, user_tel: 18714124198 },
-        // { store_ability: 12, user_tel: 13301201366 },
-        // { store_ability: 1, user_tel: 18714124198 }
+        // { store_ability: 12, user_tel: 13301201366,profit_rank:100,bind_num:14},
+        // { store_ability: 1, user_tel: 18714124198,profit_rank:100,bind_num:14 },
+        // { store_ability: 12, user_tel: 13301201366,profit_rank:100,bind_num:14},
+        // { store_ability: 1, user_tel: 18714124198,profit_rank:100,bind_num:14 }
       ],
       rankList: [
-        // { bind_rank: 12, user_tel: 13301201366 },
-        // { bind_rank: 1, user_tel: 18714124198 },
-        // { bind_rank: 12, user_tel: 13301201366 },
-        // { bind_rank: 1, user_tel: 18714124198 }
+        // { bind_rank: 12, user_tel: 13301201366,node_income:150,bind_rank:15 },
+        // { bind_rank: 1, user_tel: 18714124198,node_income:150,bind_rank:15 },
+        // { bind_rank: 12, user_tel: 13301201366,node_income:150,bind_rank:15 },
+        // { bind_rank: 1, user_tel: 18714124198,node_income:150,bind_rank:15 }
       ],
       token_gen_ts: format(Date.now(), "YYYY/MM/DD")
     };
@@ -547,13 +547,11 @@ export default {
       .tltle_m {
         width: 25%;
         text-align: center;
-        margin-left: 0.5rem;
         font-weight: 700;
       }
       .title_n {
         width: 25%;
         text-align: center;
-        margin-left: 0.5rem;
         font-weight: 700;
       }
       .node_title_n {
@@ -570,7 +568,7 @@ export default {
       }
     }
     .ranking_item {
-      width: 100;
+      width: 100%;
       height: 1rem;
       line-height: 0.5rem;
       margin: 0 auto;
@@ -624,7 +622,7 @@ export default {
         }
       }
       .ranking_item_m {
-        width: 25%;
+        width: 30%;
         // padding-right: 0.4rem;
       }
       .ranking_item_n {
@@ -633,7 +631,7 @@ export default {
       }
       .ranking_item_r {
         // margin-left: 1.45rem;
-        width: 30%;
+        width: 25%;
         text-align: center;
         overflow: hidden;
         color: #000;
