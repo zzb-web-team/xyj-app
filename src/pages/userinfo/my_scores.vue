@@ -4,13 +4,21 @@
       size="0.4rem"
       left-arrow
       fixed
-      title="西柚机收益账户"
       @click-left="onClickLeft()"
       @click-right="onClickRight()"
       :z-index="0"
     >
       <div slot="left" class="alltitleleft">
         <van-icon name="arrow-left" color="#ffffff" />
+      </div>
+      <div slot="title" class="title_select">
+        <van-dropdown-menu>
+          <van-dropdown-item
+            v-model="title_value"
+            :options="title_option"
+            @change="changetitle()"
+          />
+        </van-dropdown-menu>
       </div>
       <div slot="right" class="titright">
         <span>兑换</span>
@@ -40,7 +48,7 @@
       </div>
 
       <!--  -->
-      <van-tabs @click="onClick">
+      <van-tabs @change="onClick" v-model="con_active">
         <van-tab title="西柚机收益">
           <vuu-pull
             ref="vuuPull"
@@ -128,6 +136,12 @@ import boadind from "../../assets/images/spinwhile.gif"; //动画
 export default {
   data() {
     return {
+      title_value: 0,
+      title_option: [
+        { text: "西柚机收益", value: 0 },
+        { text: "节点收益", value: 1 }
+      ],
+      con_active: 0,
       income_unit: "gfm",
       total_revenue: 0,
       activeNames: ["1"],
@@ -256,9 +270,13 @@ export default {
         }
       }, 500);
     },
-    onClick(name, title) {
+    changetitle() {
+      this.con_active = this.title_value;
+      this.onClick();
+    },
+    onClick() {
       this.total_revenue = 0;
-      if (title == "西柚机收益") {
+      if (this.con_active == 0) {
         this.income_unit = "gfm";
         this.changetime();
       } else {
@@ -369,7 +387,6 @@ export default {
             }
           })
           .catch(error => {
-            // console.log(error);
             // Toast("网络错误，请重新请求");
           });
       }
@@ -504,6 +521,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.title_select .van-dropdown-menu {
+  height: 0.92rem;
+  background: linear-gradient(45deg, #478ffe 10%, #3170fd 100%);
+  color: #ffffff;
+}
+/deep/ .title_select .van-dropdown-menu .van-dropdown-menu__title {
+  color: #ffffff;
+}
 /deep/.van-button .van-icon {
   transform: rotate(90deg);
 }
@@ -524,7 +549,7 @@ export default {
 }
 /deep/.van-dropdown-menu {
   justify-content: space-between;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   height: 1.26rem;
   z-index: 11;
 }
@@ -532,7 +557,7 @@ export default {
   background-color: #ffffff;
   z-index: 11;
 }
-/deep/.van-dropdown-menu__item:nth-child(1) {
+/deep/.income_con_btn .van-dropdown-menu__item:nth-child(1) {
   flex: none;
   width: 1.56rem;
   height: 0.6rem;
@@ -542,7 +567,7 @@ export default {
   border: 1px solid #eeeeee;
   margin-left: 4%;
 }
-/deep/.van-dropdown-menu__item:nth-child(2) {
+/deep/.income_con_btn .van-dropdown-menu__item:nth-child(2) {
   flex: none;
   width: 1.56rem;
   height: 0.6rem;
@@ -581,6 +606,20 @@ export default {
 /deep/[class*="van-hairline"]::after {
   border: none;
 }
+/deep/.title_select .van-popup {
+  width: 50%;
+  left: 25%;
+  color: #ffffff;
+}
+/deep/.title_select .van-popup .van-cell {
+  display: flex;
+  align-items: center;
+  height: 0.8rem;
+}
+/deep/ .van-tabs--line .van-tabs__wrap {
+  height: 0;
+  line-height: 0;
+}
 .all_income {
   width: 100%;
   height: 100%;
@@ -589,6 +628,10 @@ export default {
   .titright {
     line-height: inherit;
     margin-right: 0.2rem;
+  }
+  .title_select {
+    height: 0.92rem;
+    overflow: hidden;
   }
   .income_con {
     margin-top: 0.92rem;
@@ -600,7 +643,7 @@ export default {
       background-size: 100% 100%;
       background-position: top;
       position: relative;
-      z-index: 11;
+      z-index: 1;
       p {
         color: #fff;
         padding-top: 0.2rem;
@@ -617,6 +660,8 @@ export default {
     .income_con_btn {
       background-color: #f8fafb;
       width: 100%;
+      position: relative;
+      z-index: 2;
     }
     .incon_con_body {
       overflow-x: hidden;
@@ -629,7 +674,7 @@ export default {
         padding: 0 4%;
         border-bottom: 1px solid #eeeeee;
         height: 1rem;
-        background: #f5f5f5;
+        background: #ffffff;
       }
       .incon_con_body_item_title {
         div {

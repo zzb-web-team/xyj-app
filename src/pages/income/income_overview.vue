@@ -376,15 +376,17 @@ export default {
             },
             axisLabel: {
               margin: 2
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "##E5E5E5"
+              }
             }
           }
         ],
         yAxis: {
           splitArea: {
-            show: false
-          },
-          //取消网格线
-          splitLine: {
             show: false
           },
           //取消坐标值
@@ -393,30 +395,64 @@ export default {
           },
           //取消刻度线
           axisTick: {
-            show: true
+            show: false,
+            lineStyle: { color: "##E2E6F5" }
           },
           //取消坐标轴
           axisLine: {
-            show: true
+            show: true,
+            lineStyle: {
+              color: "##E5E5E5"
+            }
+          },
+          splitLine: {
+            //网格线
+            lineStyle: {
+              type: "dashed" //设置网格线类型 dotted：虚线   solid:实线
+            },
+            show: true //隐藏或显示
           }
         },
         series: [
           {
             type: "line",
+            smooth: true, //这个是把线变成曲线
             // data: [15, 46, 15, 48, 16, 165, 1, 6, 34, 30],
             data: _this.echarts_data.map(function(item) {
               return (item.user_total_profit / 100).toFixed(2);
             }),
+
             large: true,
-            markLine: {
-              symbol: "none",
-              label: {
-                position: "middle", //将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
-                formatter: function(params) {
-                  return `${params.value}`;
+            // markLine: {
+            //   symbol: "none",
+            //   label: {
+            //     position: "middle", //将警示值放在哪个位置，三个值“start”,"middle","end"  开始  中点 结束
+            //     formatter: function(params) {
+            //       return `${params.value}`;
+            //     }
+            //   },
+            //   data: [{ type: "max", name: "最大值" }]
+            // },
+            areaStyle: {
+              normal: {
+                color: {
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [
+                    {
+                      offset: 0,
+                      color: "#79A5FE" // 0% 处的颜色
+                    },
+                    {
+                      offset: 0.7,
+                      color: "#ffffff" // 100% 处的颜色
+                    }
+                  ],
+                  globalCoord: false // 缺省为 false
                 }
-              },
-              data: [{ type: "max", name: "最大值" }]
+              }
             }
           }
         ]
@@ -502,6 +538,9 @@ export default {
 /deep/.bandwidth .van-tab {
   width: 1.5rem;
   font-size: 0.24rem;
+}
+/deep/.bandwidth .van-tabs__nav--card{
+  border: none;
 }
 /deep/.bandwidth .van-tabs__wrap {
   // width: 75%;
@@ -600,7 +639,7 @@ export default {
         box-sizing: border-box;
         padding: 0.4rem 0.3rem;
         border-radius: 0.2rem;
-         margin-left: -0.2rem;
+        margin-left: -0.2rem;
         .monitor_top_right_img {
           img {
             width: 0.8rem;
