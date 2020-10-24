@@ -3,7 +3,7 @@ import axios from 'axios'
 
 
 //let serverUrl = 'http://test.zzb.com' //PHP服务域名
-let serverUrl = 'http://zzb.onezen.net' //PHP服务域名
+let serverUrl = 'http://zzb.stguarantee.com' //PHP服务域名
     //let serverUrl = 'http://xyj.grapefruitcloud.com/' //PHP服务域名
 
 
